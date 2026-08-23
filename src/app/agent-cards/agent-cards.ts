@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AGENTS, GROUP_COLORS, FALLBACK_GROUP_COLOR } from '../models/refined-source';
 import { AgentCard } from './agent-card';
 
@@ -10,6 +10,7 @@ import { AgentCard } from './agent-card';
   selector: 'app-agent-cards',
   imports: [AgentCard],
   templateUrl: './agent-cards.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './agent-cards.css',
 })
 export class AgentCards {

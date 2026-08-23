@@ -15,7 +15,7 @@ If a protocol mixes project facts with agent behavior, split it: project facts g
 
 | Protocol | Purpose | Audience |
 |---|---|---|
-| [`refined-source-curation.md`](./refined-source-curation.md) | How to evolve `refined-source/` (agents.json, rules.json, graph.json, agents/*.md) in sync with `.opencode/` → `source/`. | `documenter`, `delivery`, `orchestrator` |
+| [`refined-source-curation.md`](./refined-source-curation.md) | How to evolve `refined-source/` (agents.json, rules.json, graph.json, agents/*.md) in sync with `.opencode/` → `source/` | `documenter`, `delivery`, `orchestrator` |
 
 ## When to add a new project protocol
 

@@ -7,6 +7,11 @@
       "type": "remote",
       "url": "http://localhost:8081/sse",
       "enabled": true
+    },
+    "angular-cli": {
+      "type": "local",
+      "command": ["npx", "-y", "@angular/cli", "mcp"],
+      "enabled": true
     }
   },
   "compaction": {

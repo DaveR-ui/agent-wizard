@@ -7,7 +7,7 @@ status: active
 
 # Local Development
 
-agent-wizard is an Angular 21 SPA skeleton plus an opencode agent system. There is no backend and no default test user.
+agent-wizard is an Angular 22 SPA skeleton plus an opencode agent system. There is no backend and no default test user.
 
 > [!CAUTION] The workspace path contains spaces (`/run/media/admin/Datos/Matafuegos necochea/agent-wizard`) — quote every path in bash.
 

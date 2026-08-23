@@ -29,11 +29,11 @@ Keep `refined-source/` in sync with the agent system without auto-scripts. Manua
 jq empty refined-source/agents.json && jq empty refined-source/rules.json && jq empty refined-source/graph.json
 ```
 
-6. **Verify relatedFiles** — every path in `agents.json → relatedFiles` must resolve (see `docs/context/refined-source-data.md`).
+6. **Verify relatedFiles** — every path in `agents.json → relatedFiles` must resolve (except sibling-project references; see `docs/context/refined-source-data.md`).
 
 ## Constraints
 
-- No auto-script; edits are manual and pretty-printed.
+- No auto-script that generates curated content — edits are manual, hand-authored, and pretty-printed.
 - All JSON/MD content in English.
 - Do NOT mutate `.opencode/` at the workspace root silently — review loop applies.
 - `relatedFiles` pointing at `docs/` must resolve after the change (post-change audit).

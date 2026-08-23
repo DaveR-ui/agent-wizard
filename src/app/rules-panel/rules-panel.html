@@ -42,7 +42,7 @@
         @for (rule of visibleGlobalRules(); track rule.id) {
           <article class="rule-card">
             <div class="rule-head">
-              <h4 class="rule-title">{{ rule.rule }}</h4>
+              <h4 class="rule-title">{{ rule.id }} - {{ rule.rule }}</h4>
               <span
                 class="severity-badge"
                 [class.severity-hard]="rule.severity === 'hard'"
@@ -54,8 +54,7 @@
             <p class="rule-description">{{ rule.description }}</p>
             <p class="rule-source">{{ rule.source }}</p>
           </article>
-        }
-        @empty {
+        } @empty {
           <p class="empty-note">Sin coincidencias para «{{ filter() }}».</p>
         }
       </div>
@@ -73,18 +72,18 @@
           </button>
         }
       </div>
-      <p class="family-members">
-        Miembros: {{ selectedFamily().members.join(', ') }}
-      </p>
+      <p class="family-members">Miembros: {{ selectedFamily().members.join(', ') }}</p>
       <div class="rule-list">
         @for (rule of visibleFamilyRules(); track rule.id) {
           <article class="rule-card">
             <div class="rule-head">
-              <h4 class="rule-title">{{ rule.rule }}</h4>
+              <h4 class="rule-title">{{ rule.id }} - {{ rule.rule }}</h4>
             </div>
             <p class="rule-description">{{ rule.description }}</p>
             <p class="rule-source">{{ rule.source }}</p>
           </article>
+        } @empty {
+          <p class="empty-note">Sin coincidencias para «{{ filter() }}».</p>
         }
       </div>
     }
@@ -97,7 +96,7 @@
               @for (rule of entry.rules; track rule.id) {
                 <article class="rule-card">
                   <div class="rule-head">
-                    <h4 class="rule-title">{{ rule.rule }}</h4>
+                    <h4 class="rule-title">{{ rule.id }} - {{ rule.rule }}</h4>
                   </div>
                   <p class="rule-description">{{ rule.description }}</p>
                   <p class="rule-source">{{ rule.source }}</p>
@@ -105,8 +104,7 @@
               }
             </div>
           </section>
-        }
-        @empty {
+        } @empty {
           <p class="empty-note">Sin coincidencias para «{{ filter() }}».</p>
         }
       </div>

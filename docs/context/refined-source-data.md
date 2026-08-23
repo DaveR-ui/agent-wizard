@@ -1,6 +1,6 @@
 ---
 last_updated: 2026-08-23
-description: The refined-source data layer — agents.json, rules.json, graph.json schemas, hover contract, jq validation, manual curation workflow.
+description: The refined-source data layer — agents.json, rules.json, graph.json schemas, hover contract, jq validation, and manual curation workflow.
 tags: [refined-source, data-layer, json, agents.json, rules.json, graph.json, jq]
 status: active
 ---
@@ -60,6 +60,8 @@ Every rule cites `source` (the file it comes from).
 1. **Can call** — `canCall` / `edges`; empty `[]` = leaf; self-loop = recursive fan-out.
 2. **Beyond general rules** — `specificBeyondGeneral`; global rules deliberately not repeated.
 3. **Related files** — `relatedFiles[]` rendered as clickable chips; `if applicable` (vision-relay, external-scout have minimal surface).
+
+**relatedFiles exception**: paths pointing into sibling projects (`frontend/`, `backend/`) are intentionally non-resolvable in-repo — they reference the sibling repo tree and are display-only in the UI. The must-resolve rule applies to in-repo paths (`.opencode/`, `docs/`, `opencode.json`, `refined-source/`).
 
 ## Validation
 

@@ -33,24 +33,15 @@
   max-width: 72rem;
   margin: 0 auto;
   padding: 2rem 1.5rem 4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
 }
 
-.page-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1.1rem;
+.site-tabs {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 0.75rem;
+  padding: 0.25rem 1rem 1.5rem;
 }
 
-.section-title {
-  margin: 0;
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: var(--text-strong, #0f172a);
-  padding-bottom: 0.4rem;
-  border-bottom: 2px solid var(--accent, #4f46e5);
-  display: inline-block;
-  align-self: flex-start;
+.site-tabs ::ng-deep .mat-mdc-tab-body-content {
+  padding-top: 1.25rem;
 }

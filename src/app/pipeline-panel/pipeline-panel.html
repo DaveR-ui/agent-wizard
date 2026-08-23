@@ -1,0 +1,64 @@
+<section class="pipeline-panel" aria-label="Pipeline graph — read-only first sketch">
+  <div class="graph-legend" aria-label="Pipeline phases">
+    @for (group of groups; track group.id) {
+      <span class="legend-item">
+        <span class="legend-dot" [style.background-color]="group.color"></span>
+        {{ group.label }}
+      </span>
+    }
+  </div>
+
+  <div class="graph-container">
+    <div
+      #jointPaper
+      class="joint-paper-host"
+      [class.is-panning]="panningActive()"
+      aria-label="Pipeline graph — JointJS"
+    ></div>
+    <div class="zoom-toolbar" role="toolbar" aria-label="Zoom controls">
+      <button
+        type="button"
+        class="zoom-btn"
+        aria-label="Zoom in"
+        title="Zoom in (+)"
+        (click)="zoomIn()"
+      >
+        +
+      </button>
+      <button
+        type="button"
+        class="zoom-btn"
+        aria-label="Zoom out"
+        title="Zoom out (−)"
+        (click)="zoomOut()"
+      >
+        −
+      </button>
+      <button
+        type="button"
+        class="zoom-btn"
+        aria-label="Reset zoom"
+        title="Reset zoom (fit)"
+        (click)="zoomReset()"
+      >
+        ⛶
+      </button>
+      <span class="zoom-percent" aria-live="polite">{{ zoomPercent() }}%</span>
+    </div>
+  </div>
+
+  <p class="graph-caption">
+    First sketch toward n8n-like prompt builder — read-only pipeline visualization with
+    zoom + pan (wheel to zoom, drag the background to pan).
+  </p>
+  <p class="graph-note">
+    Spanish is cut at the interpreter (Step 0): interpreter normalizes vocabulary against the
+    codebase and may consult the user via a question batch. Orchestrator (Phase 2) performs
+    saneamiento and confidence branching: low → broad exploration, medium → targeted exploration,
+    high → direct execution (coder) → tester → reviewer → documenter (optional, dashed).
+  </p>
+  <p class="graph-meta">
+    Layout: manual LR (left-to-right) · JointJS (OSS, MPL-2.0) · {{ nodes.length }} nodes ·
+    {{ links.length }} edges
+  </p>
+</section>

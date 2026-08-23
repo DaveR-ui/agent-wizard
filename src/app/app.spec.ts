@@ -1,13 +1,10 @@
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { GraphComponent } from '@swimlane/ngx-graph';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { App } from './app';
-import './testing/ngx-graph-test-env';
-
-/** Graph component internals we clean up (its own ngOnDestroy keeps the layout subscription). */
-interface GraphComponentInternals {
-  graphSubscription?: { unsubscribe(): void };
-}
+// JointJS needs SVG matrix/transform APIs jsdom lacks — the Pipeline tab's lazy
+// chunk imports @joint/core at runtime, so the shim must be in place up front.
+import './testing/joint-test-env';
 
 describe('App', () => {
   let fixture: ComponentFixture<App>;
@@ -15,25 +12,20 @@ describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      // MatTabs needs an animation provider in tests; noop keeps tab switching instant.
+      providers: [provideNoopAnimations()],
     }).compileComponents();
     fixture = TestBed.createComponent(App);
   });
 
-  afterEach(async () => {
-    // ngx-graph's ngAfterViewInit schedules an unguarded `setTimeout(() => this.update())`
-    // that emits `stateChange` on the next macrotask. Flush it while the component is still
-    // alive so the emit does not hit a destroyed OutputRef (NG0953), then stop the
-    // force-simulation subscription (its ngOnDestroy keeps it) and tear down.
-    await new Promise((resolve) => setTimeout(resolve, 50));
-    const graph = fixture.debugElement.query(By.directive(GraphComponent))
-      ?.componentInstance as GraphComponentInternals | undefined;
-    graph?.graphSubscription?.unsubscribe();
+  afterEach(() => {
     fixture.destroy();
   });
 
   it('should create the app', () => {
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
+    fixture.detectChanges();
   });
 
   it('should render the page title', () => {
@@ -42,20 +34,46 @@ describe('App', () => {
     expect(compiled.querySelector('.site-title')?.textContent).toBe('AgentWizard');
   });
 
-  it('should render the three section headers', () => {
+  it('should render the four Material tab labels', () => {
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    const headings = Array.from(compiled.querySelectorAll('.section-title')).map((el) =>
-      el.textContent?.trim(),
-    );
-    expect(headings).toEqual(['Agentes', 'Reglas', 'Grafo de delegación']);
+    const labels = fixture.debugElement
+      .queryAll(By.css('.mat-mdc-tab'))
+      .map((tab) => tab.nativeElement.textContent?.trim());
+    expect(labels).toEqual(['Agentes', 'Reglas', 'Constructor', 'Pipeline']);
   });
 
-  it('should mount the agent cards, rules panel and graph panel', () => {
+  it('should mount only the active tab content (Agentes by default)', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('app-agent-cards')).toBeTruthy();
-    expect(compiled.querySelector('app-rules-panel')).toBeTruthy();
-    expect(compiled.querySelector('app-graph-panel')).toBeTruthy();
+    expect(compiled.querySelector('app-rules-panel')).toBeNull();
+    expect(compiled.querySelector('app-constructor-panel')).toBeNull();
+  });
+
+  it('should mount each panel when its tab is activated', async () => {
+    fixture.detectChanges();
+    const headers = fixture.debugElement.queryAll(By.css('.mat-mdc-tab'));
+
+    // Tab 2: Reglas.
+    headers[1].nativeElement.click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('app-rules-panel')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('app-agent-cards')).toBeNull();
+
+    // Tab 3: Constructor.
+    headers[2].nativeElement.click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('app-constructor-panel')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('app-rules-panel')).toBeNull();
+
+    // Tab 4: Pipeline — lazy-loaded via @defer (on idle); wait for the idle
+    // timer + dynamic-import chunk before asserting it mounted. Activated last.
+    headers[3].nativeElement.click();
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('app-pipeline-panel')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('app-constructor-panel')).toBeNull();
   });
 });

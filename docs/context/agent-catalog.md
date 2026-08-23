@@ -20,7 +20,7 @@ The 14 agents defined in `refined-source/agents.json` (source of truth: `.openco
 | `project-context` | Project Context | exploration | READ-ONLY doc lookup and context assembly for docs/ | inherit | subagent | 0 | `project-context.md`, `docs/project.md`, `docs/context/README.md` |
 | `external-scout` | External Scout | exploration | Fetches live docs for external libraries on demand | inherit | subagent | 0 | `external-scout.md` |
 | `vision-relay` | Vision Relay | exploration | Cheap image inspection for non-vision models | inherit | subagent | 0 | `vision-relay.md` |
-| `coder-angular` | Coder Angular | coders | Angular 21 SPA implementation specialist | deepseek-v4-flash | subagent | 0 | `coder-angular.md`, `coder.schema.json`, `docs/context/architecture.md`, `frontend/docs/context/README.md` |
+| `coder-angular` | Coder Angular | coders | Angular 22 SPA implementation specialist | deepseek-v4-flash | subagent | 0 | `coder-angular.md`, `coder.schema.json`, `docs/context/architecture.md`, `frontend/docs/context/README.md` |
 | `coder-go` | Coder Go | coders | Go 1.24 API implementation specialist | deepseek-v4-flash | subagent | 0 | `coder-go.md`, `coder.schema.json`, `backend/docs/project.md` |
 | `reviewer` | Reviewer | guardians | Code review, security audit, best practices, performance | deepseek-v4-flash | subagent | 1 | `reviewer.md`, `reviewer.schema.json`, `docs/context/architecture.md` |
 | `architect` | Architect | guardians | System design, module boundaries, patterns | inherit | subagent | 0 | `architect.md`, `architect.schema.json`, `docs/context/architecture.md` |

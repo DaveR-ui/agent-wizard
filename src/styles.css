@@ -1,3 +1,6 @@
+/* Angular Material prebuilt theme (indigo/pink). Must precede all other rules. */
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+
 /* Global design tokens and base styles for the AgentWizard SPA. */
 
 :root {

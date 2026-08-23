@@ -1,25 +1,29 @@
 <header class="site-header">
   <h1 class="site-title">AgentWizard</h1>
   <p class="site-tagline">
-    Visualización del sistema de agentes: 14 agentes, reglas en 3 niveles y grafo de delegación.
+    Visualización del sistema de agentes: 14 agentes, reglas en 3 niveles y constructor de agentes.
   </p>
 </header>
 
 <main class="site-main">
-  <section id="agentes" class="page-section">
-    <h2 class="section-title">Agentes</h2>
-    <app-agent-cards />
-  </section>
-
-  <section id="reglas" class="page-section">
-    <h2 class="section-title">Reglas</h2>
-    <app-rules-panel />
-  </section>
-
-  <section id="grafo" class="page-section">
-    <h2 class="section-title">Grafo de delegación</h2>
-    <app-graph-panel />
-  </section>
+  <mat-tab-group class="site-tabs">
+    <mat-tab label="Agentes">
+      <app-agent-cards />
+    </mat-tab>
+    <mat-tab label="Reglas">
+      <app-rules-panel />
+    </mat-tab>
+    <mat-tab label="Constructor">
+      <app-constructor-panel />
+    </mat-tab>
+    <mat-tab label="Pipeline">
+      @defer (on idle) {
+        <app-pipeline-panel />
+      } @placeholder {
+        <!-- Pipeline loads on idle; @joint/core stays out of the initial bundle. -->
+      }
+    </mat-tab>
+  </mat-tab-group>
 </main>
 
 <router-outlet />

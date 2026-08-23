@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, signal, ChangeDetectionStrategy } from '@angular/core';
 import { RULES } from '../models/refined-source';
 import type { AgentSpecificRule, Rule } from '../models/refined-source';
 
@@ -14,6 +14,7 @@ export type RuleLevel = 'global' | 'groups' | 'specific';
 @Component({
   selector: 'app-rules-panel',
   templateUrl: './rules-panel.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './rules-panel.css',
 })
 export class RulesPanel {

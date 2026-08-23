@@ -7,7 +7,7 @@
 ## Overview
 
 - **Project Name**: agent-wizard
-- **Description**: Angular 21 SPA + opencode agent system. The page creates and visualizes the human's own agent: cards, rules, and a delegation graph. The data layer lives in `refined-source/` and is imported by the Angular app at build time.
+- **Description**: Angular 22 SPA + opencode agent system. The page creates and visualizes the human's own agent: cards, rules, and a delegation graph. The data layer lives in `refined-source/` and is imported by the Angular app at build time.
 
 ## Slices
 
@@ -18,7 +18,7 @@ The orchestrator uses this table to route incoming tasks. Each slice is a vertic
 | docs | Documentation maintenance: project.md, context docs, protocols, indexes | docs, README, context, protocol, convention, documentation, tag index, frontmatter | `docs/` | documenter |
 | agent-system | Agent definitions, protocols, workflows, scripts, tests, runtime config | agent, subagent, protocol, workflow, dispatch, orchestrate, script, test, .opencode, source, permission, frontmatter, schema, review loop | `.opencode/`, `source/` | reviewer, analista, tester |
 | refined-source | Curated JSON + MD data layer for the UI | refined-source, agents.json, rules.json, graph.json, card, hover, curation, jq | `refined-source/` | documenter |
-| frontend-skeleton | Angular 21 SPA skeleton (no features yet) | angular, component, route, src, app, serve, build, test, skeleton | `src/`, `angular.json`, `package.json` | coder-angular, tester |
+| frontend-skeleton | Angular 22 SPA skeleton (Material tab shell) | angular, component, route, src, app, serve, build, test, skeleton | `src/`, `angular.json`, `package.json` | coder-angular, tester |
 | graph-ui | Graph visualization of the agent system — implemented | graph, visualization, force-directed, d3, vis-network, ngx-graph, node, edge | `refined-source/graph.json`, `src/app/*` | coder-angular, reviewer |
 
 ### Slice matching rules
@@ -31,25 +31,27 @@ The orchestrator uses this table to route incoming tasks. Each slice is a vertic
 
 ## Technology Stack
 
-- **Frontend**: Angular 21.2.x (CLI 21.2.21), standalone components
-- **Language**: TypeScript ~5.9.2
+- **Frontend**: Angular 22.1.x (CLI 22.1.5), standalone components
+- **Language**: TypeScript ~6.0.3
 - **Reactive**: RxJS ~7.8
 - **Unit tests**: Vitest ^4.0.8 (via `@angular/build`; `ng test`)
 - **DOM for tests**: jsdom ^28
 - **Formatting**: Prettier ^3.8.1
 - **Package manager**: npm 12.0.2 (`packageManager` field)
-- **Graph**: ngx-graph ^0.9.2 (pulls d3 ^7.3.0 transitively)
+- **Node**: 22+ required (local 26.7.0)
+- **UI components**: @angular/material 22.1.x (prebuilt indigo-pink theme; @angular/cdk + @angular/animations 22.1.x)
+- **Graph**: @swimlane/ngx-graph ^13.0.0 (pulls d3 ^7.x transitively; peer deps @angular/cdk + @angular/animations)
 
-**Explicitly NOT in this project** (they belong to the sibling `frontend/` project): Tailwind, Biome, Playwright, Storybook, Angular Material.
+**Explicitly NOT in this project** (they belong to the sibling `frontend/` project): Tailwind, Biome, Playwright, Storybook.
 
 ## Architecture
 
 - **Pattern**: Three independent layers — agent system, data layer, Angular skeleton.
 - **Agent system**: `.opencode/` (runtime) ↔ `source/` (clean copy, node_modules removed, the only maintained copy).
 - **Data layer**: `refined-source/*.json` + `agents/*.md` — manually curated presentation of the agent system.
-- **Angular skeleton**: `src/` — standalone-component app rendering agent cards, rules, and the delegation graph; `app.routes.ts` is empty.
+- **Angular skeleton**: `src/` — standalone-component app with a 4-tab Material shell (Agentes → agent cards, Reglas → rules, Grafo de delegación → graph, Pipeline); `app.routes.ts` is empty.
 - **Data flow**: `refined-source/*.json` imported as TS modules at build time (`resolveJsonModule`) → Angular components → rendered cards/graph.
-- **Graph UI**: consumes `graph.json` (14 nodes, 27 edges, 7 groups) with a force-directed layout via ngx-graph.
+- **Graph UI**: consumes `graph.json` (14 nodes, 27 edges, 7 groups) with a force-directed layout via @swimlane/ngx-graph.
 
 ## Commands
 
@@ -99,9 +101,9 @@ No application environment variables are required. The Angular dev server defaul
 - **English only** — `doc_language: english`; all docs, comments, routing packets, and structured returns in English.
 - **Kebab-case paths** — `refined-source/`, `docs/_TAG-INDEX.md`, etc.
 - **refined-source is manually curated** — no auto-scripts; edits are hand-made and jq-validated.
-- **relatedFiles must resolve** — every path in `refined-source/agents.json → relatedFiles` points to a real file.
+- **relatedFiles must resolve** — every path in `refined-source/agents.json → relatedFiles` points to a real file (except sibling-project references).
 - **Never mutate `.opencode/` directly** — agent-system changes go through the review loop (Draft → Review → Apply → Verify).
-- **No external libs without an explicit decision** — ngx-graph was chosen for the graph UI (2026-08-23); any other library still requires an explicit decision.
+- **No external libs without an explicit decision** — @swimlane/ngx-graph was chosen for the graph UI and Angular Material for the tab shell (2026-08-23); any other library still requires an explicit decision.
 - **Quote paths with spaces** — workspace root is `/run/media/admin/Datos/Matafuegos necochea`.
 
 ## Domain Entities

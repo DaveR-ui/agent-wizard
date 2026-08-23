@@ -81,7 +81,128 @@ if (!(globalThis.CSS as { escape?: (value: string) => string }).escape) {
       // Otherwise, escaped character.
       result += `\\${string.charAt(index)}`;
     }
-
     return result;
   };
+}
+
+/**
+ * Dagre CJS/ESM interop fix for Vitest (Vite/CJS).
+ *
+ * @swimlane/ngx-graph imports dagre via `import * as dagre from 'dagre'` and
+ * expects `dagre.layout` at the top level. In Vite's jsdom test transform the
+ * CJS `dagre` package is exposed as `{ default: { layout, graphlib } }`, so
+ * `dagre.layout` is undefined and DagreLayout.run throws. The node_modules
+ * patch handles the bundled mjs, but this runtime prototype patch is the
+ * durable fix that survives fresh installs.
+ *
+ * Implementation is synchronous and side-effect free so it runs before any
+ * spec instantiates the graph component.
+ */
+// @ts-ignore - dagre CJS without types
+import * as dagreImport from 'dagre';
+import { DagreLayout, DagreClusterLayout, DagreNodesOnlyLayout } from '@swimlane/ngx-graph';
+
+try {
+  const dagreResolved = ((dagreImport as unknown as { default?: unknown }).default as never) ?? (dagreImport as never);
+  const needsPatch =
+    dagreResolved &&
+    typeof (dagreResolved as { layout?: unknown }).layout === 'function' &&
+    typeof (dagreImport as { layout?: unknown }).layout === 'undefined';
+  if (needsPatch) {
+    const dagreAny = dagreResolved as {
+      layout(g: unknown): void;
+      graphlib: { Graph: new (opts: { compound: boolean; multigraph: boolean }) => unknown };
+    };
+    const patch = (Cls: { prototype: { run(graph: unknown): unknown; createDagreGraph(graph: unknown): void } }) => {
+      if (!Cls?.prototype?.createDagreGraph || !Cls?.prototype?.run) return;
+      Cls.prototype.createDagreGraph = function (graph: unknown) {
+        const g = graph as {
+          nodes: Array<{
+            id: string;
+            dimension?: { width?: number; height?: number };
+            position?: { x?: number; y?: number };
+          }>;
+          edges: Array<{ source: string; target: string; id?: string }>;
+        };
+        const settings = Object.assign(
+          {},
+          (this as unknown as { defaultSettings: Record<string, unknown> }).defaultSettings,
+          (this as unknown as { settings: Record<string, unknown> }).settings,
+        );
+        (this as unknown as { dagreGraph: unknown }).dagreGraph = new dagreAny.graphlib.Graph({
+          compound: settings['compound'] as boolean,
+          multigraph: settings['multigraph'] as boolean,
+        });
+        const dg = (
+          this as unknown as {
+            dagreGraph: {
+              setGraph(o: unknown): void;
+              setDefaultEdgeLabel(fn: () => unknown): void;
+              setNode(id: string, v: unknown): void;
+              setEdge(s: string, t: string, v: unknown): void;
+            };
+          }
+        ).dagreGraph;
+        dg.setGraph({
+          rankdir: settings['orientation'],
+          marginx: settings['marginX'],
+          marginy: settings['marginY'],
+          edgesep: settings['edgePadding'],
+          ranksep: settings['rankPadding'],
+          nodesep: settings['nodePadding'],
+          align: settings['align'],
+          acyclicer: settings['acyclicer'],
+          ranker: settings['ranker'],
+          multigraph: settings['multigraph'],
+          compound: settings['compound'],
+        });
+        dg.setDefaultEdgeLabel(() => ({}));
+        const dagreNodes = g.nodes.map((n) => ({
+          ...n,
+          width: n.dimension?.width ?? 150,
+          height: n.dimension?.height ?? 40,
+          x: n.position?.x ?? 0,
+          y: n.position?.y ?? 0,
+        }));
+        const dagreEdges = g.edges.map((l) => ({ ...l, id: l.id ?? Math.random().toString(36).slice(2) }));
+        (this as unknown as { dagreNodes: unknown }).dagreNodes = dagreNodes;
+        (this as unknown as { dagreEdges: unknown }).dagreEdges = dagreEdges;
+        for (const node of dagreNodes) {
+          dg.setNode(node.id, node);
+        }
+        for (const edge of dagreEdges) {
+          dg.setEdge(edge.source, edge.target, edge);
+        }
+      };
+      Cls.prototype.run = function (graph: unknown) {
+        this.createDagreGraph(graph);
+        dagreAny.layout((this as unknown as { dagreGraph: unknown }).dagreGraph);
+        const dg = (
+          this as unknown as {
+            dagreGraph: {
+              _edgeLabels: unknown;
+              _nodes: Record<string, { id: string; x: number; y: number; width: number; height: number }>;
+            };
+          }
+        ).dagreGraph;
+        (graph as { edgeLabels: unknown }).edgeLabels = dg._edgeLabels;
+        for (const id in dg._nodes) {
+          const dn = dg._nodes[id];
+          const node = (
+            graph as { nodes: Array<{ id: string; position?: unknown; dimension?: unknown }> }
+          ).nodes.find((n) => n.id === dn.id);
+          if (node) {
+            node.position = { x: dn.x, y: dn.y };
+            node.dimension = { width: dn.width, height: dn.height };
+          }
+        }
+        return graph;
+      };
+    };
+    patch(DagreLayout);
+    patch(DagreClusterLayout);
+    patch(DagreNodesOnlyLayout);
+  }
+} catch {
+  // Test env must never throw; dagre fix is best-effort. Production build resolves dagre correctly.
 }

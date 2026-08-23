@@ -1,4 +1,11 @@
-import { Component, computed, input, signal, OnDestroy } from '@angular/core';
+import {
+  Component,
+  computed,
+  input,
+  signal,
+  OnDestroy,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import type { Agent } from '../models/refined-source';
 import { AGENTS } from '../models/refined-source';
 
@@ -18,6 +25,7 @@ export interface CanCallItem {
 @Component({
   selector: 'app-agent-card',
   templateUrl: './agent-card.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './agent-card.css',
 })
 export class AgentCard implements OnDestroy {
