@@ -1,0 +1,115 @@
+<div class="rules-panel">
+  <div class="rules-toolbar">
+    <div class="level-tabs" role="tablist" aria-label="Nivel de reglas">
+      <button
+        type="button"
+        class="level-tab"
+        [class.active]="level() === 'global'"
+        (click)="level.set('global')"
+      >
+        Global ({{ globalCount }})
+      </button>
+      <button
+        type="button"
+        class="level-tab"
+        [class.active]="level() === 'groups'"
+        (click)="level.set('groups')"
+      >
+        Grupos ({{ familyCount }})
+      </button>
+      <button
+        type="button"
+        class="level-tab"
+        [class.active]="level() === 'specific'"
+        (click)="level.set('specific')"
+      >
+        Específicas ({{ specificCount }})
+      </button>
+    </div>
+    <input
+      type="search"
+      class="rules-filter"
+      placeholder="Filtrar reglas…"
+      aria-label="Filtrar reglas"
+      [value]="filter()"
+      (input)="onFilterInput($event)"
+    />
+  </div>
+
+  @switch (level()) {
+    @case ('global') {
+      <div class="rule-list">
+        @for (rule of visibleGlobalRules(); track rule.id) {
+          <article class="rule-card">
+            <div class="rule-head">
+              <h4 class="rule-title">{{ rule.rule }}</h4>
+              <span
+                class="severity-badge"
+                [class.severity-hard]="rule.severity === 'hard'"
+                [class.severity-medium]="rule.severity === 'medium'"
+              >
+                {{ rule.severity }}
+              </span>
+            </div>
+            <p class="rule-description">{{ rule.description }}</p>
+            <p class="rule-source">{{ rule.source }}</p>
+          </article>
+        }
+        @empty {
+          <p class="empty-note">Sin coincidencias para «{{ filter() }}».</p>
+        }
+      </div>
+    }
+    @case ('groups') {
+      <div class="family-pills">
+        @for (fam of families; track fam.group) {
+          <button
+            type="button"
+            class="family-pill"
+            [class.active]="family() === fam.group"
+            (click)="family.set(fam.group)"
+          >
+            {{ fam.group }}
+          </button>
+        }
+      </div>
+      <p class="family-members">
+        Miembros: {{ selectedFamily().members.join(', ') }}
+      </p>
+      <div class="rule-list">
+        @for (rule of visibleFamilyRules(); track rule.id) {
+          <article class="rule-card">
+            <div class="rule-head">
+              <h4 class="rule-title">{{ rule.rule }}</h4>
+            </div>
+            <p class="rule-description">{{ rule.description }}</p>
+            <p class="rule-source">{{ rule.source }}</p>
+          </article>
+        }
+      </div>
+    }
+    @case ('specific') {
+      <div class="agent-rule-blocks">
+        @for (entry of visibleSpecific(); track entry.agentId) {
+          <section class="agent-rule-block">
+            <h4 class="agent-rule-head">{{ entry.agentId }}</h4>
+            <div class="rule-list">
+              @for (rule of entry.rules; track rule.id) {
+                <article class="rule-card">
+                  <div class="rule-head">
+                    <h4 class="rule-title">{{ rule.rule }}</h4>
+                  </div>
+                  <p class="rule-description">{{ rule.description }}</p>
+                  <p class="rule-source">{{ rule.source }}</p>
+                </article>
+              }
+            </div>
+          </section>
+        }
+        @empty {
+          <p class="empty-note">Sin coincidencias para «{{ filter() }}».</p>
+        }
+      </div>
+    }
+  }
+</div>

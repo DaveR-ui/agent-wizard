@@ -1,0 +1,5 @@
+<div class="agent-grid">
+  @for (agent of agents; track agent.id) {
+    <app-agent-card [agent]="agent" [groupColor]="groupColor(agent.group)" />
+  }
+</div>

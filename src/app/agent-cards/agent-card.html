@@ -1,0 +1,71 @@
+<article
+  class="agent-card"
+  [class.is-hovered]="hovered()"
+  [style.--group-color]="groupColor()"
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()"
+>
+  <header class="agent-card-header">
+    <span class="group-badge" [style.background-color]="groupColor()">{{ agent().group }}</span>
+    <h3 class="agent-name">{{ agent().displayName }}</h3>
+  </header>
+
+  <p class="agent-role">{{ agent().role }}</p>
+  <p class="agent-essence">{{ agent().essence }}</p>
+
+  <dl class="agent-meta">
+    <div class="meta-row">
+      <dt>Modelo</dt>
+      <dd>{{ agent().model ?? 'inherit' }}</dd>
+    </div>
+    <div class="meta-row">
+      <dt>Temperatura</dt>
+      <dd>{{ agent().temperature ?? '—' }}</dd>
+    </div>
+    <div class="meta-row">
+      <dt>Modo</dt>
+      <dd>{{ agent().mode === 'primary' ? 'Primario' : 'Subagente' }}</dd>
+    </div>
+  </dl>
+
+  @if (hovered()) {
+    <div class="hover-panel">
+      <section class="panel-block">
+        <h4>Puede llamar a</h4>
+        @if (isLeaf()) {
+          <p class="leaf-note">Hoja — no delega</p>
+        } @else {
+          <ul class="can-call-list">
+            @for (item of canCallItems(); track item.id) {
+              <li>
+                {{ item.displayName }}
+                @if (item.recursive) {
+                  <span class="recursive-hint">recursivo</span>
+                }
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
+      <section class="panel-block">
+        <h4>Más allá de las reglas generales</h4>
+        <p class="beyond-text">{{ agent().specificBeyondGeneral }}</p>
+      </section>
+
+      <section class="panel-block">
+        <h4>Archivos relacionados</h4>
+        <div class="chips">
+          @for (file of agent().relatedFiles; track file) {
+            <button type="button" class="file-chip" (click)="onChipClick(file)">
+              {{ file }}
+              @if (copiedPath() === file) {
+                <span class="copied-feedback">Copiado</span>
+              }
+            </button>
+          }
+        </div>
+      </section>
+    </div>
+  }
+</article>

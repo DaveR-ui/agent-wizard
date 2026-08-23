@@ -1,0 +1,319 @@
+[
+  {
+    "id": "delivery",
+    "displayName": "Delivery",
+    "role": "Sole human ↔ agent interface. Translates, routes, and delegates — never implements.",
+    "group": "coordination",
+    "essence": "Coordinator, not executor. Enforces interpreter-first hard gate on every prompt and delegates ALL technical work via task tool. Owns human conversation, language translation, and session state.",
+    "model": "opencode-go/deepseek-v4-flash",
+    "temperature": 0.3,
+    "mode": "primary",
+    "permission": {
+      "webfetch": "deny",
+      "task": ["interpreter", "orchestrator", "coder-angular", "coder-go", "tester", "reviewer", "architect", "explorer", "project-context", "vision-relay", "external-scout", "analista", "documenter"]
+    },
+    "canCall": ["interpreter", "orchestrator", "coder-angular", "coder-go", "tester", "reviewer", "architect", "explorer", "project-context", "vision-relay", "external-scout", "analista", "documenter"],
+    "specificBeyondGeneral": "Trivial vs non-trivial is OUTPUT of interpreter packet (never pre-classified). Implements Self-check gate, Hard STOP on subagent failure (report, don't absorb), Agent-system changes review loop (draft → review → apply → verify), Session Preflight (batch all ambiguities), Skill Loading Contract (pass exact file paths).",
+    "relatedFiles": [
+      ".opencode/agents/subagents/delivery.md",
+      ".opencode/workflows/dispatch.md",
+      ".opencode/protocols/prompt-pipeline.md",
+      ".opencode/protocols/session-recovery.md",
+      "opencode.json",
+      "docs/project.md"
+    ]
+  },
+  {
+    "id": "orchestrator",
+    "displayName": "Orchestrator",
+    "role": "Persistent coordinator. Receives handoff from delivery, decomposes, fans out, aggregates, returns agent-snapshot.",
+    "group": "coordination",
+    "essence": "Sole executor of Phase 2 Reduce (scope, complexity, hot spots, in/out, verification). Maintains state across delegations, fans out same-type subagents when input too large, aggregates structured JSON via EventV2 bus.",
+    "model": "inherit (delivery)",
+    "temperature": null,
+    "mode": "subagent",
+    "permission": {
+      "task": ["interpreter", "coder-angular", "coder-go", "tester", "reviewer", "architect", "explorer", "project-context", "vision-relay", "external-scout", "analista", "documenter"]
+    },
+    "canCall": ["interpreter", "coder-angular", "coder-go", "tester", "reviewer", "architect", "explorer", "project-context", "vision-relay", "external-scout", "analista", "documenter"],
+    "specificBeyondGeneral": "Produces ## Scope block (complexity, hot spots, key files, verification). Fan-out pattern: split by file list, 10-20 per chunk, N parallel tasks. Cost discipline (cheap tier default). Slices routing via docs/project.md Keywords → Repo → Entry points. Decision Hierarchy (context > integrity > user decisions > objective > buildable > conventions > quality).",
+    "relatedFiles": [
+      ".opencode/agents/subagents/orchestrator.md",
+      ".opencode/workflows/orchestrate.md",
+      ".opencode/protocols/prompt-pipeline.md",
+      ".opencode/protocols/broad-investigation-template.md",
+      ".opencode/protocols/session-recovery.md",
+      "docs/project.md",
+      "docs/context/README.md"
+    ]
+  },
+  {
+    "id": "interpreter",
+    "displayName": "Interpreter",
+    "role": "Step 0 normalization helper. Reconciles vocabulary via grep/glob, captures constraints, returns routing packet.",
+    "group": "analysis",
+    "essence": "Lightweight pre-routing. Normalizes raw human prompt (in human language) → English routing packet with modules (slice IDs), constraints, hidden assumption, acceptance criteria. Mandatory grep+glob against docs/project.md Slices table.",
+    "model": "inherit",
+    "temperature": 0.1,
+    "mode": "subagent",
+    "permission": {
+      "edit": "deny",
+      "bash": "deny",
+      "task": ["interpreter"]
+    },
+    "canCall": [],
+    "specificBeyondGeneral": "Every ambiguous term lands in exactly one of resolved_by_lookup (with source) or unresolved_questions. May call question tool ONCE batched. Never answers request itself - only normalizes and routes. Packet consumed by Phase 2 Reduce.",
+    "relatedFiles": [
+      ".opencode/agents/subagents/interpreter.md",
+      ".opencode/agents/subagents/interpreter.schema.json",
+      ".opencode/protocols/prompt-pipeline.md",
+      "docs/project.md",
+      "docs/context/README.md"
+    ]
+  },
+  {
+    "id": "explorer",
+    "displayName": "Explorer",
+    "role": "Read-only codebase exploration, file search, dependency analysis.",
+    "group": "exploration",
+    "essence": "Find and report; never modify. Recursively fans out when input exceeds SAMPLE_WINDOW (10 files, CHUNK_SIZE 20, MAX_DEPTH 3). Returns ExplorerOutput JSON.",
+    "model": "inherit",
+    "temperature": 0.1,
+    "mode": "subagent",
+    "permission": {
+      "edit": "deny",
+      "task": ["explorer"]
+    },
+    "canCall": ["explorer"],
+    "specificBeyondGeneral": "Sampling and Fan-out divide-and-conquer. Broad Investigation Template (Goal/Search/Evidence/Coverage/DoD). Evidence scale: Verified/Likely/Inferred separate from confidence. Reports paths relative to repo root with line numbers.",
+    "relatedFiles": [
+      ".opencode/agents/subagents/explorer.md",
+      ".opencode/agents/subagents/explorer.schema.json",
+      ".opencode/protocols/broad-investigation-template.md",
+      "docs/project.md",
+      "docs/context/architecture.md"
+    ]
+  },
+  {
+    "id": "coder-angular",
+    "displayName": "Coder Angular",
+    "role": "Angular 21 SPA implementation specialist.",
+    "group": "coders",
+    "essence": "Thin adapter over Angular docs in docs/context/. Implements features, bug fixes, refactors for frontend. Returns CoderOutput JSON.",
+    "model": "opencode-go/deepseek-v4-flash",
+    "temperature": null,
+    "mode": "subagent",
+    "permission": {
+      "task": ["coder-angular"]
+    },
+    "canCall": [],
+    "specificBeyondGeneral": "Reads docs/project.md + Angular docs in docs/context/ (not src/ legacy patterns). Follows slice pattern <feature>.{routes,service,models}.ts + page/ + ui/. Biome lint, Tailwind 4.1, standalone components. Complexity review of codebase is GROUP rule for coders.",
+    "relatedFiles": [
+      ".opencode/agents/subagents/coder-angular.md",
+      ".opencode/agents/subagents/coder.schema.json",
+      "docs/project.md",
+      "docs/context/architecture.md",
+      "frontend/docs/context/README.md",
+      "frontend/src/features/<feature>/"
+    ]
+  },
+  {
+    "id": "coder-go",
+    "displayName": "Coder Go",
+    "role": "Go 1.24 API implementation specialist.",
+    "group": "coders",
+    "essence": "Thin adapter over Go docs in docs/context/. Implements backend domain → repository → service → handler → routes under /api/v1. Returns CoderOutput JSON.",
+    "model": "opencode-go/deepseek-v4-flash",
+    "temperature": null,
+    "mode": "subagent",
+    "permission": {
+      "task": ["coder-go"]
+    },
+    "canCall": [],
+    "specificBeyondGeneral": "Follows backend layering, GORM + PostgreSQL, Gin, Viper, JWT. Seed logic for new domain entities. Database in development: backward compatibility not required. gofmt/go vet clean, explicit error handling.",
+    "relatedFiles": [
+      ".opencode/agents/subagents/coder-go.md",
+      ".opencode/agents/subagents/coder.schema.json",
+      "docs/project.md",
+      "backend/docs/project.md",
+      "backend/internal/domain/",
+      "backend/internal/transport/http/"
+    ]
+  },
+  {
+    "id": "reviewer",
+    "displayName": "Reviewer",
+    "role": "Code review, security audit, best practices, performance.",
+    "group": "guardians",
+    "essence": "Analyzes diffs/PRs; never modifies. Returns ReviewerOutput JSON with verdict and issues. Can fan out when diff naturally partitioned.",
+    "model": "opencode-go/deepseek-v4-flash",
+    "temperature": null,
+    "mode": "subagent",
+    "permission": {
+      "edit": "deny",
+      "task": ["reviewer"]
+    },
+    "canCall": ["reviewer"],
+    "specificBeyondGeneral": "Checklist: architecture, standards, permissions (RequirePermission/RequireRoles), secrets/auth, performance (N+1, memoization, change detection), anti-patterns (any types, fighting signal pattern), testing, doc-tree integrity. Severity-ordered, file+line cited. Coupling forbids fan-out.",
+    "relatedFiles": [
+      ".opencode/agents/subagents/reviewer.md",
+      ".opencode/agents/subagents/reviewer.schema.json",
+      "docs/context/architecture.md",
+      "backend/docs/context/permission-architecture.md",
+      "docs/project.md"
+    ]
+  },
+  {
+    "id": "tester",
+    "displayName": "Tester",
+    "role": "Unit, integration, coverage, e2e test author and runner.",
+    "group": "quality",
+    "essence": "Authors and runs tests via canonical commands from docs/project.md. Returns TesterOutput JSON. Handles flaky-test quarantine.",
+    "model": "inherit",
+    "temperature": 0.2,
+    "mode": "subagent",
+    "permission": {
+      "task": ["tester"]
+    },
+    "canCall": [],
+    "specificBeyondGeneral": "Runs from package dir (never repo root). Stack: Vitest 4 (unit), Playwright 1.58 (e2e) for frontend; Go tests for backend (not yet configured). Mock sparingly, assert observable outcomes, never duplicate logic into tests.",
+    "relatedFiles": [
+      ".opencode/agents/subagents/tester.md",
+      ".opencode/agents/subagents/tester.schema.json",
+      "docs/project.md",
+      "docs/context/project-rules.md",
+      "frontend/package.json",
+      "frontend/playwright.config.ts"
+    ]
+  },
+  {
+    "id": "architect",
+    "displayName": "Architect",
+    "role": "System design, module boundaries, patterns.",
+    "group": "guardians",
+    "essence": "Produces design decisions and phased plans, not code. Returns ArchitectOutput JSON with decisions[] and files_to_touch.",
+    "model": "inherit",
+    "temperature": null,
+    "mode": "subagent",
+    "permission": {
+      "task": ["architect"]
+    },
+    "canCall": [],
+    "specificBeyondGeneral": "Follows docs/context/architecture.md layering. Principles: simplicity, testability, documented decisions with rejected alternatives. Designs without reading code is anti-pattern — every proposal cites concrete files.",
+    "relatedFiles": [
+      ".opencode/agents/subagents/architect.md",
+      ".opencode/agents/subagents/architect.schema.json",
+      "docs/context/architecture.md",
+      "docs/project.md"
+    ]
+  },
+  {
+    "id": "analista",
+    "displayName": "Analista",
+    "role": "Second-opinion advisor for delivery and orchestrator. Read-only.",
+    "group": "guardians",
+    "essence": "Critiques plans before execution, advises when stuck, compares 2-3 alternatives with tradeoffs. Returns AnalystOutput JSON. Re-routes out-of-scope work.",
+    "model": "inherit",
+    "temperature": null,
+    "mode": "subagent",
+    "permission": {
+      "edit": "deny",
+      "bash": "deny",
+      "task": ["analista"]
+    },
+    "canCall": [],
+    "specificBeyondGeneral": "Requires at least two alternatives and calibrated confidence (<0.5 must say what evidence would raise it). Verdict: proceed/reconsider/abandon. No write/bash/task beyond analista. Complements session-recovery.md for STUCK advice.",
+    "relatedFiles": [
+      ".opencode/agents/subagents/analista.md",
+      ".opencode/agents/subagents/analista.schema.json",
+      ".opencode/protocols/session-recovery.md",
+      ".opencode/protocols/subagent-spec-template.md"
+    ]
+  },
+  {
+    "id": "documenter",
+    "displayName": "Documenter",
+    "role": "Sole dedicated writer for docs/. Reads and writes documentation on demand.",
+    "group": "writers",
+    "essence": "Maintains docs/project.md, docs/context/*.md and indexes. Never modifies code or .opencode runtime config. Returns DocumenterOutput JSON.",
+    "model": "inherit",
+    "temperature": 0.2,
+    "mode": "subagent",
+    "permission": {
+      "task": ["documenter"]
+    },
+    "canCall": [],
+    "specificBeyondGeneral": "Every page carries frontmatter (last_updated, status, description, tags). New doc done only when registered in docs/context/README.md, _TAG-INDEX.md, and Slices table if needed. Post-change audit: routing-table sync, date freshness (>30 stale, >90 flag), link integrity. One topic per file.",
+    "relatedFiles": [
+      ".opencode/agents/subagents/documenter.md",
+      ".opencode/agents/subagents/documenter.schema.json",
+      "docs/project.md",
+      "docs/context/README.md",
+      "docs/_TAG-INDEX.md",
+      ".opencode/protocols/ia-docs-gen.md",
+      ".opencode/protocols/ia-catalog-manager.md"
+    ]
+  },
+  {
+    "id": "project-context",
+    "displayName": "Project Context",
+    "role": "READ-ONLY doc lookup and context assembly for docs/.",
+    "group": "exploration",
+    "essence": "Knows project structure and docs tree. Cites file path + line numbers for every fact. No writes, no edits.",
+    "model": "inherit",
+    "temperature": 0.2,
+    "mode": "subagent",
+    "permission": {
+      "edit": "deny",
+      "bash": "deny",
+      "task": ["project-context"]
+    },
+    "canCall": [],
+    "specificBeyondGeneral": "Read workflow: docs/project.md → docs/context/README.md → slice README → grep if still unclear. Single source of truth hierarchy: docs/context/*.md > docs/project.md > docs/_TAG-INDEX.md > src/. Never duplicate facts into .opencode.",
+    "relatedFiles": [
+      ".opencode/agents/subagents/project-context.md",
+      "docs/project.md",
+      "docs/context/README.md"
+    ]
+  },
+  {
+    "id": "vision-relay",
+    "displayName": "Vision Relay",
+    "role": "Cheap image inspection for non-vision models. One image + one question → compact answer.",
+    "group": "exploration",
+    "essence": "Minimal subagent: one image, one focused question, one answer. No edits, no shell, no web, no chain-of-thought. Unreadable image → one-line failure.",
+    "model": "inherit",
+    "temperature": 0.1,
+    "mode": "subagent",
+    "permission": {
+      "edit": "deny",
+      "bash": "deny",
+      "webfetch": "deny"
+    },
+    "canCall": [],
+    "specificBeyondGeneral": "Called via task tool with absolute image path + question. Use cases: OCR screenshot, read diagram, extract visible text from PDF snapshot. If caller model already vision-capable, don't invoke.",
+    "relatedFiles": [
+      ".opencode/agents/subagents/vision-relay.md"
+    ]
+  },
+  {
+    "id": "external-scout",
+    "displayName": "External Scout",
+    "role": "Fetches live docs for external libraries on demand. One library + version + question.",
+    "group": "exploration",
+    "essence": "Webfetch against official docs → compact structured answer with API signatures, breaking changes, usage patterns. No edits, no shell, no exploration.",
+    "model": "inherit",
+    "temperature": 0.1,
+    "mode": "subagent",
+    "permission": {
+      "edit": "deny",
+      "bash": "deny",
+      "webfetch": "allow"
+    },
+    "canCall": [],
+    "specificBeyondGeneral": "Priority sources: official docs version-pinned → GitHub releases → npm/README. One compact answer only; if unreachable, one line and stop. No fallback model.",
+    "relatedFiles": [
+      ".opencode/agents/subagents/external-scout.md"
+    ]
+  }
+]

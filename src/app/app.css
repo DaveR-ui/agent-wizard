@@ -1,0 +1,56 @@
+:host {
+  display: block;
+  min-height: 100dvh;
+  background: var(--page-bg, #f8fafc);
+  color: var(--text-body, #1e293b);
+}
+
+.site-header {
+  padding: 2.5rem 1.5rem 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+  background:
+    radial-gradient(60rem 18rem at 50% -8rem, rgb(79 70 229 / 0.12), transparent),
+    var(--card-bg, #ffffff);
+}
+
+.site-title {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-strong, #0f172a);
+}
+
+.site-tagline {
+  margin: 0.5rem auto 0;
+  max-width: 46rem;
+  color: var(--text-muted, #475569);
+  font-size: 0.95rem;
+}
+
+.site-main {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.page-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-strong, #0f172a);
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--accent, #4f46e5);
+  display: inline-block;
+  align-self: flex-start;
+}
