@@ -29,10 +29,42 @@
   font-size: 0.95rem;
 }
 
-.site-main {
-  max-width: 72rem;
+/*
+ * Desktop shell: the tab shell (.site-main) and the routed detail viewer
+ * (.site-detail) sit side-by-side in a flex row. The previous centered
+ * max-width/padding of .site-main moved up to this layout container.
+ */
+.site-layout {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  max-width: 96rem;
   margin: 0 auto;
   padding: 2rem 1.5rem 4rem;
+}
+
+.site-main {
+  flex: 1 1 0;
+  min-width: 0; /* let the tab shell shrink instead of overflowing the row */
+}
+
+/*
+ * Routed detail panel (diagram-agent viewer). Hidden until a detail route is
+ * active (App.hasDetail → .has-detail) so the empty aside never reserves
+ * horizontal space next to the tabs. Sticky keeps the card in view while the
+ * tab shell scrolls.
+ */
+.site-detail {
+  flex: 0 0 28rem;
+  width: 28rem;
+  max-width: 30rem;
+  position: sticky;
+  top: 1rem;
+  display: none;
+}
+
+.site-detail.has-detail {
+  display: block;
 }
 
 .site-tabs {
@@ -44,4 +76,19 @@
 
 .site-tabs ::ng-deep .mat-mdc-tab-body-content {
   padding-top: 1.25rem;
+}
+
+/* Narrow screens: stack the detail panel below the tabs, full width. */
+@media (max-width: 900px) {
+  .site-layout {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .site-detail {
+    flex: none;
+    width: 100%;
+    max-width: none;
+    position: static;
+  }
 }

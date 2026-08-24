@@ -1,11 +1,13 @@
 import {
   Component,
   computed,
+  inject,
   input,
   signal,
   OnDestroy,
   ChangeDetectionStrategy,
 } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import type { Agent } from '../models/refined-source';
 import { AGENTS } from '../models/refined-source';
 
@@ -24,6 +26,7 @@ export interface CanCallItem {
  */
 @Component({
   selector: 'app-agent-card',
+  imports: [RouterLink],
   templateUrl: './agent-card.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './agent-card.css',
@@ -37,6 +40,9 @@ export class AgentCard implements OnDestroy {
 
   /** Path currently shown with "Copiado" feedback (null = none). */
   readonly copiedPath = signal<string | null>(null);
+
+  /** Router for the whole-card click → diagram-agent counterpart view. */
+  private readonly router = inject(Router);
 
   /** agent id → displayName lookup. */
   private readonly nameById: ReadonlyMap<string, string> = new Map(
@@ -80,7 +86,18 @@ export class AgentCard implements OnDestroy {
     this.hovered.set(false);
   }
 
-  onChipClick(path: string): void {
+  /**
+   * Whole-card click (pointer enhancement): navigate to the diagram-agent
+   * counterpart view for this agent. The explicit "View doc →" link in the
+   * template is the accessible path — this handler never replaces it.
+   */
+  onCardClick(): void {
+    void this.router.navigate(['/diagram-agent', this.agent().id]);
+  }
+
+  onChipClick(path: string, event: Event): void {
+    // Chip clicks copy the path — do not bubble into the card navigation.
+    event.stopPropagation();
     void this.copyToClipboard(path);
     this.copiedPath.set(path);
     if (this.copyResetTimer) {

@@ -29,6 +29,7 @@ Fast lookup for the doc tree. Every tag used in `docs/context/` and `docs/protoc
 | `curation` | `protocols/refined-source-curation.md` |
 | `data-layer` | `context/architecture.md`, `context/refined-source-data.md`, `protocols/refined-source-curation.md` |
 | `delegation` | `context/agent-delegation-graph.md` |
+| `diagram-agent` | `diagram-agent/README.md`, `diagram-agent/*.md` (14 flat files — `delivery`, `orchestrator`, `interpreter`, `explorer`, `project-context`, `external-scout`, `vision-relay`, `coder-angular`, `coder-go`, `reviewer`, `tester`, `architect`, `analista`, `documenter`), `diagram-agent/<group>/README.md` (7 group indexes) |
 | `deploy` | `production.md` |
 | `dev` | `local-dev.md` |
 | `discipline` | `context/context-engineering.md` |
@@ -79,7 +80,8 @@ Fast lookup for the doc tree. Every tag used in `docs/context/` and `docs/protoc
 | Topic | Tags |
 |---|---|
 | Architecture | `architecture`, `layers`, `angular`, `graph-ui`, `data-layer` |
-| Agents | `agents`, `agent`, `subagents`, `canCall`, `delegation`, `graph`, `edges`, `fan-out`, `groups` |
+| Agents | `agents`, `agent`, `subagents`, `canCall`, `delegation`, `graph`, `edges`, `fan-out`, `groups`, `diagram-agent` |
+| Diagram agent | `diagram-agent` (mirror of `graph.json` — flat + group indexes, static) |
 | Rules | `rules`, `standards`, `conventions`, `english`, `cost`, `review-loop`, `hierarchy`, `global`, `agent-specific`, `severity` |
 | Data layer | `refined-source`, `json`, `jq`, `curation`, `data-layer` |
 | Docs system | `docs`, `frontmatter`, `registration`, `ia-docs-gen`, `indexing`, `tags`, `_TAG-INDEX`, `search`, `lookup`, `index` |

@@ -1,6 +1,8 @@
 // JointJS needs SVG matrix/transform APIs jsdom lacks — install before @joint/core evaluates.
 import '../testing/joint-test-env';
 import { TestBed, type ComponentFixture } from '@angular/core/testing';
+import { provideRouter, Router } from '@angular/router';
+import { vi } from 'vitest';
 import type { dia } from '@joint/core';
 import { PipelinePanel } from './pipeline-panel';
 
@@ -10,6 +12,8 @@ describe('PipelinePanel', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [PipelinePanel],
+      // PipelinePanel navigates via Router on node click.
+      providers: [provideRouter([])],
     }).compileComponents();
     fixture = TestBed.createComponent(PipelinePanel);
     fixture.detectChanges();
@@ -183,5 +187,33 @@ describe('PipelinePanel', () => {
     // A huge negative delta (zoom in) must clamp at MAX_SCALE = 3.
     wheel(-100000);
     expect(paper!.scale().sx).toBeLessThanOrEqual(3);
+  });
+
+  it('should navigate to the diagram-agent view when a mapped node is clicked', () => {
+    const component = fixture.componentInstance;
+    const router = TestBed.inject(Router);
+    const navigateSpy = vi.spyOn(router, 'navigate');
+    const onElementClick = (
+      component as unknown as { onElementClick?: (view: { model: { id: string } }) => void }
+    ).onElementClick;
+    expect(onElementClick).toBeTruthy();
+
+    onElementClick?.({ model: { id: 'interpreter' } });
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/diagram-agent', 'interpreter']);
+  });
+
+  it('should ignore clicks on pipeline-only nodes without a graph.json counterpart', () => {
+    const component = fixture.componentInstance;
+    const router = TestBed.inject(Router);
+    const navigateSpy = vi.spyOn(router, 'navigate');
+    const onElementClick = (
+      component as unknown as { onElementClick?: (view: { model: { id: string } }) => void }
+    ).onElementClick;
+
+    onElementClick?.({ model: { id: 'decision' } });
+    onElementClick?.({ model: { id: 'execution' } });
+
+    expect(navigateSpy).not.toHaveBeenCalled();
   });
 });

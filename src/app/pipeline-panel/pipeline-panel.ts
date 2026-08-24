@@ -5,9 +5,12 @@ import {
   ViewChild,
   ElementRef,
   ChangeDetectionStrategy,
+  inject,
   signal,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { dia, shapes } from '@joint/core';
+import { GRAPH } from '../models/refined-source';
 
 /** Pipeline phase group for legend rendering. */
 export interface PipelineGroup {
@@ -75,6 +78,16 @@ interface EdgeLineStyle {
 export class PipelinePanel implements AfterViewInit, OnDestroy {
   /** Host div that receives the JointJS paper SVG. */
   @ViewChild('jointPaper') paperEl!: ElementRef<HTMLDivElement>;
+
+  /** Router for node-click navigation to the diagram-agent counterpart view. */
+  private readonly router = inject(Router);
+
+  /**
+   * graph.json node ids — only pipeline nodes that also exist in
+   * refined-source/graph.json navigate to a diagram-agent counterpart view.
+   * Pipeline-only nodes (user, decision, execution, ...) stay inert.
+   */
+  private readonly graphNodeIds = new Set<string>(GRAPH.nodes.map((n) => n.id));
 
   /** Phase groups for legend — distinct colors per phase. */
   readonly groups: PipelineGroup[] = [
@@ -448,6 +461,7 @@ export class PipelinePanel implements AfterViewInit, OnDestroy {
     this.stopPan();
     this.resizeObserver?.disconnect();
     this.paper?.off('blank:pointerdown', this.onBlankPointerDown);
+    this.paper?.off('element:pointerclick', this.onElementClick);
     this.paper?.remove();
     this.graph?.clear();
   }
@@ -474,6 +488,9 @@ export class PipelinePanel implements AfterViewInit, OnDestroy {
       height: host.clientHeight || DEFAULT_HEIGHT,
       background: { color: '#F8F9FA' },
     });
+
+    // Clicking an agent node navigates to its diagram-agent counterpart view.
+    this.paper.on('element:pointerclick', this.onElementClick);
   }
 
   /** Map a PipelineNode to a JointJS element preserving shape/color. */
@@ -481,6 +498,9 @@ export class PipelinePanel implements AfterViewInit, OnDestroy {
     const size = node.dimension ?? { width: 140, height: 40 };
     const position = this.positions[node.id] ?? { x: 40, y: 260 };
     const { shape, groupColor } = node.data;
+
+    // Nodes with a graph.json counterpart are clickable → pointer cursor.
+    const cursor = this.graphNodeIds.has(node.id) ? 'pointer' : 'default';
 
     const label = {
       text: node.label,
@@ -502,7 +522,7 @@ export class PipelinePanel implements AfterViewInit, OnDestroy {
         position,
         size,
         attrs: {
-          root: { cursor: 'default' },
+          root: { cursor },
           body: {
             ...body,
             points: 'calc(w/2) 0, calc(w) calc(h/2), calc(w/2) calc(h), 0 calc(h/2)',
@@ -518,7 +538,7 @@ export class PipelinePanel implements AfterViewInit, OnDestroy {
         position,
         size,
         attrs: {
-          root: { cursor: 'default' },
+          root: { cursor },
           body: { ...body, rx: 8, ry: 8, strokeDasharray: '2 3' },
           label,
         },
@@ -531,7 +551,7 @@ export class PipelinePanel implements AfterViewInit, OnDestroy {
         position,
         size,
         attrs: {
-          root: { cursor: 'default' },
+          root: { cursor },
           body: { ...body, rx: 10, ry: 10, strokeDasharray: '6 4' },
           label,
         },
@@ -543,7 +563,7 @@ export class PipelinePanel implements AfterViewInit, OnDestroy {
       position,
       size,
       attrs: {
-        root: { cursor: 'default' },
+        root: { cursor },
         body: { ...body, rx: 10, ry: 10 },
         label,
       },
@@ -757,6 +777,18 @@ export class PipelinePanel implements AfterViewInit, OnDestroy {
     this.paper?.el.removeEventListener('wheel', this.wheelListener);
     this.wheelListener = undefined;
   }
+
+  /**
+   * Click on a pipeline node → navigate to its diagram-agent counterpart view.
+   * Only nodes that exist in refined-source/graph.json navigate; pipeline-only
+   * nodes (user, decision, execution, ...) stay inert.
+   */
+  private onElementClick = (elementView: dia.ElementView): void => {
+    const id = String(elementView.model.id);
+    if (this.graphNodeIds.has(id)) {
+      void this.router.navigate(['/diagram-agent', id]);
+    }
+  };
 
   /**
    * Start a pan drag on the blank paper background (primary button only).

@@ -4,6 +4,7 @@
   [style.--group-color]="groupColor()"
   (mouseenter)="onMouseEnter()"
   (mouseleave)="onMouseLeave()"
+  (click)="onCardClick()"
 >
   <header class="agent-card-header">
     <span class="group-badge" [style.background-color]="groupColor()">{{ agent().group }}</span>
@@ -57,7 +58,7 @@
         <h4>Archivos relacionados</h4>
         <div class="chips">
           @for (file of agent().relatedFiles; track file) {
-            <button type="button" class="file-chip" (click)="onChipClick(file)">
+            <button type="button" class="file-chip" (click)="onChipClick(file, $event)">
               {{ file }}
               @if (copiedPath() === file) {
                 <span class="copied-feedback">Copiado</span>
@@ -68,4 +69,15 @@
       </section>
     </div>
   }
+
+  <footer class="agent-card-footer">
+    <a
+      class="view-doc-link"
+      [routerLink]="['/diagram-agent', agent().id]"
+      (click)="$event.stopPropagation()"
+      aria-label="Open diagram-agent counterpart doc for {{ agent().displayName }}"
+    >
+      View doc →
+    </a>
+  </footer>
 </article>

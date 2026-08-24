@@ -1,0 +1,97 @@
+@if (node(); as node) {
+  <section class="viewer-card" [style.--group-color]="group()?.color ?? '#64748b'">
+    <header class="viewer-header">
+      <span class="viewer-badge" [style.background-color]="group()?.color ?? '#64748b'">
+        {{ node.group }}
+      </span>
+      <h2 class="viewer-title">{{ node.label }}</h2>
+    </header>
+
+    <dl class="viewer-meta">
+      <div class="meta-row">
+        <dt>Node id</dt>
+        <dd>{{ node.id }}</dd>
+      </div>
+      <div class="meta-row">
+        <dt>Group</dt>
+        <dd>{{ group()?.label ?? node.group }}</dd>
+      </div>
+      <div class="meta-row">
+        <dt>Level</dt>
+        <dd>{{ node.level }}</dd>
+      </div>
+      <div class="meta-row">
+        <dt>Mode</dt>
+        <dd>{{ node.isPrimary ? 'Primary' : 'Subagent' }}</dd>
+      </div>
+    </dl>
+
+    <section class="viewer-section">
+      <h3>Counterpart doc (diagram-agent)</h3>
+      <p class="viewer-note">
+        The counterpart markdown lives in the static <code>diagram-agent/</code> folder. This view is
+        read-only — it never writes or persists anything.
+      </p>
+      <ul class="doc-links">
+        <li>
+          <a class="doc-link" [href]="docHref(node.id)" target="_blank" rel="noopener">
+            diagram-agent/{{ node.id }}.md
+          </a>
+        </li>
+        <li>
+          <a class="doc-link" [href]="groupIndexHref(node.group)" target="_blank" rel="noopener">
+            diagram-agent/{{ node.group }}/README.md (group index)
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section class="viewer-section outgoing-section">
+      <h3>Outgoing edges (can call)</h3>
+      @if (outgoingEdges().length === 0) {
+        <p class="leaf-note">Leaf — no outgoing delegation edges.</p>
+      } @else {
+        <ul class="edge-list">
+          @for (edge of outgoingEdges(); track $index) {
+            <li>
+              <a [routerLink]="['/diagram-agent', edge.to]">{{ labelFor(edge.to) }}</a>
+              <span class="edge-kind">{{ edge.kind }}</span>
+              @if (edge.label) {
+                <span class="edge-label">{{ edge.label }}</span>
+              }
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <section class="viewer-section incoming-section">
+      <h3>Incoming edges (called by)</h3>
+      @if (incomingEdges().length === 0) {
+        <p class="leaf-note">No incoming edges.</p>
+      } @else {
+        <ul class="edge-list">
+          @for (edge of incomingEdges(); track $index) {
+            <li>
+              <a [routerLink]="['/diagram-agent', edge.from]">{{ labelFor(edge.from) }}</a>
+              <span class="edge-kind">{{ edge.kind }}</span>
+              @if (edge.label) {
+                <span class="edge-label">{{ edge.label }}</span>
+              }
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <footer class="viewer-footer">
+      <a class="back-link" routerLink="/">← Back to agents</a>
+    </footer>
+  </section>
+} @else {
+  <section class="viewer-missing">
+    <h2>Agent not found</h2>
+    <p>No graph.json node matches id "{{ id() }}".</p>
+    <a class="back-link" routerLink="/">← Back to agents</a>
+  </section>
+}

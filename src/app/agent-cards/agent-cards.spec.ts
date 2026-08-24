@@ -1,4 +1,6 @@
 import { TestBed } from '@angular/core/testing';
+import { provideRouter, Router } from '@angular/router';
+import { vi } from 'vitest';
 import { AgentCards } from './agent-cards';
 import { AGENTS } from '../models/refined-source';
 
@@ -15,6 +17,8 @@ describe('AgentCards', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AgentCards],
+      // AgentCard navigates via Router (whole-card click) and renders RouterLink.
+      providers: [provideRouter([])],
     }).compileComponents();
   });
 
@@ -117,5 +121,29 @@ describe('AgentCards', () => {
     const chips = visionRelay.querySelectorAll('.file-chip');
     expect(chips.length).toBe(1);
     expect(chips[0].textContent).toContain('vision-relay.md');
+  });
+
+  it('should navigate to the diagram-agent counterpart view when a card is clicked', () => {
+    const fixture = TestBed.createComponent(AgentCards);
+    fixture.detectChanges();
+    const delivery = cardFor(fixture, 'Delivery');
+    const router = TestBed.inject(Router);
+    const navigateSpy = vi.spyOn(router, 'navigate');
+
+    delivery.dispatchEvent(new MouseEvent('click'));
+
+    expect(navigateSpy).toHaveBeenCalledWith(['/diagram-agent', 'delivery']);
+  });
+
+  it('should render a "View doc" link per card pointing to the diagram-agent counterpart', () => {
+    const fixture = TestBed.createComponent(AgentCards);
+    fixture.detectChanges();
+    const delivery = cardFor(fixture, 'Delivery');
+    const link = delivery.querySelector('.view-doc-link') as HTMLAnchorElement;
+    expect(link).toBeTruthy();
+    expect(link.getAttribute('href')).toBe('/diagram-agent/delivery');
+    expect(link.getAttribute('aria-label')).toBe(
+      'Open diagram-agent counterpart doc for Delivery',
+    );
   });
 });

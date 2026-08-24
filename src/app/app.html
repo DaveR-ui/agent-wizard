@@ -5,25 +5,36 @@
   </p>
 </header>
 
-<main class="site-main">
-  <mat-tab-group class="site-tabs">
-    <mat-tab label="Agentes">
-      <app-agent-cards />
-    </mat-tab>
-    <mat-tab label="Reglas">
-      <app-rules-panel />
-    </mat-tab>
-    <mat-tab label="Constructor">
-      <app-constructor-panel />
-    </mat-tab>
-    <mat-tab label="Pipeline">
-      @defer (on idle) {
-        <app-pipeline-panel />
-      } @placeholder {
-        <!-- Pipeline loads on idle; @joint/core stays out of the initial bundle. -->
-      }
-    </mat-tab>
-  </mat-tab-group>
-</main>
+<!--
+  Desktop shell: the tab shell (.site-main) and the routed detail viewer
+  (.site-detail → diagram-agent/:id) sit side-by-side in a flex row. The aside
+  only reserves space when a detail route is active (App.hasDetail →
+  .has-detail); on narrow screens the layout stacks and the panel becomes full
+  width below the tabs.
+-->
+<div class="site-layout">
+  <main class="site-main">
+    <mat-tab-group class="site-tabs">
+      <mat-tab label="Agentes">
+        <app-agent-cards />
+      </mat-tab>
+      <mat-tab label="Reglas">
+        <app-rules-panel />
+      </mat-tab>
+      <mat-tab label="Constructor">
+        <app-constructor-panel />
+      </mat-tab>
+      <mat-tab label="Pipeline">
+        @defer (on idle) {
+          <app-pipeline-panel />
+        } @placeholder {
+          <!-- Pipeline loads on idle; @joint/core stays out of the initial bundle. -->
+        }
+      </mat-tab>
+    </mat-tab-group>
+  </main>
 
-<router-outlet />
+  <aside class="site-detail" [class.has-detail]="hasDetail()">
+    <router-outlet />
+  </aside>
+</div>

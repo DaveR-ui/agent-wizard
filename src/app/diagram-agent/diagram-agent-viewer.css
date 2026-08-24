@@ -1,0 +1,174 @@
+:host {
+  display: block;
+  width: 100%;
+  /* The shell layout (site-layout) owns the outer spacing; a small inset keeps
+     the card from touching the side-panel edges on desktop and looks fine when
+     the panel is stacked below the tabs on narrow screens. */
+  padding: 0.5rem 0.5rem 1rem;
+}
+
+.viewer-card {
+  max-width: 44rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: 1.4rem 1.6rem;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-top: 3px solid var(--group-color, #64748b);
+  border-radius: 10px;
+  background: var(--card-bg, #ffffff);
+  box-shadow: 0 1px 3px rgb(15 23 42 / 0.06);
+}
+
+.viewer-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.viewer-badge {
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.viewer-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-strong, #0f172a);
+}
+
+.viewer-meta {
+  margin: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.meta-row {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.meta-row dt {
+  color: var(--text-muted, #64748b);
+  min-width: 5.5rem;
+}
+
+.meta-row dd {
+  margin: 0;
+  color: var(--text-body, #1e293b);
+  font-variant-numeric: tabular-nums;
+}
+
+.viewer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.viewer-section h3 {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #64748b);
+}
+
+.viewer-note {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-muted, #475569);
+}
+
+.doc-links,
+.edge-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.86rem;
+  color: var(--text-body, #1e293b);
+}
+
+.doc-link {
+  font-family: var(--font-mono, ui-monospace, 'SF Mono', Menlo, Consolas, monospace);
+  font-size: 0.8rem;
+  color: #4338ca;
+  text-decoration: none;
+  border-bottom: 1px dashed #c7d2fe;
+}
+
+.doc-link:hover {
+  color: #3730a3;
+  border-bottom-style: solid;
+}
+
+.edge-kind {
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3730a3;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.edge-label {
+  margin-left: 0.4rem;
+  color: var(--text-muted, #64748b);
+  font-size: 0.74rem;
+  font-style: italic;
+}
+
+.leaf-note {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted, #64748b);
+  font-style: italic;
+}
+
+.viewer-footer {
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border-color, #e2e8f0);
+}
+
+.back-link {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4338ca;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.viewer-missing {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 1.4rem 1.6rem;
+  border: 1px dashed var(--border-color, #cbd5e1);
+  border-radius: 10px;
+  background: var(--card-bg, #ffffff);
+}
+
+.viewer-missing h2 {
+  margin: 0 0 0.4rem;
+  color: var(--text-strong, #0f172a);
+}
+
+.viewer-missing p {
+  margin: 0 0 0.8rem;
+  color: var(--text-muted, #475569);
+}
