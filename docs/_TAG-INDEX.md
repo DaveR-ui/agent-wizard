@@ -1,13 +1,13 @@
 ---
 last_updated: 2026-08-24
-description: Tag index for docs/ — every tag used in context and protocol frontmatter, mapped to the files that carry it.
+description: Tag index for docs/ — every tag used in context, protocol, and plan frontmatter, mapped to the files that carry it.
 tags: [index, tags, lookup]
 status: active
 ---
 
 # Tag Index
 
-Fast lookup for the doc tree. Every tag used in `docs/context/` and `docs/protocols/` frontmatter maps to the files that carry it. Tags are for human lookup — the workspace does not interpret them for routing.
+Fast lookup for the doc tree. Every tag used in `docs/context/`, `docs/protocols/`, and `docs/plans/` frontmatter maps to the files that carry it. Tags are for human lookup — the workspace does not interpret them for routing.
 
 ## Index
 
@@ -16,7 +16,7 @@ Fast lookup for the doc tree. Every tag used in `docs/context/` and `docs/protoc
 | `agent` | `context/agent-catalog.md`, `context/agent-delegation-graph.md` |
 | `agent-specific` | `context/rules-hierarchy.md` |
 | `agent-system` | `context/architecture.md` |
-| `agents` | `context/agent-catalog.md`, `context/agent-delegation-graph.md` |
+| `agents` | `context/agent-catalog.md`, `context/agent-delegation-graph.md`, `plans/rpg-agent-organization-plan.md` |
 | `agents.json` | `context/refined-source-data.md` |
 | `angular` | `context/architecture.md` |
 | `architecture` | `context/architecture.md` |
@@ -42,9 +42,9 @@ Fast lookup for the doc tree. Every tag used in `docs/context/` and `docs/protoc
 | `graph` | `context/agent-delegation-graph.md` |
 | `graph-ui` | `context/architecture.md` |
 | `graph.json` | `context/refined-source-data.md` |
-| `groups` | `context/agent-catalog.md`, `context/rules-hierarchy.md` |
+| `groups` | `context/agent-catalog.md`, `context/rules-hierarchy.md`, `plans/rpg-agent-organization-plan.md` |
 | `hierarchy` | `context/rules-hierarchy.md` |
-| `index` | `context/README.md`, `protocols/README.md`, `_TAG-INDEX.md` |
+| `index` | `context/README.md`, `plans/README.md`, `protocols/README.md`, `_TAG-INDEX.md` |
 | `indexing` | `context/indexing-strategy.md` |
 | `jq` | `context/refined-source-data.md`, `local-dev.md`, `protocols/refined-source-curation.md` |
 | `json` | `context/refined-source-data.md` |
@@ -54,13 +54,18 @@ Fast lookup for the doc tree. Every tag used in `docs/context/` and `docs/protoc
 | `local` | `local-dev.md` |
 | `lookup` | `context/indexing-strategy.md`, `_TAG-INDEX.md` |
 | `mvi` | `context/context-engineering.md` |
+| `permissions` | `plans/rpg-agent-organization-plan.md` |
 | `philosophy` | `context/README.md` |
+| `plan` | `plans/rpg-agent-organization-plan.md` |
+| `plans` | `plans/README.md` |
 | `production` | `production.md` |
 | `protocol` | `protocols/refined-source-curation.md` |
-| `protocols` | `protocols/README.md` |
+| `protocols` | `protocols/README.md`, `plans/rpg-agent-organization-plan.md` |
+| `refined-source` | `context/refined-source-data.md`, `protocols/refined-source-curation.md`, `plans/rpg-agent-organization-plan.md` |
 | `registration` | `context/doc-conventions.md` |
 | `review-loop` | `context/project-rules.md` |
 | `routing` | `context/agent-delegation-graph.md` |
+| `rpg` | `plans/rpg-agent-organization-plan.md` |
 | `rules` | `context/project-rules.md`, `context/rules-hierarchy.md` |
 | `rules.json` | `context/refined-source-data.md` |
 | `search` | `context/indexing-strategy.md` |
@@ -72,6 +77,7 @@ Fast lookup for the doc tree. Every tag used in `docs/context/` and `docs/protoc
 | `subagents` | `context/agent-catalog.md` |
 | `tags` | `context/indexing-strategy.md`, `_TAG-INDEX.md` |
 | `test` | `local-dev.md` |
+| `ui` | `plans/rpg-agent-organization-plan.md` |
 | `_TAG-INDEX` | `context/indexing-strategy.md` |
 
 ## Grouped by topic
@@ -79,7 +85,7 @@ Fast lookup for the doc tree. Every tag used in `docs/context/` and `docs/protoc
 | Topic | Tags |
 |---|---|
 | Architecture | `architecture`, `layers`, `angular`, `graph-ui`, `data-layer` |
-| Agents | `agents`, `agent`, `subagents`, `canCall`, `delegation`, `graph`, `edges`, `fan-out`, `groups`, `diagram-agent` |
+| Agents | `agents`, `agent`, `subagents`, `canCall`, `delegation`, `graph`, `edges`, `fan-out`, `groups`, `diagram-agent`, `plan`, `rpg` |
 | Diagram agent | `diagram-agent` (mirror of `graph.json` — flat + group indexes, static) |
 | Rules | `rules`, `standards`, `conventions`, `english`, `cost`, `review-loop`, `hierarchy`, `global`, `agent-specific`, `severity` |
 | Data layer | `refined-source`, `json`, `jq`, `curation`, `data-layer` |

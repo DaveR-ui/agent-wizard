@@ -28,7 +28,7 @@ Tags are for human lookup via `docs/_TAG-INDEX.md` — the workspace does not in
 
 A new doc is done only when registered:
 
-1. Row in `docs/context/README.md` (context docs) or `docs/protocols/README.md` (protocols).
+1. Row in `docs/context/README.md` (context docs), `docs/protocols/README.md` (protocols), or `docs/plans/README.md` (plans).
 2. Tag entries in `docs/_TAG-INDEX.md`.
 3. Slices-table row in `docs/project.md` when the doc introduces a new slice.
 

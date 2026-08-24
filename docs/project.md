@@ -131,6 +131,7 @@ The single source of truth for strategic knowledge is `docs/context/`:
 - `docs/context/context-engineering.md` - load-on-demand context discipline
 - `docs/protocols/README.md` - project protocols index
 - `docs/protocols/refined-source-curation.md` - how to evolve refined-source/
+- `docs/plans/README.md` - index of improvement plans (currently: RPG agent organization plan)
 - `docs/local-dev.md` - local setup and commands
 - `docs/production.md` - production notes (static hosting)
 - `docs/_TAG-INDEX.md` - tag lookup for the doc tree
