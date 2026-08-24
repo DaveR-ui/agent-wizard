@@ -197,14 +197,12 @@ const DELIVERY_TEMPLATE: AgentTemplate = {
 task:
   interpreter: allow
   orchestrator: allow
-  coder-angular: allow
-  coder-go: allow
+  coder: allow
   tester: allow
   reviewer: allow
   architect: allow
   explorer: allow
   project-context: allow
-  vision-relay: allow
   external-scout: allow
   analista: allow
   documenter: allow`,
@@ -227,14 +225,12 @@ const ORCHESTRATOR_TEMPLATE: AgentTemplate = {
   mode: 'subagent',
   permission: `task:
   interpreter: allow
-  coder-angular: allow
-  coder-go: allow
+  coder: allow
   tester: allow
   reviewer: allow
   architect: allow
   explorer: allow
   project-context: allow
-  vision-relay: allow
   external-scout: allow
   analista: allow
   documenter: allow`,
@@ -328,58 +324,58 @@ const CODER_BASE: Omit<AgentTemplate, 'id' | 'displayName' | 'role' | 'model' | 
     'Thin adapter: never mimic legacy src/ anti-patterns — docs/context/*.md are the source of truth. Run the canonical test/lint/build commands from docs/project.md before reporting done.',
 };
 
-/** Coder language variants — role/model (plus id/displayName/permission) change per stack. */
+/** Coder language variants — role/model (plus permission/essence/relatedFiles) change per stack. */
 const CODER_VARIANTS: Record<
   string,
   Pick<AgentTemplate, 'id' | 'displayName' | 'role' | 'model' | 'permission' | 'essence' | 'relatedFiles'>
 > = {
   Angular: {
-    id: 'coder-angular',
-    displayName: 'Coder Angular',
-    role: 'Angular 22 SPA implementation specialist',
+    id: 'coder',
+    displayName: 'Coder',
+    role: 'Angular 22 SPA implementation specialist (language=angular)',
     model: 'opencode-go/deepseek-v4-flash',
     permission: `task:
-  coder-angular: allow`,
+  coder: allow`,
     essence:
-      'Thin adapter: reads the Angular docs in docs/context/ and the matched slice, applies them, returns CoderOutput JSON. For Go work use coder-go.',
+      'Thin adapter: reads the Angular docs in docs/context/ and the matched slice, applies them, returns CoderOutput JSON. Branches by language=angular.',
     relatedFiles:
-      '.opencode/agents/subagents/coder-angular.md, .opencode/agents/subagents/coder.schema.json, docs/context/architecture.md, docs/context/project-rules.md',
+      '.opencode/agents/subagents/coder.md, .opencode/agents/subagents/coder.schema.json, docs/context/architecture.md, docs/context/project-rules.md',
   },
   Go: {
-    id: 'coder-go',
-    displayName: 'Coder Go',
-    role: 'Go 1.24 API implementation specialist',
+    id: 'coder',
+    displayName: 'Coder',
+    role: 'Go 1.24 API implementation specialist (language=go)',
     model: 'opencode-go/deepseek-v4-flash',
     permission: `task:
-  coder-go: allow`,
+  coder: allow`,
     essence:
-      'Thin adapter: reads the Go docs in docs/context/ and the matched slice, applies them, returns CoderOutput JSON. For Angular work use coder-angular.',
+      'Thin adapter: reads the Go docs in docs/context/ and the matched slice, applies them, returns CoderOutput JSON. Branches by language=go.',
     relatedFiles:
-      '.opencode/agents/subagents/coder-go.md, .opencode/agents/subagents/coder.schema.json, docs/context/architecture.md, backend/docs/project.md',
+      '.opencode/agents/subagents/coder.md, .opencode/agents/subagents/coder.schema.json, docs/context/architecture.md, backend/docs/project.md',
   },
   TypeScript: {
-    id: 'coder-typescript',
-    displayName: 'Coder TypeScript',
-    role: 'TypeScript implementation specialist',
+    id: 'coder',
+    displayName: 'Coder',
+    role: 'TypeScript implementation specialist (language=typescript)',
     model: 'inherit',
     permission: `task:
-  coder-typescript: allow`,
+  coder: allow`,
     essence:
       'Thin adapter: reads the docs in docs/context/ and the matched slice, applies them, returns CoderOutput JSON.',
     relatedFiles:
-      '.opencode/agents/subagents/coder-typescript.md, docs/context/architecture.md, docs/context/project-rules.md',
+      '.opencode/agents/subagents/coder.md, docs/context/architecture.md, docs/context/project-rules.md',
   },
   Python: {
-    id: 'coder-python',
-    displayName: 'Coder Python',
-    role: 'Python implementation specialist',
+    id: 'coder',
+    displayName: 'Coder',
+    role: 'Python implementation specialist (language=python)',
     model: 'inherit',
     permission: `task:
-  coder-python: allow`,
+  coder: allow`,
     essence:
       'Thin adapter: reads the docs in docs/context/ and the matched slice, applies them, returns CoderOutput JSON.',
     relatedFiles:
-      '.opencode/agents/subagents/coder-python.md, docs/context/architecture.md, docs/context/project-rules.md',
+      '.opencode/agents/subagents/coder.md, docs/context/architecture.md, docs/context/project-rules.md',
   },
 };
 

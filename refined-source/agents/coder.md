@@ -11,7 +11,7 @@ _(none)_ — leaf worker. Does not delegate. Branches internally, does not fan-o
 ## What it does BEYOND global rules
 - **Branching**: `language=angular` → Angular 22 SPA: standalone components, signals/rxResource, slice pattern `<feature>.{routes,service,models}.ts` + `page/` + `ui/`, Material, @swimlane/ngx-graph. `language=go` → Go 1.24 API: layered domain→repository→service→handler→routes under `/api/v1`, Gin v1.10, GORM v1.30 + PostgreSQL, Viper, JWT, seed logic in internal/domain/jsons/.
 - Reads docs/project.md + relevant docs/context/ (not src/ legacy patterns); source-of-truth hierarchy: docs/context/*.md > docs/project.md > _TAG-INDEX.md > src/.
-- Stack checks: Angular → ng test/build, Biome lint; Go → gofmt/go vet clean, explicit error handling; DB in development: backward compat NOT required.
+- Stack checks: Angular → ng test/build; Go → gofmt/go vet clean, explicit error handling; DB in development: backward compat NOT required.
 - **Group rule**: complexity review and slice routing is a coder trait.
 
 ## Related files

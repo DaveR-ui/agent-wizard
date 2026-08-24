@@ -17,24 +17,23 @@ describe('RulesPanel', () => {
     }).compileComponents();
   });
 
-  it('should render the three level tabs with the curated counts (7 / 6 / 6)', () => {
+  it('should render the three level tabs with the curated counts (2 / 6 / 6)', () => {
     const fixture = TestBed.createComponent(RulesPanel);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     const tabs = Array.from(compiled.querySelectorAll('.level-tab')).map((el) =>
       el.textContent?.trim(),
     );
-    expect(tabs).toEqual(['Global (7)', 'Grupos (6)', 'Específicas (6)']);
+    expect(tabs).toEqual(['Global (2)', 'Grupos (6)', 'Específicas (6)']);
   });
 
-  it('should render 7 global rules with severity badges by default', () => {
+  it('should render 2 global rules with severity badges by default', () => {
     const fixture = TestBed.createComponent(RulesPanel);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelectorAll('.rule-card').length).toBe(7);
-    expect(compiled.querySelectorAll('.severity-badge').length).toBe(7);
+    expect(compiled.querySelectorAll('.rule-card').length).toBe(2);
+    expect(compiled.querySelectorAll('.severity-badge').length).toBe(2);
     expect(compiled.querySelector('.severity-hard')).toBeTruthy();
-    expect(compiled.querySelector('.severity-medium')).toBeTruthy();
     // Each global rule cites its source.
     expect(compiled.querySelector('.rule-source')?.textContent?.length).toBeGreaterThan(0);
   });
@@ -61,18 +60,16 @@ describe('RulesPanel', () => {
 
     // Default family is coders (4 rules) with its members listed.
     expect(compiled.querySelector('.family-pill.active')?.textContent?.trim()).toBe('coders');
-    expect(compiled.querySelector('.family-members')?.textContent).toContain(
-      'coder-angular, coder-go',
-    );
+    expect(compiled.querySelector('.family-members')?.textContent).toContain('coder');
     expect(compiled.querySelectorAll('.rule-card').length).toBe(4);
 
-    // Switch to exploration (5 rules).
+    // Switch to exploration (4 rules).
     const exploration = Array.from(
       compiled.querySelectorAll<HTMLButtonElement>('.family-pill'),
     ).find((el) => el.textContent?.trim() === 'exploration');
     exploration?.click();
     fixture.detectChanges();
-    expect(compiled.querySelectorAll('.rule-card').length).toBe(5);
+    expect(compiled.querySelectorAll('.rule-card').length).toBe(4);
   });
 
   it('should render the 6 agent-specific rule blocks', () => {
@@ -104,17 +101,17 @@ describe('RulesPanel', () => {
     const compiled = fixture.nativeElement as HTMLElement;
 
     const input = compiled.querySelector('.rules-filter') as HTMLInputElement;
-    input.value = 'english';
+    input.value = 'never';
     input.dispatchEvent(new Event('input'));
     fixture.detectChanges();
 
     const titles = Array.from(compiled.querySelectorAll('.rule-title')).map((el) =>
       el.textContent?.trim(),
     );
-    // global-01 and global-12 mention "English".
+    // Both global rules (0007, 0008) describe "never" write/touch actions.
     expect(titles.length).toBe(2);
-    expect(titles.join(' | ')).toContain('language is English');
-    expect(titles.join(' | ')).toContain('English');
+    expect(titles.join(' | ')).toContain('Structured returns via EventV2');
+    expect(titles.join(' | ')).toContain('Agent-system changes');
     expect(titles).not.toContain('One question block');
   });
 

@@ -17,7 +17,7 @@ Development standards for THIS project. The full agent rule hierarchy (global / 
 |---|---|---|
 | English only | hard | All docs, comments, routing packets, and structured returns in English (`doc_language: english`). Human ↔ delivery may be any language; delivery translates. |
 | Quote paths with spaces | medium | Workspace root is `/run/media/admin/Datos/Matafuegos necochea` — every bash path with spaces must be quoted. |
-| Cost discipline | discretionary | A discretionary decision (not a global rule) owned by `orchestrator`, `coder-angular`, `coder-go`, `analista`, `architect`: default to the cheap tier (`opencode-go/deepseek-v4-flash`); escalate only when the task demands it. Fan-out multiplies cost. |
+| Cost discipline | discretionary | A discretionary decision (not a global rule) owned by `orchestrator`, `coder`, `analista`, `architect`: default to the cheap tier (`opencode-go/deepseek-v4-flash`); escalate only when the task demands it. Fan-out multiplies cost. |
 | Never run tests from repo root | hard | Run canonical commands from the affected package dir (`agent-wizard/`, `frontend/`, `backend/`). |
 | No-mutate `.opencode/` review loop | hard | Changes to `.opencode/agents`, `.opencode/protocols`, `.opencode/workflows`, or `opencode.json` require Draft → Review (reviewer/analista) → Apply → Verify (tester). Single-line typo exempt. |
 | Structured returns via EventV2 | hard | Subagents with `output_schema` return validated JSON via the `task` tool + EventV2 bus. Never write `summary.md` / `output-full.md` / `manifest.md` to disk. |

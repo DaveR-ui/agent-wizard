@@ -64,10 +64,10 @@ describe('ConstructorPanel', () => {
     panel.onArchetypeChange('coder');
     panel.onLanguageChange('Go');
     fixture.detectChanges();
-    expect(panel.fields.id()).toBe('coder-go');
+    expect(panel.fields.id()).toBe('coder');
     expect(panel.fields.role()).toContain('Go 1.24');
     expect(panel.fields.model()).toBe('opencode-go/deepseek-v4-flash');
-    expect(panel.fields.permission()).toContain('coder-go: allow');
+    expect(panel.fields.permission()).toContain('coder: allow');
   });
 
   it('should update the preview as fields change', () => {

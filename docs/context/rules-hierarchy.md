@@ -27,7 +27,7 @@ Counts remain: global 2, groups 6 families, agentSpecific 6 agents / 9 rules.
 | `0007` | Structured returns via EventV2, not markdown files | passive | hard | `.opencode/agents/subagents/orchestrator.md / subagent-spec-template.md` |
 | `0008` | Agent-system changes require review loop | passive | hard | `.opencode/agents/subagents/delivery.md Agent-system changes` |
 
-> **2026-08-23**: `0011` (cost discipline: cheap tier default) was demoted from a global rule to a **discretionary decision** owned by `orchestrator`, `coder-angular`, `coder-go`, `analista`, and `architect` (they decide tier by complexity; `reviewer` observes/flags only). `0001`, `0009`, `0010`, `0012` were removed from the formal global rules set — their operational guidance (English-only, never run tests from repo root, quote paths with spaces, docs in English) remains embedded in the workflows/protocols.
+> **2026-08-23**: `0011` (cost discipline: cheap tier default) was demoted from a global rule to a **discretionary decision** owned by `orchestrator`, `coder`, `analista`, and `architect` (they decide tier by complexity; `reviewer` observes/flags only). `0001`, `0009`, `0010`, `0012` were removed from the formal global rules set — their operational guidance (English-only, never run tests from repo root, quote paths with spaces, docs in English) remains embedded in the workflows/protocols.
 
 > Removed from global in 1.0.1: `0002` → `agentSpecific/delivery`, `0003-0006` → `groups/coordination` (see below). Source citations unchanged from `refined-source/rules.json`.
 
@@ -35,9 +35,9 @@ Counts remain: global 2, groups 6 families, agentSpecific 6 agents / 9 rules.
 
 | Group | Members | Rules | Passive / Active split | Focus |
 |---|---|---|---|---|
-| `coders` | coder-angular, coder-go | 4 | 1 passive (`0016` stack) → 3 active (`0013` slice routing, `0014` read-before-modify, `0015` canonical checks) | Complexity review + slice routing; read docs/context not src/ legacy; canonical test/lint/build; stack conventions |
+| `coders` | coder | 4 | 1 passive (`0016` stack) → 3 active (`0013` slice routing, `0014` read-before-modify, `0015` canonical checks) | Complexity review + slice routing; read docs/context not src/ legacy; canonical test/lint/build; stack conventions |
 | `guardians` | reviewer, architect, analista | 4 | 3 passive (`0017` read-only, `0018` checklist order, `0019` concrete files) → 1 active (`0020` two alternatives) | Read-only analysis with structured JSON verdict; severity-ordered review; concrete files + simplicity; two alternatives + calibrated confidence |
-| `exploration` | explorer, project-context, external-scout, vision-relay | 5 | 2 passive (`0021` read-only, `0023` sole hierarchy) → 3 active (`0022` fan-out thresholds, `0024` one library/version/question, `0025` one image/question) | Read-only; fan-out thresholds; sole doc hierarchy; one library/version/question; one image/question/answer |
+| `exploration` | explorer, project-context, external-scout | 5 | 2 passive (`0021` read-only, `0023` sole hierarchy) → 3 active (`0022` fan-out thresholds, `0024` one library/version/question, `0025` one image/question) | Read-only; fan-out thresholds; sole doc hierarchy; one library/version/question; one image/question/answer |
 | `quality` | tester | 2 | 2 passive (`0026` canonical runner, `0027` behavior assertions) → 0 active | Canonical runner per package dir; behavior assertions not mock verification |
 | `writers` | documenter | 2 | 1 passive (`0028` sole writer) → 1 active (`0029` post-change audit) | Sole writer with registration; post-change audit |
 | `coordination` | delivery, orchestrator | 6 | 1 passive (`0003` never implement) → 5 active (`0004` delegation, `0005` one question block, `0006` hard STOP, `0030` hierarchy+routing, `0031` Phase 2 Reduce) | Decision hierarchy + slices routing; orchestrator owns Phase 2 Reduce; coordinators never implement; delegation via permission.task + Dispatch; one question block; hard STOP on failure |

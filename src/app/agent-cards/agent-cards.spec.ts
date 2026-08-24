@@ -22,12 +22,12 @@ describe('AgentCards', () => {
     }).compileComponents();
   });
 
-  it('should render one card per agent (14)', () => {
+  it('should render one card per agent (12)', () => {
     const fixture = TestBed.createComponent(AgentCards);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelectorAll('.agent-card').length).toBe(14);
-    expect(AGENTS.length).toBe(14);
+    expect(compiled.querySelectorAll('.agent-card').length).toBe(12);
+    expect(AGENTS.length).toBe(12);
   });
 
   it('should show the group badge with the group color from graph.json', () => {
@@ -58,7 +58,7 @@ describe('AgentCards', () => {
       delivery.querySelectorAll('.can-call-list li'),
     ).map((li) => li.textContent?.trim());
     expect(canCallNames).toContain('Interpreter');
-    expect(canCallNames.length).toBe(13); // delivery delegates to 13 agents, deduped
+    expect(canCallNames.length).toBe(11); // delivery delegates to 11 agents, deduped
 
     const chips = delivery.querySelectorAll('.file-chip');
     expect(chips.length).toBe(6); // delivery relatedFiles
@@ -109,18 +109,18 @@ describe('AgentCards', () => {
     expect(feedback?.textContent).toBe('Copiado');
   });
 
-  it('should render chips for minimal-surface agents (vision-relay, 1 file)', () => {
+  it('should render chips for minimal-surface agents (external-scout, 1 file)', () => {
     const fixture = TestBed.createComponent(AgentCards);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    const visionRelay = cardFor(fixture, 'Vision Relay');
+    const externalScout = cardFor(fixture, 'External Scout');
 
-    visionRelay.dispatchEvent(new MouseEvent('mouseenter'));
+    externalScout.dispatchEvent(new MouseEvent('mouseenter'));
     fixture.detectChanges();
 
-    const chips = visionRelay.querySelectorAll('.file-chip');
+    const chips = externalScout.querySelectorAll('.file-chip');
     expect(chips.length).toBe(1);
-    expect(chips[0].textContent).toContain('vision-relay.md');
+    expect(chips[0].textContent).toContain('external-scout.md');
   });
 
   it('should navigate to the diagram-agent counterpart view when a card is clicked', () => {

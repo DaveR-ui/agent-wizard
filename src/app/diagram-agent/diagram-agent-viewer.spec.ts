@@ -48,8 +48,8 @@ describe('DiagramAgentViewer', () => {
     expect(compiled.querySelectorAll('.incoming-section .edge-list li').length).toBe(incomingCount);
   });
 
-  it('should show a leaf note when the node has no outgoing edges (vision-relay)', () => {
-    const { compiled } = render('vision-relay');
+  it('should show a leaf note when the node has no outgoing edges (coder)', () => {
+    const { compiled } = render('coder');
     expect(compiled.querySelector('.outgoing-section .leaf-note')).toBeTruthy();
   });
 
