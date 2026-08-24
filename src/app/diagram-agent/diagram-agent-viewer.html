@@ -1,49 +1,167 @@
-@if (node(); as node) {
-  <section class="viewer-card" [style.--group-color]="group()?.color ?? '#64748b'">
+@if (agent(); as agent) {
+  <section class="viewer-card" [style.--group-color]="groupMeta()?.color ?? '#64748b'">
     <header class="viewer-header">
-      <span class="viewer-badge" [style.background-color]="group()?.color ?? '#64748b'">
-        {{ node.group }}
+      <span class="viewer-badge" [style.background-color]="groupMeta()?.color ?? '#64748b'">
+        {{ agent.group }}
       </span>
-      <h2 class="viewer-title">{{ node.label }}</h2>
+      @if (race()) {
+        <span class="race-badge" [style.border-color]="groupMeta()?.color ?? '#64748b'" [style.color]="groupMeta()?.color ?? '#64748b'" [attr.title]="flavor()">{{ race() }}</span>
+      }
+      <h2 class="viewer-title">{{ agent.displayName }}</h2>
     </header>
+
+    @if (flavor()) {
+      <p class="flavor-text" [attr.title]="flavor()">{{ flavor() }}</p>
+    }
+
+    <p class="viewer-role">{{ agent.role }}</p>
+    <p class="viewer-essence">{{ agent.essence }}</p>
 
     <dl class="viewer-meta">
       <div class="meta-row">
-        <dt>Node id</dt>
-        <dd>{{ node.id }}</dd>
+        <dt>Agent id</dt>
+        <dd>{{ agent.id }}</dd>
       </div>
       <div class="meta-row">
         <dt>Group</dt>
-        <dd>{{ group()?.label ?? node.group }}</dd>
+        <dd>{{ groupMeta()?.label ?? agent.group }}</dd>
+      </div>
+      <div class="meta-row">
+        <dt>Race</dt>
+        <dd>{{ race() ?? '—' }}</dd>
       </div>
       <div class="meta-row">
         <dt>Level</dt>
-        <dd>{{ node.level }}</dd>
+        <dd>{{ node()?.level ?? '—' }}</dd>
       </div>
       <div class="meta-row">
         <dt>Mode</dt>
-        <dd>{{ node.isPrimary ? 'Primary' : 'Subagent' }}</dd>
+        <dd>{{ agent.mode === 'primary' ? 'Primary' : 'Subagent' }}</dd>
+      </div>
+      <div class="meta-row">
+        <dt>Modelo</dt>
+        <dd>{{ agent.model ?? 'inherit' }}</dd>
       </div>
     </dl>
 
+    <!-- RPG: Passives -->
     <section class="viewer-section">
-      <h3>Counterpart doc (diagram-agent)</h3>
-      <p class="viewer-note">
-        The counterpart markdown lives in the static <code>diagram-agent/</code> folder. This view is
-        read-only — it never writes or persists anything.
-      </p>
-      <ul class="doc-links">
-        <li>
-          <a class="doc-link" [href]="docHref(node.id)" target="_blank" rel="noopener">
-            diagram-agent/{{ node.id }}.md
-          </a>
-        </li>
-        <li>
-          <a class="doc-link" [href]="groupIndexHref(node.group)" target="_blank" rel="noopener">
-            diagram-agent/{{ node.group }}/README.md (group index)
-          </a>
-        </li>
-      </ul>
+      <h3>Passives</h3>
+      <div class="tier">
+        <h4>World laws ({{ worldPassives().length }})</h4>
+        @if (worldPassives().length === 0) {
+          <p class="leaf-note">No world passives</p>
+        } @else {
+          <ul class="rpg-rule-list">
+            @for (rule of worldPassives(); track rule.id) {
+              <li><strong>{{ rule.id }}</strong> {{ rule.rule }} — <span class="rule-desc">{{ rule.description }}</span></li>
+            }
+          </ul>
+        }
+      </div>
+      <div class="tier">
+        <h4>Race trait — {{ race() ?? agent.group }} ({{ racePassives().length }})</h4>
+        @if (racePassives().length === 0) {
+          <p class="leaf-note">No race passives</p>
+        } @else {
+          <ul class="rpg-rule-list">
+            @for (rule of racePassives(); track rule.id) {
+              <li><strong>{{ rule.id }}</strong> {{ rule.rule }} — <span class="rule-desc">{{ rule.description }}</span></li>
+            }
+          </ul>
+        }
+      </div>
+      <div class="tier">
+        <h4>Personal trait ({{ personalPassives().length }})</h4>
+        @if (personalPassives().length === 0) {
+          <p class="leaf-note">No personal passives</p>
+        } @else {
+          <ul class="rpg-rule-list">
+            @for (rule of personalPassives(); track rule.id) {
+              <li><strong>{{ rule.id }}</strong> {{ rule.rule }} — <span class="rule-desc">{{ rule.description }}</span></li>
+            }
+          </ul>
+        }
+      </div>
+    </section>
+
+    <section class="viewer-section">
+      <h3>Skills</h3>
+      @if (worldSkills().length + raceSkills().length + personalSkills().length === 0) {
+        <p class="leaf-note">No active skills</p>
+      } @else {
+        @if (worldSkills().length > 0) {
+          <div class="tier">
+            <h4>World skills ({{ worldSkills().length }})</h4>
+            <ul class="rpg-rule-list">
+              @for (rule of worldSkills(); track rule.id) {
+                <li><strong>{{ rule.id }}</strong> {{ rule.rule }} — <span class="rule-desc">{{ rule.description }}</span></li>
+              }
+            </ul>
+          </div>
+        }
+        @if (raceSkills().length > 0) {
+          <div class="tier">
+            <h4>Race skills ({{ raceSkills().length }})</h4>
+            <ul class="rpg-rule-list">
+              @for (rule of raceSkills(); track rule.id) {
+                <li><strong>{{ rule.id }}</strong> {{ rule.rule }} — <span class="rule-desc">{{ rule.description }}</span></li>
+              }
+            </ul>
+          </div>
+        }
+        @if (personalSkills().length > 0) {
+          <div class="tier">
+            <h4>Personal skills ({{ personalSkills().length }})</h4>
+            <ul class="rpg-rule-list">
+              @for (rule of personalSkills(); track rule.id) {
+                <li><strong>{{ rule.id }}</strong> {{ rule.rule }} — <span class="rule-desc">{{ rule.description }}</span></li>
+              }
+            </ul>
+          </div>
+        }
+      }
+    </section>
+
+    <section class="viewer-section">
+      <h3>Weapons</h3>
+      @if (weapons().length === 0) {
+        <p class="leaf-note">No explicit weapons — inherits defaults</p>
+      } @else {
+        <div class="chips">
+          @for (w of weapons(); track w.tool) {
+            <span class="weapon-chip" [class.equipped]="w.status === 'allow'" [class.locked]="w.status === 'deny'">{{ w.tool }} — {{ w.status === 'allow' ? 'equipped' : 'locked' }}</span>
+          }
+        </div>
+      }
+      <h3>Summons</h3>
+      @if (summons().length === 0) {
+        <p class="leaf-note">No summons — leaf</p>
+      } @else {
+        <div class="chips">
+          @for (s of summons(); track s.id) {
+            <span class="summon-chip">{{ s.displayName }}</span>
+          }
+        </div>
+      }
+    </section>
+
+    <section class="viewer-section">
+      <h3>Protocol scrolls</h3>
+      @if (protocolScrolls().length === 0) {
+        <p class="leaf-note">No protocol scrolls</p>
+      } @else {
+        <div class="chips">
+          @for (file of protocolScrolls(); track file) {
+            <span class="file-chip protocol-chip">{{ file }}</span>
+          }
+        </div>
+      }
+    </section>
+
+    <section class="viewer-section">
+      <h3>Specific beyond general</h3>
+      <p class="viewer-note">{{ agent.specificBeyondGeneral }}</p>
     </section>
 
     <section class="viewer-section outgoing-section">
@@ -88,10 +206,77 @@
       <a class="back-link" routerLink="/">← Back to agents</a>
     </footer>
   </section>
+} @else if (node(); as node) {
+  <!-- Fallback for graph-only nodes (should not happen for 12 agents, but keep graph view) -->
+  <section class="viewer-card" [style.--group-color]="groupMeta()?.color ?? '#64748b'">
+    <header class="viewer-header">
+      <span class="viewer-badge" [style.background-color]="groupMeta()?.color ?? '#64748b'">
+        {{ node.group }}
+      </span>
+      <h2 class="viewer-title">{{ node.label }}</h2>
+    </header>
+    <dl class="viewer-meta">
+      <div class="meta-row">
+        <dt>Node id</dt>
+        <dd>{{ node.id }}</dd>
+      </div>
+      <div class="meta-row">
+        <dt>Group</dt>
+        <dd>{{ groupMeta()?.label ?? node.group }}</dd>
+      </div>
+      <div class="meta-row">
+        <dt>Level</dt>
+        <dd>{{ node.level }}</dd>
+      </div>
+      <div class="meta-row">
+        <dt>Mode</dt>
+        <dd>{{ node.isPrimary ? 'Primary' : 'Subagent' }}</dd>
+      </div>
+    </dl>
+    <section class="viewer-section outgoing-section">
+      <h3>Outgoing edges (can call)</h3>
+      @if (outgoingEdges().length === 0) {
+        <p class="leaf-note">Leaf — no outgoing delegation edges.</p>
+      } @else {
+        <ul class="edge-list">
+          @for (edge of outgoingEdges(); track $index) {
+            <li>
+              <a [routerLink]="['/diagram-agent', edge.to]">{{ labelFor(edge.to) }}</a>
+              <span class="edge-kind">{{ edge.kind }}</span>
+              @if (edge.label) {
+                <span class="edge-label">{{ edge.label }}</span>
+              }
+            </li>
+          }
+        </ul>
+      }
+    </section>
+    <section class="viewer-section incoming-section">
+      <h3>Incoming edges (called by)</h3>
+      @if (incomingEdges().length === 0) {
+        <p class="leaf-note">No incoming edges.</p>
+      } @else {
+        <ul class="edge-list">
+          @for (edge of incomingEdges(); track $index) {
+            <li>
+              <a [routerLink]="['/diagram-agent', edge.from]">{{ labelFor(edge.from) }}</a>
+              <span class="edge-kind">{{ edge.kind }}</span>
+              @if (edge.label) {
+                <span class="edge-label">{{ edge.label }}</span>
+              }
+            </li>
+          }
+        </ul>
+      }
+    </section>
+    <footer class="viewer-footer">
+      <a class="back-link" routerLink="/">← Back to agents</a>
+    </footer>
+  </section>
 } @else {
   <section class="viewer-missing">
     <h2>Agent not found</h2>
-    <p>No graph.json node matches id "{{ id() }}".</p>
+    <p>No agent matches id "{{ id() }}".</p>
     <a class="back-link" routerLink="/">← Back to agents</a>
   </section>
 }

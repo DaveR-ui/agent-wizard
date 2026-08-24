@@ -10,9 +10,33 @@
     "mode": "primary",
     "permission": {
       "webfetch": "deny",
-      "task": ["interpreter", "orchestrator", "coder", "tester", "reviewer", "architect", "explorer", "project-context", "external-scout", "analista", "documenter"]
+      "task": [
+        "interpreter",
+        "orchestrator",
+        "coder",
+        "tester",
+        "reviewer",
+        "architect",
+        "explorer",
+        "project-context",
+        "external-scout",
+        "analista",
+        "documenter"
+      ]
     },
-    "canCall": ["interpreter", "orchestrator", "coder", "tester", "reviewer", "architect", "explorer", "project-context", "external-scout", "analista", "documenter"],
+    "canCall": [
+      "interpreter",
+      "orchestrator",
+      "coder",
+      "tester",
+      "reviewer",
+      "architect",
+      "explorer",
+      "project-context",
+      "external-scout",
+      "analista",
+      "documenter"
+    ],
     "specificBeyondGeneral": "Trivial vs non-trivial is OUTPUT of interpreter packet (never pre-classified). Implements Self-check gate, Hard STOP on subagent failure (report, don't absorb), Agent-system changes review loop (draft → review → apply → verify), Session Preflight (batch all ambiguities), Skill Loading Contract (pass exact file paths).",
     "relatedFiles": [
       ".opencode/agents/subagents/delivery.md",
@@ -20,7 +44,9 @@
       ".opencode/protocols/prompt-pipeline.md",
       ".opencode/protocols/session-recovery.md",
       "opencode.json",
-      "docs/project.md"
+      "docs/project.md",
+      ".opencode/protocols/delivery/README.md",
+      ".opencode/protocols/delivery/delivery-routing.md"
     ]
   },
   {
@@ -33,9 +59,29 @@
     "temperature": null,
     "mode": "subagent",
     "permission": {
-      "task": ["coder", "tester", "reviewer", "architect", "explorer", "project-context", "external-scout", "analista", "documenter"]
+      "task": [
+        "coder",
+        "tester",
+        "reviewer",
+        "architect",
+        "explorer",
+        "project-context",
+        "external-scout",
+        "analista",
+        "documenter"
+      ]
     },
-    "canCall": ["coder", "tester", "reviewer", "architect", "explorer", "project-context", "external-scout", "analista", "documenter"],
+    "canCall": [
+      "coder",
+      "tester",
+      "reviewer",
+      "architect",
+      "explorer",
+      "project-context",
+      "external-scout",
+      "analista",
+      "documenter"
+    ],
     "specificBeyondGeneral": "Produces ## Scope block (complexity, hot spots, key files, verification). Fan-out pattern: split by file list, 10-20 per chunk, N parallel tasks. Cost discipline (cheap tier default). Slices routing via docs/project.md Keywords → Repo → Entry points. Decision Hierarchy (context > integrity > user decisions > objective > buildable > conventions > quality).",
     "relatedFiles": [
       ".opencode/agents/subagents/orchestrator.md",
@@ -44,7 +90,9 @@
       ".opencode/protocols/broad-investigation-template.md",
       ".opencode/protocols/session-recovery.md",
       "docs/project.md",
-      "docs/context/README.md"
+      "docs/context/README.md",
+      ".opencode/protocols/orchestrator/README.md",
+      ".opencode/protocols/orchestrator/orchestrator-fanout.md"
     ]
   },
   {
@@ -59,7 +107,9 @@
     "permission": {
       "edit": "deny",
       "bash": "deny",
-      "task": ["interpreter"]
+      "task": [
+        "interpreter"
+      ]
     },
     "canCall": [],
     "specificBeyondGeneral": "Every ambiguous term lands in exactly one of resolved_by_lookup (with source) or unresolved_questions. May call question tool ONCE batched. Never answers request itself - only normalizes and routes. Packet consumed by Phase 2 Reduce. Image-inspection mode: one image + one focused question → compact textual answer; prioritize visible text over image context; unreadable image → one-line failure; if caller already vision-capable, don't invoke.",
@@ -68,7 +118,9 @@
       ".opencode/agents/subagents/interpreter.schema.json",
       ".opencode/protocols/prompt-pipeline.md",
       "docs/project.md",
-      "docs/context/README.md"
+      "docs/context/README.md",
+      ".opencode/protocols/interpreter/README.md",
+      ".opencode/protocols/interpreter/interpreter-lexicon.md"
     ]
   },
   {
@@ -82,16 +134,22 @@
     "mode": "subagent",
     "permission": {
       "edit": "deny",
-      "task": ["explorer"]
+      "task": [
+        "explorer"
+      ]
     },
-    "canCall": ["explorer"],
+    "canCall": [
+      "explorer"
+    ],
     "specificBeyondGeneral": "Sampling and Fan-out divide-and-conquer. Broad Investigation Template (Goal/Search/Evidence/Coverage/DoD). Evidence scale: Verified/Likely/Inferred separate from confidence. Reports paths relative to repo root with line numbers.",
     "relatedFiles": [
       ".opencode/agents/subagents/explorer.md",
       ".opencode/agents/subagents/explorer.schema.json",
       ".opencode/protocols/broad-investigation-template.md",
       "docs/project.md",
-      "docs/context/architecture.md"
+      "docs/context/architecture.md",
+      ".opencode/protocols/explorer/README.md",
+      ".opencode/protocols/explorer/explorer-scout.md"
     ]
   },
   {
@@ -104,7 +162,9 @@
     "temperature": null,
     "mode": "subagent",
     "permission": {
-      "task": ["coder"]
+      "task": [
+        "coder"
+      ]
     },
     "canCall": [],
     "specificBeyondGeneral": "Language-parameterized branching: language=angular → read docs/project.md + Angular docs in docs/context/ + MCP angular, follow standalone components, signals/rxResource, slice pattern <feature>.{routes,service,models}.ts + page/+ui; language=go → read Go docs + backend docs, follow domain→repository→service→handler→routes under /api/v1, GORM+PostgreSQL, Gin, Viper, JWT, seed logic, gofmt/vet clean, explicit errors. Never copy legacy src/ patterns; source-of-truth hierarchy docs/context/*.md > docs/project.md > _TAG-INDEX.md > src/.",
@@ -112,7 +172,9 @@
       ".opencode/agents/subagents/coder.md",
       ".opencode/agents/subagents/coder.schema.json",
       "docs/project.md",
-      "docs/context/architecture.md"
+      "docs/context/architecture.md",
+      ".opencode/protocols/coder/README.md",
+      ".opencode/protocols/coder/coder-toolkit.md"
     ]
   },
   {
@@ -126,16 +188,22 @@
     "mode": "subagent",
     "permission": {
       "edit": "deny",
-      "task": ["reviewer"]
+      "task": [
+        "reviewer"
+      ]
     },
-    "canCall": ["reviewer"],
+    "canCall": [
+      "reviewer"
+    ],
     "specificBeyondGeneral": "Checklist: architecture, standards, permissions (RequirePermission/RequireRoles), secrets/auth, performance (N+1, memoization, change detection), anti-patterns (any types, fighting signal pattern), testing, doc-tree integrity. Severity-ordered, file+line cited. Coupling forbids fan-out.",
     "relatedFiles": [
       ".opencode/agents/subagents/reviewer.md",
       ".opencode/agents/subagents/reviewer.schema.json",
       "docs/context/architecture.md",
       "backend/docs/context/permission-architecture.md",
-      "docs/project.md"
+      "docs/project.md",
+      ".opencode/protocols/reviewer/README.md",
+      ".opencode/protocols/reviewer/reviewer-judgement.md"
     ]
   },
   {
@@ -148,7 +216,9 @@
     "temperature": 0.2,
     "mode": "subagent",
     "permission": {
-      "task": ["tester"]
+      "task": [
+        "tester"
+      ]
     },
     "canCall": [],
     "specificBeyondGeneral": "Runs from package dir (never repo root). Stack: Vitest 4 (unit), Playwright 1.58 (e2e) for frontend; Go tests for backend (not yet configured). Mock sparingly, assert observable outcomes, never duplicate logic into tests.",
@@ -158,7 +228,9 @@
       "docs/project.md",
       "docs/context/project-rules.md",
       "frontend/package.json",
-      "frontend/playwright.config.ts"
+      "frontend/playwright.config.ts",
+      ".opencode/protocols/tester/README.md",
+      ".opencode/protocols/tester/tester-trials.md"
     ]
   },
   {
@@ -171,7 +243,9 @@
     "temperature": null,
     "mode": "subagent",
     "permission": {
-      "task": ["architect"]
+      "task": [
+        "architect"
+      ]
     },
     "canCall": [],
     "specificBeyondGeneral": "Follows docs/context/architecture.md layering. Principles: simplicity, testability, documented decisions with rejected alternatives. Designs without reading code is anti-pattern — every proposal cites concrete files.",
@@ -179,7 +253,9 @@
       ".opencode/agents/subagents/architect.md",
       ".opencode/agents/subagents/architect.schema.json",
       "docs/context/architecture.md",
-      "docs/project.md"
+      "docs/project.md",
+      ".opencode/protocols/architect/README.md",
+      ".opencode/protocols/architect/architect-blueprint.md"
     ]
   },
   {
@@ -194,7 +270,9 @@
     "permission": {
       "edit": "deny",
       "bash": "deny",
-      "task": ["analista"]
+      "task": [
+        "analista"
+      ]
     },
     "canCall": [],
     "specificBeyondGeneral": "Requires at least two alternatives and calibrated confidence (<0.5 must say what evidence would raise it). Verdict: proceed/reconsider/abandon. No write/bash/task beyond analista. Complements session-recovery.md for STUCK advice.",
@@ -202,7 +280,9 @@
       ".opencode/agents/subagents/analista.md",
       ".opencode/agents/subagents/analista.schema.json",
       ".opencode/protocols/session-recovery.md",
-      ".opencode/protocols/subagent-spec-template.md"
+      ".opencode/protocols/subagent-spec-template.md",
+      ".opencode/protocols/analista/README.md",
+      ".opencode/protocols/analista/analista-counsel.md"
     ]
   },
   {
@@ -215,7 +295,9 @@
     "temperature": 0.2,
     "mode": "subagent",
     "permission": {
-      "task": ["documenter"]
+      "task": [
+        "documenter"
+      ]
     },
     "canCall": [],
     "specificBeyondGeneral": "Every page carries frontmatter (last_updated, status, description, tags). New doc done only when registered in docs/context/README.md, _TAG-INDEX.md, and Slices table if needed. Post-change audit: routing-table sync, date freshness (>30 stale, >90 flag), link integrity. One topic per file.",
@@ -225,7 +307,9 @@
       "docs/project.md",
       "docs/context/README.md",
       "docs/_TAG-INDEX.md",
-      "docs/context/doc-conventions.md"
+      "docs/context/doc-conventions.md",
+      ".opencode/protocols/documenter/README.md",
+      ".opencode/protocols/documenter/documenter-chronicle.md"
     ]
   },
   {
@@ -240,14 +324,18 @@
     "permission": {
       "edit": "deny",
       "bash": "deny",
-      "task": ["project-context"]
+      "task": [
+        "project-context"
+      ]
     },
     "canCall": [],
     "specificBeyondGeneral": "Read workflow: docs/project.md → docs/context/README.md → slice README → grep if still unclear. Single source of truth hierarchy: docs/context/*.md > docs/project.md > docs/_TAG-INDEX.md > src/. Never duplicate facts into .opencode.",
     "relatedFiles": [
       ".opencode/agents/subagents/project-context.md",
       "docs/project.md",
-      "docs/context/README.md"
+      "docs/context/README.md",
+      ".opencode/protocols/project-context/README.md",
+      ".opencode/protocols/project-context/project-context-lore.md"
     ]
   },
   {
@@ -267,7 +355,9 @@
     "canCall": [],
     "specificBeyondGeneral": "Priority sources: official docs version-pinned → GitHub releases → npm/README. One compact answer only; if unreachable, one line and stop. No fallback model.",
     "relatedFiles": [
-      ".opencode/agents/subagents/external-scout.md"
+      ".opencode/agents/subagents/external-scout.md",
+      ".opencode/protocols/external-scout/README.md",
+      ".opencode/protocols/external-scout/external-scout-fetch.md"
     ]
   }
 ]

@@ -1,6 +1,6 @@
 ---
-last_updated: 2026-08-25
-description: Layered architecture of agent-wizard — agent system (.opencode sole source), data layer, and Angular UI, plus dependency flow and the graph UI.
+last_updated: 2026-08-24
+description: Layered architecture of agent-wizard — agent system (.opencode sole source, Branch B flat), data layer, and Angular UI, plus dependency flow and the graph UI.
 tags: [architecture, layers, agent-system, data-layer, angular, graph-ui]
 status: active
 ---
@@ -17,8 +17,8 @@ The opencode agent runtime. `.opencode/` is the live config the runtime loads an
 
 | Area | Path | Contents |
 |---|---|---|
-| Agents | `.opencode/agents/subagents/` | 13 agent `.md` definitions spec / 12 actual (single `coder.md` + `coder.schema.json`, vision-relay removed, interpreter now handles image inspection), 7 with `.schema.json` |
-| Protocols | `.opencode/protocols/` | 5 agent protocols + `README.md` (retired 4 ia-* + references/ on 2026-08-24) |
+| Agents | `.opencode/agents/subagents/` | 12 flat `.md` (Branch B — flat-loader precedent, probe `_probe/probe.md` not discovered per `docs/plans/rpg-agent-organization-plan.md` Phase 0; single `coder.md` + `coder.schema.json` preserved, vision-relay removed, interpreter image inspection) + 7 `.schema.json` — per-agent protocol scrolls live under `.opencode/protocols/<id>/*.md` (12 dirs, e.g. `.opencode/protocols/coder/coder-toolkit.md`); see `.opencode/protocols/README.md` Per-agent scrolls |
+| Protocols | `.opencode/protocols/` | 5 shared agent protocols + `README.md` (retired 4 ia-* + references/ on 2026-08-24) — per-agent scrolls now under `.opencode/protocols/<id>/` (12 dirs, Branch B) |
 | Workflows | `.opencode/workflows/` | `dispatch.md`, `orchestrate.md` |
 | Scripts | `.opencode/scripts/` | `install-agent.ps1`, `session-recover.ps1`, `validate-agent.sh` |
 | Tests | `.opencode/tests/` | `run-tests.sh`, schema contract tests, fixtures |

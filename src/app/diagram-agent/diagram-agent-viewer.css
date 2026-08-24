@@ -45,6 +45,39 @@
   color: var(--text-strong, #0f172a);
 }
 
+.race-badge {
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  background: transparent;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.flavor-text {
+  margin: -0.5rem 0 0;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--text-muted, #64748b);
+  font-style: italic;
+}
+
+.viewer-role {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--text-muted, #475569);
+  font-style: italic;
+}
+
+.viewer-essence {
+  margin: 0;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--text-body, #1e293b);
+}
+
 .viewer-meta {
   margin: 0;
   display: grid;
@@ -81,6 +114,84 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-muted, #64748b);
+}
+
+.viewer-section h4 {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-body, #475569);
+}
+
+.tier {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.rpg-rule-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.82rem;
+  color: var(--text-body, #1e293b);
+}
+
+.rpg-rule-list .rule-desc {
+  color: var(--text-muted, #64748b);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.file-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.55rem;
+  border: 1px solid var(--border-color, #cbd5e1);
+  border-radius: 999px;
+  background: #f8fafc;
+  color: var(--text-body, #1e293b);
+  font-family: var(--font-mono, ui-monospace, 'SF Mono', Menlo, Consolas, monospace);
+  font-size: 0.74rem;
+}
+
+.weapon-chip,
+.summon-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.73rem;
+  font-weight: 600;
+}
+
+.weapon-chip.equipped {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.weapon-chip.locked {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.summon-chip {
+  background: #eef2ff;
+  color: #3730a3;
+  border: 1px solid #c7d2fe;
+}
+
+.protocol-chip {
+  border-color: #c7d2fe;
 }
 
 .viewer-note {

@@ -45,13 +45,14 @@ export interface Agent {
   relatedFiles: string[];
 }
 
-/** A rule card. `severity` only exists on global rules. */
+/** A rule card. `severity` only exists on global rules. `kind` is passive (invariant) or active (behavioral). */
 export interface Rule {
   id: string;
   rule: string;
   description: string;
   source: string;
   severity?: Severity;
+  kind?: 'passive' | 'active';
 }
 
 /** One family of group rules (refined-source/rules.json → groups). */
@@ -87,6 +88,10 @@ export interface GraphGroup {
   label: string;
   color: string;
   order: number;
+  /** Display race for the RPG layer (e.g. Herald, Artificer). */
+  race?: string;
+  /** Flavor text for the race badge tooltip/subtitle. */
+  flavor?: string;
 }
 
 export interface GraphNode {
@@ -113,7 +118,7 @@ export interface GraphData {
 }
 
 /**
- * The 14 agent cards.
+ * The 12 agent cards (v1.1.0: 12 actual agents, 22 edges, 7 groups with race+flavor).
  *
  * The JSON imports are asserted onto the interfaces: resolveJsonModule widens
  * string-like values (group, severity, mode) to `string`, while the curated,
@@ -121,10 +126,10 @@ export interface GraphData {
  */
 export const AGENTS = agentsJson as Agent[];
 
-/** The 3-level rule tree (7 global / 6 families / 6 agent-specific). */
+/** The 3-level rule tree (2 global / 6 families / 6 agent-specific, kind-tagged). */
 export const RULES = rulesJson as RulesData;
 
-/** The delegation graph (14 nodes, 27 edges, 7 groups). */
+/** The delegation graph (12 nodes, 22 edges, 7 groups, v1.1.0). */
 export const GRAPH = graphJson as GraphData;
 
 /** Group id → color lookup derived from graph.json groups. */

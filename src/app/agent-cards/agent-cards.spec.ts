@@ -2,10 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { vi } from 'vitest';
 import { AgentCards } from './agent-cards';
-import { AGENTS } from '../models/refined-source';
+import { AGENTS, GRAPH, RULES } from '../models/refined-source';
 
 function cardFor(fixture: { nativeElement: HTMLElement }, displayName: string): HTMLElement {
-  const cards = Array.from(fixture.nativeElement.querySelectorAll<HTMLElement>('.agent-card'));
+  const cards = Array.from(
+    fixture.nativeElement.querySelectorAll('.agent-card') as NodeListOf<HTMLElement>,
+  );
   const card = cards.find((el) => el.querySelector('.agent-name')?.textContent === displayName);
   if (!card) {
     throw new Error(`No card found for "${displayName}"`);
@@ -41,6 +43,57 @@ describe('AgentCards', () => {
     expect((badge as HTMLElement).style.backgroundColor).toBe('rgb(79, 70, 229)');
   });
 
+  it('should show race badge + flavor derived from GRAPH.groups for every agent without hover', () => {
+    const fixture = TestBed.createComponent(AgentCards);
+    fixture.detectChanges();
+    const cards = Array.from(
+      fixture.nativeElement.querySelectorAll('.agent-card') as NodeListOf<HTMLElement>,
+    );
+    expect(cards.length).toBe(12);
+    for (const card of cards) {
+      const name = card.querySelector('.agent-name')?.textContent?.trim() ?? '';
+      const agent = AGENTS.find((a) => a.displayName === name);
+      expect(agent).toBeTruthy();
+      const groupMeta = GRAPH.groups.find((g) => g.id === agent!.group);
+      // race badge always visible
+      const raceBadge = card.querySelector('.race-badge');
+      expect(raceBadge, `race badge for ${name}`).toBeTruthy();
+      expect(raceBadge?.textContent).toBe(groupMeta?.race);
+      // flavor text always visible
+      const flavor = card.querySelector('.flavor-text');
+      expect(flavor, `flavor for ${name}`).toBeTruthy();
+      expect(flavor?.textContent).toBe(groupMeta?.flavor);
+    }
+  });
+
+  it('should render RPG passives (3 tiers) for every agent without hover', () => {
+    const fixture = TestBed.createComponent(AgentCards);
+    fixture.detectChanges();
+    const delivery = cardFor(fixture, 'Delivery');
+    // Passives headings always visible (no hover needed)
+    expect(delivery.querySelector('.passives-block')).toBeTruthy();
+    expect(delivery.textContent).toContain('World laws');
+    expect(delivery.textContent).toContain('Race trait');
+    expect(delivery.textContent).toContain('Personal trait');
+    // Skills heading also always visible
+    expect(delivery.querySelector('.skills-block')).toBeTruthy();
+    expect(delivery.textContent).toContain('Skills');
+  });
+
+  it('should render weapons / summons and protocol scrolls for every agent without hover', () => {
+    const fixture = TestBed.createComponent(AgentCards);
+    fixture.detectChanges();
+    const delivery = cardFor(fixture, 'Delivery');
+    expect(delivery.querySelector('.weapons-block')).toBeTruthy();
+    expect(delivery.querySelector('.protocols-block')).toBeTruthy();
+    // protocol scrolls are chips filtered to .opencode/protocols/
+    const protocolChips = delivery.querySelectorAll('.protocols-block .protocol-chip');
+    const expectedScrolls = AGENTS.find((a) => a.id === 'delivery')!.relatedFiles.filter((f) =>
+      f.includes('.opencode/protocols/'),
+    );
+    expect(protocolChips.length).toBe(expectedScrolls.length);
+  });
+
   it('should reveal the hover panel with canCall and related-file chips on hover', () => {
     const fixture = TestBed.createComponent(AgentCards);
     fixture.detectChanges();
@@ -60,8 +113,9 @@ describe('AgentCards', () => {
     expect(canCallNames).toContain('Interpreter');
     expect(canCallNames.length).toBe(11); // delivery delegates to 11 agents, deduped
 
-    const chips = delivery.querySelectorAll('.file-chip');
-    expect(chips.length).toBe(6); // delivery relatedFiles
+    const hoverChips = delivery.querySelectorAll('.hover-panel .file-chip');
+    const expectedFiles = AGENTS.find((a) => a.id === 'delivery')!.relatedFiles.length;
+    expect(hoverChips.length).toBe(expectedFiles);
   });
 
   it('should render a neutral leaf note when canCall is empty', () => {
@@ -73,8 +127,8 @@ describe('AgentCards', () => {
     interpreter.dispatchEvent(new MouseEvent('mouseenter'));
     fixture.detectChanges();
 
-    expect(interpreter.querySelector('.leaf-note')?.textContent).toBe('Hoja — no delega');
-    expect(interpreter.querySelectorAll('.can-call-list li').length).toBe(0);
+    expect(interpreter.querySelector('.hover-panel .leaf-note')?.textContent).toBe('Hoja — no delega');
+    expect(interpreter.querySelectorAll('.hover-panel .can-call-list li').length).toBe(0);
   });
 
   it('should dedupe the recursive fan-out self-loop with a hint (explorer)', () => {
@@ -100,7 +154,7 @@ describe('AgentCards', () => {
     delivery.dispatchEvent(new MouseEvent('mouseenter'));
     fixture.detectChanges();
 
-    const chip = delivery.querySelector('.file-chip') as HTMLButtonElement;
+    const chip = delivery.querySelector('.hover-panel .file-chip') as HTMLButtonElement;
     expect(chip).toBeTruthy();
     chip.click();
     fixture.detectChanges();
@@ -109,7 +163,7 @@ describe('AgentCards', () => {
     expect(feedback?.textContent).toBe('Copiado');
   });
 
-  it('should render chips for minimal-surface agents (external-scout, 1 file)', () => {
+  it('should render chips for minimal-surface agents (external-scout)', () => {
     const fixture = TestBed.createComponent(AgentCards);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
@@ -118,8 +172,9 @@ describe('AgentCards', () => {
     externalScout.dispatchEvent(new MouseEvent('mouseenter'));
     fixture.detectChanges();
 
-    const chips = externalScout.querySelectorAll('.file-chip');
-    expect(chips.length).toBe(1);
+    const expected = AGENTS.find((a) => a.id === 'external-scout')!.relatedFiles.length;
+    const chips = externalScout.querySelectorAll('.hover-panel .file-chip');
+    expect(chips.length).toBe(expected);
     expect(chips[0].textContent).toContain('external-scout.md');
   });
 

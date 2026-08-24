@@ -1,15 +1,15 @@
 ---
-last_updated: 2026-08-23
-description: Mirror of refined-source/graph.json (14 nodes, 27 edges, 7 groups) — flat files + group indexes, static no runtime writes, navigated from graph UI
+last_updated: 2026-08-25
+description: 'Deprecated: superseded by live RPG card at /diagram-agent/:id — mirror of refined-source/graph.json (12 nodes, 22 edges, 7 groups) is frozen; use the live viewer instead.'
 tags: [diagram-agent, graph, overview, refined-source]
-status: active
+status: deprecated
 ---
 
-# Diagram Agent — Graph Mirror
+# Diagram Agent — Graph Mirror (Deprecated)
 
-> Navigate from graph: each node in the Graph UI links to `diagram-agent/<id>.md`. This folder is the stable click target — visual only, no runtime API. Static, no auto-sync.
+> **Deprecated — superseded by the live RPG card at `/diagram-agent/:id`.** This static `diagram-agent/` mirror (v1.0.0, 14 nodes, 27 edges) is frozen and will be removed by a human later (never-delete convention during implementation). The live viewer renders the same data at runtime from `refined-source/agents.json + graph.json + rules.json` (v1.1.0, 12 nodes, 22 edges, 7 groups with race+flavor) — no static `.md` links remain in the viewer.
 
-Mirror of [`refined-source/graph.json`](../refined-source/graph.json) (v1.0.0, generated 2026-08-23, 14 nodes, 27 edges, 7 groups) — flat files + group indexes. Static, no runtime writes. Navigated from the `Grafo de delegación` tab in the Angular app.
+Mirror of [`refined-source/graph.json`](../refined-source/graph.json) (v1.0.0, generated 2026-08-23, 14 nodes, 27 edges, 7 groups) — flat files + group indexes. Static, no runtime writes. Navigated from the `Grafo de delegación` tab in the Angular app. **Status is now `deprecated`; the live viewer is the source of truth.**
 
 ## Structure
 
@@ -17,6 +17,13 @@ Mirror of [`refined-source/graph.json`](../refined-source/graph.json) (v1.0.0, g
 - **Group indexes** (7): `diagram-agent/<group>/README.md` — members, edges, relative links `../<id>.md`.
 
 Prefer relative markdown links, not symlinks or duplicate copies (Windows + drift risk). Source of truth remains `refined-source/graph.json` + `refined-source/agents.json` + `refined-source/agents/*.md` + `.opencode/agents/subagents/*.md` (hybrid provenance).
+
+## Live viewer (current)
+
+- **Route:** `/diagram-agent/:id` → `src/app/diagram-agent/diagram-agent-viewer.ts` (lazy, `withComponentInputBinding`)
+- **Data:** live from `refined-source/agents.json` + `refined-source/graph.json` + `refined-source/rules.json` (v1.1.0)
+- **Renders:** race badge + flavor (graph groups race/flavor), passives (3 tiers: world/race/personal filtered `kind=passive`), skills (`kind=active`), weapons (permission entries) + summons (`permission.task`), protocol scrolls (`relatedFiles` filtered `.opencode/protocols/`), outgoing/incoming edges.
+- **No static links:** `docHref` / `groupIndexHref` removed; no `/diagram-agent/*.md` hrefs remain.
 
 ## Groups
 
@@ -96,7 +103,7 @@ Total: 27 edges. Verify: `jq '.edges|length' ../refined-source/graph.json` → 2
 
 ## References
 
-- Source of truth: [`refined-source/graph.json`](../refined-source/graph.json) (v1.0.0), [`refined-source/agents.json`](../refined-source/agents.json), [`refined-source/README.md`](../refined-source/README.md) + [`refined-source/agents/*.md`](../refined-source/agents/) (14 files)
+- Source of truth: [`refined-source/graph.json`](../refined-source/graph.json) (v1.1.0), [`refined-source/agents.json`](../refined-source/agents.json), [`refined-source/README.md`](../refined-source/README.md) + [`refined-source/agents/*.md`](../refined-source/agents/) (12 files)
 - Architecture: [`docs/context/architecture.md`](../docs/context/architecture.md) (layers, diagram-agent is static, no runtime API)
 - Data layer: [`docs/context/refined-source-data.md`](../docs/context/refined-source-data.md)
 - Curation: [`docs/protocols/refined-source-curation.md`](../docs/protocols/refined-source-curation.md)

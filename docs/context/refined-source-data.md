@@ -1,6 +1,6 @@
 ---
-last_updated: 2026-08-25
-description: The refined-source data layer — agents.json, rules.json (passive-first with kind), graph.json schemas, hover contract, jq validation, and manual curation workflow. (14→13 spec / 12 actual)
+last_updated: 2026-08-24
+description: The refined-source data layer — agents.json, rules.json (passive-first with kind), graph.json (v1.1.0 race+flavor) schemas, hover contract, jq validation, and manual curation workflow. (12 actual, Branch B)
 tags: [refined-source, data-layer, json, agents.json, rules.json, graph.json, jq, passive, active]
 status: active
 ---
@@ -13,10 +13,10 @@ status: active
 
 | File | Content |
 |---|---|
-| `agents.json` | 13 agent cards (spec) / 12 actual — single `coder` with language param, vision-relay removed (was 14) |
+| `agents.json` | 12 agent cards — single `coder` with language param, vision-relay removed (was 14); Branch B per-agent protocol scrolls reflected in `relatedFiles` (`.opencode/protocols/<id>/*.md`, 12 dirs, e.g. `.opencode/protocols/coder/coder-toolkit.md`) — v1.1.0 |
 | `rules.json` | Rule cards, 3 levels (global 2, groups 6 families, agentSpecific 6 agents) — coders members [coder], exploration [explorer, project-context, external-scout] |
-| `graph.json` | Delegation graph (13 nodes spec / 12 actual, 22 edges, 7 groups, v1.0.2) — was 14 nodes, 26 edges v1.0.1 |
-| `agents/*.md` | Per-agent detail prose (12 actual / 13 spec — coder.md replaces coder-angular/go, vision-relay removed, interpreter expanded) |
+| `graph.json` | Delegation graph (12 nodes, 22 edges, 7 groups, v1.1.0) — was 14 nodes, 26 edges v1.0.1; v1.1.0 adds display-only `race` + `flavor` per group (RPG layer) |
+| `agents/*.md` | Per-agent detail prose (12 actual — coder.md replaces coder-angular/go, vision-relay removed, interpreter expanded) |
 | `README.md` | Overview + hover contract |
 
 ## agents.json schema
@@ -36,7 +36,9 @@ status: active
 | `specificBeyondGeneral` | string | What the agent does beyond global rules |
 | `relatedFiles` | string[] | Real paths; must resolve |
 
-**Coder language param**: `coder` is language-parameterized — `language=angular|go` branches to Angular docs+MCP or Go docs+gofmt/vet. Single entry `id=coder` replaces `coder-angular`/`coder-go`; `relatedFiles` = [`.opencode/agents/subagents/coder.md`, `.opencode/agents/subagents/coder.schema.json`, `docs/project.md`, `docs/context/architecture.md`].
+**Coder language param**: `coder` is language-parameterized — `language=angular|go` branches to Angular docs+MCP or Go docs+gofmt/vet. Single entry `id=coder` replaces `coder-angular`/`coder-go`; `relatedFiles` = [`.opencode/agents/subagents/coder.md`, `.opencode/agents/subagents/coder.schema.json`, `docs/project.md`, `docs/context/architecture.md`, `.opencode/protocols/coder/coder-toolkit.md`] (Branch B scroll).
+
+**Branch B relatedFiles (v1.1.0)**: every agent now lists its per-agent scroll(s) under `.opencode/protocols/<id>/*.md` (12 dirs) plus shared protocols where relevant; examples: `delivery` → `.opencode/protocols/delivery/delivery-routing.md`, `orchestrator` → `orchestrator-fanout.md`, `documenter` → `documenter-chronicle.md`. See `refined-source/agents.json` and `.opencode/protocols/README.md` Per-agent scrolls.
 
 ## rules.json structure
 
@@ -52,9 +54,9 @@ Every rule cites `source` (the file it comes from) and carries `kind` (`passive`
 
 | Key | Content |
 |---|---|
-| `meta` | `version 1.0.2`, `generated 2026-08-25`, `source agent-wizard/.opencode (sole source)`, `description 13 nodes 22 edges (spec) / 12 actual`, `layoutHint` |
-| `groups` | 7 groups with `id`, `label`, `color`, `order` |
-| `nodes` | 12 actual (13 spec) nodes with `id`, `label`, `group`, `level`, `isPrimary` — single `coder` replaces `coder-angular`/`coder-go`, `vision-relay` removed |
+| `meta` | `version 1.1.0`, `generated 2026-08-24`, `source agent-wizard/.opencode (sole source)`, `description 12 nodes 22 edges, v1.1.0 adds race+flavor (display-only)`, `layoutHint` |
+| `groups` | 7 groups with `id`, `label`, `color`, `order`, `race`, `flavor` (display-only RPG layer — race = Herald/Diviner/Ranger/Artificer/Sentinel/Inquisitor/Lorekeeper) |
+| `nodes` | 12 nodes with `id`, `label`, `group`, `level`, `isPrimary` — single `coder` replaces `coder-angular`/`coder-go`, `vision-relay` removed |
 | `edges` | 22 edges with `from`, `to`, `kind`, optional `label` (was 26; delivery→vision-relay, orchestrator→vision-relay removed, coder-angular/go merged to coder) |
 
 ## Hover contract (per card)
@@ -69,10 +71,12 @@ Every rule cites `source` (the file it comes from) and carries `kind` (`passive`
 
 ```bash
 jq empty refined-source/agents.json && jq empty refined-source/rules.json && jq empty refined-source/graph.json
-# counts (spec vs actual):
-# jq length refined-source/agents.json            # 12 actual (13 spec narrative)
-# jq '.nodes | length' refined-source/graph.json  # 12 actual (13 spec)
+# counts (v1.1.0):
+# jq length refined-source/agents.json            # 12
+# jq '.nodes | length' refined-source/graph.json  # 12
 # jq '.edges | length' refined-source/graph.json  # 22
+# jq '.groups | length' refined-source/graph.json # 7 (each with race+flavor)
+# jq '.meta.version' refined-source/graph.json    # "1.1.0"
 ```
 
 ## Curation workflow
@@ -80,7 +84,7 @@ jq empty refined-source/agents.json && jq empty refined-source/rules.json && jq 
 1. Change originates in `.opencode/` (sole source; `source/` deleted 2026-08-24 — no copy step).
 2. Manually reflect in `agents.json` / `rules.json` / `graph.json` (pretty-printed, jq-checked; `rules.json` ordered passive-first with `kind`).
 3. Add/update `agents/<id>.md` if prose is needed.
-4. Bump `graph.json → meta.version` and `meta.generated` (current: `1.0.2` / `2026-08-25`).
+4. Bump `graph.json → meta.version` and `meta.generated` (current: `1.1.0` / `2026-08-24` — race+flavor added).
 5. Validate with jq.
 
 ## References

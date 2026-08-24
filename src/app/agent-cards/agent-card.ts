@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import type { Agent } from '../models/refined-source';
-import { AGENTS } from '../models/refined-source';
+import { AGENTS, GRAPH, RULES } from '../models/refined-source';
 
 /** One entry of the deduped "Puede llamar a" list. */
 export interface CanCallItem {
@@ -19,10 +19,22 @@ export interface CanCallItem {
   recursive: boolean;
 }
 
+export interface WeaponItem {
+  tool: string;
+  status: 'allow' | 'deny';
+}
+
+export interface SummonItem {
+  id: string;
+  displayName: string;
+}
+
 /**
  * Single agent card. The card body renders the always-visible summary; the
  * hover panel (signal-driven via mouseenter/mouseleave) reveals the hover
  * contract: canCall, specificBeyondGeneral and clickable related-file chips.
+ * The RPG sections (race+flavor, passives, skills, weapons/summons, protocol
+ * scrolls) are derived at render time from refined-source and always visible.
  */
 @Component({
   selector: 'app-agent-card',
@@ -47,6 +59,54 @@ export class AgentCard implements OnDestroy {
   /** agent id → displayName lookup. */
   private readonly nameById: ReadonlyMap<string, string> = new Map(
     AGENTS.map((agent) => [agent.id, agent.displayName]),
+  );
+
+  /** Group metadata (race + flavor + color) from graph.json. */
+  readonly groupMeta = computed(() => GRAPH.groups.find((g) => g.id === this.agent().group) ?? null);
+
+  readonly race = computed(() => this.groupMeta()?.race ?? null);
+  readonly flavor = computed(() => this.groupMeta()?.flavor ?? null);
+
+  // Passives — 3 tiers filtered kind=passive
+  readonly worldPassives = computed(() => RULES.global.filter((r) => r.kind === 'passive'));
+  readonly racePassives = computed(() => {
+    const fam = RULES.groups.find((g) => g.group === this.agent().group);
+    return fam ? fam.rules.filter((r) => r.kind === 'passive') : [];
+  });
+  readonly personalPassives = computed(() => {
+    const entry = RULES.agentSpecific.find((a) => a.agentId === this.agent().id);
+    return entry ? entry.rules.filter((r) => r.kind === 'passive') : [];
+  });
+
+  // Skills — same sources filtered kind=active
+  readonly worldSkills = computed(() => RULES.global.filter((r) => r.kind === 'active'));
+  readonly raceSkills = computed(() => {
+    const fam = RULES.groups.find((g) => g.group === this.agent().group);
+    return fam ? fam.rules.filter((r) => r.kind === 'active') : [];
+  });
+  readonly personalSkills = computed(() => {
+    const entry = RULES.agentSpecific.find((a) => a.agentId === this.agent().id);
+    return entry ? entry.rules.filter((r) => r.kind === 'active') : [];
+  });
+
+  /** Weapons = explicit permission entries excluding task. */
+  readonly weapons = computed<WeaponItem[]>(() => {
+    const perm = this.agent().permission;
+    return Object.entries(perm)
+      .filter(([key, val]) => key !== 'task' && (val === 'allow' || val === 'deny'))
+      .map(([tool, status]) => ({ tool, status: status as 'allow' | 'deny' }));
+  });
+
+  /** Summons = permission.task allow-list rendered with displayNames. */
+  readonly summons = computed<SummonItem[]>(() => {
+    const task = this.agent().permission.task;
+    if (!Array.isArray(task)) return [];
+    return task.map((id) => ({ id, displayName: this.nameById.get(id) ?? id }));
+  });
+
+  /** Protocol scrolls = relatedFiles filtered to .opencode/protocols/ */
+  readonly protocolScrolls = computed(() =>
+    this.agent().relatedFiles.filter((f) => f.includes('.opencode/protocols/')),
   );
 
   /**

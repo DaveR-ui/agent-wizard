@@ -1,13 +1,13 @@
 ---
-last_updated: 2026-08-25
-description: Catalog of the 13 agents defined in refined-source/agents.json — id, group, role, model, mode, canCall count, key files. (14→13 in 1.0.2: removed vision-relay, merged coders 2→1)
+last_updated: 2026-08-24
+description: Catalog of the 12 agents defined in refined-source/agents.json — id, group, role, model, mode, canCall count, key files. (14→13 in 1.0.2: removed vision-relay, merged coders 2→1; Branch B flat with per-agent protocol scrolls under .opencode/protocols/<id>/ in v1.1.0)
 tags: [agents, catalog, subagents, groups, canCall]
 status: active
 ---
 
 # Agent Catalog
 
-The 13 agents defined in `refined-source/agents.json` (source of truth: `.opencode/agents/subagents/*.md`). Group colors come from `refined-source/graph.json → groups`. Actual file count is 12 after 1.0.2 merge math (14−1 vision-relay −1 coder merge =12); docs state 13 per Phase B spec — see note below.
+The 12 agents defined in `refined-source/agents.json` (source of truth: `.opencode/agents/subagents/*.md` flat, Branch B). Group colors and RPG race/flavor come from `refined-source/graph.json → groups` (v1.1.0, 7 groups). Actual file count is 12 after 1.0.2 merge math (14−1 vision-relay −1 coder merge =12); per-agent protocol scrolls now live under `.opencode/protocols/<id>/*.md` (12 dirs) and are reflected in `refined-source/agents.json` v1.1.0 `relatedFiles` — see footnote after the table and `.opencode/protocols/README.md` Per-agent scrolls.
 
 ## All agents
 
@@ -19,7 +19,7 @@ The 13 agents defined in `refined-source/agents.json` (source of truth: `.openco
 | `explorer` | Explorer | exploration | Read-only codebase exploration, file search, dependency analysis | inherit | subagent | 1 | `explorer.md`, `explorer.schema.json`, `docs/context/architecture.md` |
 | `project-context` | Project Context | exploration | READ-ONLY doc lookup and context assembly for docs/ | inherit | subagent | 0 | `project-context.md`, `docs/project.md`, `docs/context/README.md` |
 | `external-scout` | External Scout | exploration | Fetches live docs for external libraries on demand | inherit | subagent | 0 | `external-scout.md` |
-| `coder` | Coder | coders | Language-parameterized implementation (Angular SPA | Go API) — branches by language param, thin adapter over docs/context/ | deepseek-v4-flash | subagent | 0 | `coder.md`, `coder.schema.json`, `docs/project.md`, `docs/context/architecture.md` |
+| `coder` | Coder | coders | Language-parameterized implementation (Angular SPA | Go API) — branches by language param, thin adapter over docs/context/ | deepseek-v4-flash | subagent | 0 | `coder.md`, `coder.schema.json`, `docs/project.md`, `docs/context/architecture.md`, `.opencode/protocols/coder/coder-toolkit.md` |
 | `reviewer` | Reviewer | guardians | Code review, security audit, best practices, performance | deepseek-v4-flash | subagent | 1 | `reviewer.md`, `reviewer.schema.json`, `docs/context/architecture.md` |
 | `architect` | Architect | guardians | System design, module boundaries, patterns | inherit | subagent | 0 | `architect.md`, `architect.schema.json`, `docs/context/architecture.md` |
 | `analista` | Analista | guardians | Second-opinion advisor; read-only plan critique | inherit | subagent | 0 | `analista.md`, `analista.schema.json`, `protocols/session-recovery.md` |
@@ -28,6 +28,7 @@ The 13 agents defined in `refined-source/agents.json` (source of truth: `.openco
 
 > 1.0.1: `orchestrator` canCall 12→11 (interpreter removed); Edge count 27→26.
 > 1.0.2: removed vision-relay, merged coders (2→1), nodes 14→13 (spec) / 14→12 actual, edges 26→22. Delivery canCall 13→11, orchestrator 11→9. Interpreter gained image-inspection capability (one image one question, text-over-image rule, unclear fallback).
+> 1.1.0 (Branch B, 2026-08-24): flat-loader precedent — agents stay at `.opencode/agents/subagents/<id>.md` (12); per-agent protocol scrolls under `.opencode/protocols/<id>/*.md` (12 dirs, e.g. `.opencode/protocols/coder/coder-toolkit.md`, `.opencode/protocols/documenter/documenter-chronicle.md`) reflected in `refined-source/agents.json` `relatedFiles`; `graph.json` groups add display-only `race` + `flavor` (Herald, Diviner, Ranger, Artificer, Sentinel, Inquisitor, Lorekeeper). Single coder preserved — Artificer with two toolkits (`language=angular|go`). See `docs/plans/rpg-agent-organization-plan.md` Phases 1–2 and `.opencode/protocols/README.md` Per-agent scrolls.
 
 ## Groups
 

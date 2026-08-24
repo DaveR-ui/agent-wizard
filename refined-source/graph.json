@@ -1,56 +1,270 @@
 {
   "meta": {
-    "generated": "2026-08-25",
+    "generated": "2026-08-24",
     "source": "agent-wizard/.opencode (sole source; source/ deleted 2026-08-24)",
-    "version": "1.0.2",
-    "description": "Nodes = agents, edges = canCall via task tool (from permission.task frontmatter). Hover on each card shows callable agents + specificBeyondGeneral + related files. 13 nodes, 22 edges.",
+    "version": "1.1.0",
+    "description": "Nodes = agents, edges = canCall via task tool (from permission.task frontmatter). Hover on each card shows callable agents + specificBeyondGeneral + related files. 13 nodes, 22 edges. v1.1.0 adds display-only race+flavor per group (RPG layer, display-only).",
     "layoutHint": "Force-directed with coordination layer top, guardians middle, coders/quality/writers leaves, exploration periphery"
   },
   "groups": [
-    { "id": "coordination", "label": "Coordination", "color": "#4F46E5", "order": 0 },
-    { "id": "analysis", "label": "Analysis", "color": "#06B6D4", "order": 1 },
-    { "id": "guardians", "label": "Guardians", "color": "#DC2626", "order": 2 },
-    { "id": "coders", "label": "Coders", "color": "#16A34A", "order": 3 },
-    { "id": "exploration", "label": "Exploration", "color": "#CA8A04", "order": 4 },
-    { "id": "quality", "label": "Quality", "color": "#9333EA", "order": 5 },
-    { "id": "writers", "label": "Writers", "color": "#EA580C", "order": 6 }
+    {
+      "id": "coordination",
+      "label": "Coordination",
+      "color": "#4F46E5",
+      "order": 0,
+      "race": "Herald",
+      "flavor": "Voice of the party — takes quests from the human and directs the company; never strikes"
+    },
+    {
+      "id": "analysis",
+      "label": "Analysis",
+      "color": "#06B6D4",
+      "order": 1,
+      "race": "Diviner",
+      "flavor": "Reads intent, dispels ambiguity, points the way — never walks the path for you"
+    },
+    {
+      "id": "guardians",
+      "label": "Guardians",
+      "color": "#DC2626",
+      "order": 2,
+      "race": "Sentinel",
+      "flavor": "Read-only judges of plans and deeds"
+    },
+    {
+      "id": "coders",
+      "label": "Coders",
+      "color": "#16A34A",
+      "order": 3,
+      "race": "Artificer",
+      "flavor": "Crafter who switches toolkit by material (language=angular|go)"
+    },
+    {
+      "id": "exploration",
+      "label": "Exploration",
+      "color": "#CA8A04",
+      "order": 4,
+      "race": "Ranger",
+      "flavor": "Scouts the terrain and the lore; touches nothing"
+    },
+    {
+      "id": "quality",
+      "label": "Quality",
+      "color": "#9333EA",
+      "order": 5,
+      "race": "Inquisitor",
+      "flavor": "Trials every artifact under controlled combat until it breaks"
+    },
+    {
+      "id": "writers",
+      "label": "Writers",
+      "color": "#EA580C",
+      "order": 6,
+      "race": "Lorekeeper",
+      "flavor": "Chronicler of the party; writes only in the common tongue (English)"
+    }
   ],
   "nodes": [
-    { "id": "delivery", "label": "Delivery", "group": "coordination", "level": 0, "isPrimary": true },
-    { "id": "orchestrator", "label": "Orchestrator", "group": "coordination", "level": 1, "isPrimary": false },
-    { "id": "interpreter", "label": "Interpreter", "group": "analysis", "level": 1, "isPrimary": false },
-    { "id": "explorer", "label": "Explorer", "group": "exploration", "level": 2, "isPrimary": false },
-    { "id": "project-context", "label": "Project Context", "group": "exploration", "level": 2, "isPrimary": false },
-    { "id": "external-scout", "label": "External Scout", "group": "exploration", "level": 2, "isPrimary": false },
-    { "id": "coder", "label": "Coder", "group": "coders", "level": 2, "isPrimary": false },
-    { "id": "reviewer", "label": "Reviewer", "group": "guardians", "level": 2, "isPrimary": false },
-    { "id": "tester", "label": "Tester", "group": "quality", "level": 2, "isPrimary": false },
-    { "id": "architect", "label": "Architect", "group": "guardians", "level": 2, "isPrimary": false },
-    { "id": "analista", "label": "Analista", "group": "guardians", "level": 2, "isPrimary": false },
-    { "id": "documenter", "label": "Documenter", "group": "writers", "level": 2, "isPrimary": false }
+    {
+      "id": "delivery",
+      "label": "Delivery",
+      "group": "coordination",
+      "level": 0,
+      "isPrimary": true
+    },
+    {
+      "id": "orchestrator",
+      "label": "Orchestrator",
+      "group": "coordination",
+      "level": 1,
+      "isPrimary": false
+    },
+    {
+      "id": "interpreter",
+      "label": "Interpreter",
+      "group": "analysis",
+      "level": 1,
+      "isPrimary": false
+    },
+    {
+      "id": "explorer",
+      "label": "Explorer",
+      "group": "exploration",
+      "level": 2,
+      "isPrimary": false
+    },
+    {
+      "id": "project-context",
+      "label": "Project Context",
+      "group": "exploration",
+      "level": 2,
+      "isPrimary": false
+    },
+    {
+      "id": "external-scout",
+      "label": "External Scout",
+      "group": "exploration",
+      "level": 2,
+      "isPrimary": false
+    },
+    {
+      "id": "coder",
+      "label": "Coder",
+      "group": "coders",
+      "level": 2,
+      "isPrimary": false
+    },
+    {
+      "id": "reviewer",
+      "label": "Reviewer",
+      "group": "guardians",
+      "level": 2,
+      "isPrimary": false
+    },
+    {
+      "id": "tester",
+      "label": "Tester",
+      "group": "quality",
+      "level": 2,
+      "isPrimary": false
+    },
+    {
+      "id": "architect",
+      "label": "Architect",
+      "group": "guardians",
+      "level": 2,
+      "isPrimary": false
+    },
+    {
+      "id": "analista",
+      "label": "Analista",
+      "group": "guardians",
+      "level": 2,
+      "isPrimary": false
+    },
+    {
+      "id": "documenter",
+      "label": "Documenter",
+      "group": "writers",
+      "level": 2,
+      "isPrimary": false
+    }
   ],
   "edges": [
-    { "from": "delivery", "to": "interpreter", "kind": "always", "label": "Step 0" },
-    { "from": "delivery", "to": "orchestrator", "kind": "non-trivial", "label": "delegate" },
-    { "from": "delivery", "to": "coder", "kind": "direct", "label": "trivial code" },
-    { "from": "delivery", "to": "tester", "kind": "direct" },
-    { "from": "delivery", "to": "reviewer", "kind": "direct" },
-    { "from": "delivery", "to": "architect", "kind": "direct" },
-    { "from": "delivery", "to": "explorer", "kind": "direct" },
-    { "from": "delivery", "to": "project-context", "kind": "direct" },
-    { "from": "delivery", "to": "external-scout", "kind": "direct" },
-    { "from": "delivery", "to": "analista", "kind": "direct" },
-    { "from": "delivery", "to": "documenter", "kind": "direct" },
-    { "from": "orchestrator", "to": "coder", "kind": "fan-out" },
-    { "from": "orchestrator", "to": "tester", "kind": "parallel" },
-    { "from": "orchestrator", "to": "reviewer", "kind": "parallel" },
-    { "from": "orchestrator", "to": "architect", "kind": "parallel" },
-    { "from": "orchestrator", "to": "explorer", "kind": "fan-out" },
-    { "from": "orchestrator", "to": "project-context", "kind": "parallel" },
-    { "from": "orchestrator", "to": "external-scout", "kind": "parallel" },
-    { "from": "orchestrator", "to": "analista", "kind": "parallel" },
-    { "from": "orchestrator", "to": "documenter", "kind": "parallel" },
-    { "from": "explorer", "to": "explorer", "kind": "recursive-fanout", "label": "CHUNK_SIZE 20" },
-    { "from": "reviewer", "to": "reviewer", "kind": "recursive-fanout", "label": "partition by independence" }
+    {
+      "from": "delivery",
+      "to": "interpreter",
+      "kind": "always",
+      "label": "Step 0"
+    },
+    {
+      "from": "delivery",
+      "to": "orchestrator",
+      "kind": "non-trivial",
+      "label": "delegate"
+    },
+    {
+      "from": "delivery",
+      "to": "coder",
+      "kind": "direct",
+      "label": "trivial code"
+    },
+    {
+      "from": "delivery",
+      "to": "tester",
+      "kind": "direct"
+    },
+    {
+      "from": "delivery",
+      "to": "reviewer",
+      "kind": "direct"
+    },
+    {
+      "from": "delivery",
+      "to": "architect",
+      "kind": "direct"
+    },
+    {
+      "from": "delivery",
+      "to": "explorer",
+      "kind": "direct"
+    },
+    {
+      "from": "delivery",
+      "to": "project-context",
+      "kind": "direct"
+    },
+    {
+      "from": "delivery",
+      "to": "external-scout",
+      "kind": "direct"
+    },
+    {
+      "from": "delivery",
+      "to": "analista",
+      "kind": "direct"
+    },
+    {
+      "from": "delivery",
+      "to": "documenter",
+      "kind": "direct"
+    },
+    {
+      "from": "orchestrator",
+      "to": "coder",
+      "kind": "fan-out"
+    },
+    {
+      "from": "orchestrator",
+      "to": "tester",
+      "kind": "parallel"
+    },
+    {
+      "from": "orchestrator",
+      "to": "reviewer",
+      "kind": "parallel"
+    },
+    {
+      "from": "orchestrator",
+      "to": "architect",
+      "kind": "parallel"
+    },
+    {
+      "from": "orchestrator",
+      "to": "explorer",
+      "kind": "fan-out"
+    },
+    {
+      "from": "orchestrator",
+      "to": "project-context",
+      "kind": "parallel"
+    },
+    {
+      "from": "orchestrator",
+      "to": "external-scout",
+      "kind": "parallel"
+    },
+    {
+      "from": "orchestrator",
+      "to": "analista",
+      "kind": "parallel"
+    },
+    {
+      "from": "orchestrator",
+      "to": "documenter",
+      "kind": "parallel"
+    },
+    {
+      "from": "explorer",
+      "to": "explorer",
+      "kind": "recursive-fanout",
+      "label": "CHUNK_SIZE 20"
+    },
+    {
+      "from": "reviewer",
+      "to": "reviewer",
+      "kind": "recursive-fanout",
+      "label": "partition by independence"
+    }
   ]
 }
