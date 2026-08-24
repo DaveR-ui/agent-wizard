@@ -1,0 +1,33 @@
+<article
+  class="mini-card"
+  [class.is-selected]="selected()"
+  [style.--group-color]="groupColor()"
+  (click)="onCardClick()"
+  (keydown)="onKeyDown($event)"
+  role="button"
+  tabindex="0"
+  [attr.aria-selected]="selected()"
+  [attr.aria-label]="'Select ' + agent().displayName + ' for details'"
+>
+  <header class="mini-card-header">
+    <span class="group-badge" [style.background-color]="groupColor()">{{ agent().group }}</span>
+    @if (race()) {
+      <span class="race-badge" [style.border-color]="groupColor()" [style.color]="groupColor()" [attr.title]="flavor()">{{ race() }}</span>
+    }
+    <h3 class="mini-name">{{ agent().displayName }}</h3>
+  </header>
+
+  <p class="mini-role">{{ agent().role }}</p>
+  <p class="mini-essence" [attr.title]="agent().essence">{{ agent().essence }}</p>
+
+  <footer class="mini-footer">
+    <a
+      class="view-doc-link"
+      [routerLink]="['/diagram-agent', agent().id]"
+      (click)="$event.stopPropagation()"
+      aria-label="Open diagram-agent counterpart doc for {{ agent().displayName }}"
+    >
+      View doc →
+    </a>
+  </footer>
+</article>

@@ -1,16 +1,18 @@
 <header class="site-header">
   <h1 class="site-title">AgentWizard</h1>
   <p class="site-tagline">
-    Visualización del sistema de agentes: 14 agentes, reglas en 3 niveles y constructor de agentes.
+    Visualización del sistema de agentes: 12 agentes, reglas en 3 niveles y constructor de agentes.
   </p>
 </header>
 
 <!--
-  Desktop shell: the tab shell (.site-main) and the routed detail viewer
-  (.site-detail → diagram-agent/:id) sit side-by-side in a flex row. The aside
-  only reserves space when a detail route is active (App.hasDetail →
-  .has-detail); on narrow screens the layout stacks and the panel becomes full
-  width below the tabs.
+  Desktop shell: the tab shell (.site-main) and the shell-level detail viewer
+  (.site-detail) sit side-by-side in a flex row. The aside hosts both the
+  routed detail (diagram-agent/:id via router-outlet when hasDetail is true)
+  and the inline detail (AgentDetailPanel from AgentSelection when a mini card
+  is selected). It only reserves space when either is active (hasSidePanel →
+  .has-side-panel/.has-detail/.has-inline); on narrow screens the layout
+  stacks and the panel becomes full width below the tabs.
 -->
 <div class="site-layout">
   <main class="site-main">
@@ -34,7 +36,19 @@
     </mat-tab-group>
   </main>
 
-  <aside class="site-detail" [class.has-detail]="hasDetail()">
+  <aside
+    class="site-detail"
+    [class.has-detail]="hasDetail()"
+    [class.has-inline]="hasInlineDetail()"
+    [class.has-side-panel]="hasSidePanel()"
+  >
     <router-outlet />
+    @if (showInlineDetail()) {
+      @if (selectedAgent(); as sel) {
+        <app-agent-detail-panel [agent]="sel" [groupColor]="groupColor(sel.group)" />
+      }
+    } @else if (showPlaceholder()) {
+      <p class="detail-placeholder">Select an agent to see details</p>
+    }
   </aside>
 </div>

@@ -49,10 +49,10 @@
 }
 
 /*
- * Routed detail panel (diagram-agent viewer). Hidden until a detail route is
- * active (App.hasDetail → .has-detail) so the empty aside never reserves
- * horizontal space next to the tabs. Sticky keeps the card in view while the
- * tab shell scrolls.
+ * Routed + inline detail panel. Hidden until either a detail route is active
+ * (hasDetail → .has-detail) or an inline selection exists (hasInlineDetail →
+ * .has-inline / hasSidePanel → .has-side-panel). Sticky keeps the card in
+ * view while the tab shell scrolls.
  */
 .site-detail {
   flex: 0 0 28rem;
@@ -63,8 +63,22 @@
   display: none;
 }
 
-.site-detail.has-detail {
+.site-detail.has-detail,
+.site-detail.has-inline,
+.site-detail.has-side-panel {
   display: block;
+}
+
+.detail-placeholder {
+  margin: 0.75rem 0 0;
+  padding: 1rem 1.1rem;
+  border: 1px dashed var(--border-color, #cbd5e1);
+  border-radius: 10px;
+  background: var(--card-bg, #ffffff);
+  color: var(--text-muted, #64748b);
+  font-size: 0.88rem;
+  font-style: italic;
+  text-align: center;
 }
 
 .site-tabs {

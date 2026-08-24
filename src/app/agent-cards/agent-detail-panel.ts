@@ -1,21 +1,17 @@
 import {
   Component,
+  ChangeDetectionStrategy,
+  OnDestroy,
   computed,
   input,
-  output,
   signal,
-  OnDestroy,
-  ChangeDetectionStrategy,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import type { Agent } from '../models/refined-source';
 import { AGENTS, GRAPH, RULES } from '../models/refined-source';
 
-/** One entry of the deduped "Puede llamar a" list. */
 export interface CanCallItem {
   id: string;
   displayName: string;
-  /** True when the agent may delegate to itself (recursive fan-out, e.g. explorer → explorer). */
   recursive: boolean;
 }
 
@@ -30,46 +26,34 @@ export interface SummonItem {
 }
 
 /**
- * Single agent card. The card body renders the always-visible summary; the
- * hover panel (signal-driven via mouseenter/mouseleave) reveals the hover
- * contract: canCall, specificBeyondGeneral and clickable related-file chips.
- * The RPG sections (race+flavor, passives, skills, weapons/summons, protocol
- * scrolls) are derived at render time from refined-source and always visible.
+ * Persistent detail panel for the Agentes master-detail interaction.
+ * Rendered in the right-side aside of AgentCards when an agent is selected
+ * via card click. Reuses the full detail content (canCall, specificBeyondGeneral,
+ * relatedFiles, RPG passives/skills/weapons/summons/protocol scrolls) but as a
+ * persistent panel — the hover-only contract (.hover-panel in AgentCard) stays
+ * transient. Styling matches the card/viewer vocabulary (border-top accent,
+ * sticky aside) while remaining a presentational component driven by [agent].
  */
 @Component({
-  selector: 'app-agent-card',
-  imports: [RouterLink],
-  templateUrl: './agent-card.html',
+  selector: 'app-agent-detail-panel',
+  templateUrl: './agent-detail-panel.html',
+  styleUrl: './agent-detail-panel.css',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './agent-card.css',
 })
-export class AgentCard implements OnDestroy {
+export class AgentDetailPanel implements OnDestroy {
   readonly agent = input.required<Agent>();
   readonly groupColor = input<string>('#64748b');
-  /** True when this card is the currently selected one in the master-detail. */
-  readonly selected = input<boolean>(false);
 
-  /** Emits the agent id when the card surface is activated (click / keyboard). */
-  readonly cardSelected = output<string>();
-
-  /** Hover state is signal-driven so tests can assert the contract. */
-  readonly hovered = signal(false);
-
-  /** Path currently shown with "Copiado" feedback (null = none). */
   readonly copiedPath = signal<string | null>(null);
 
-  /** agent id → displayName lookup. */
   private readonly nameById: ReadonlyMap<string, string> = new Map(
-    AGENTS.map((agent) => [agent.id, agent.displayName]),
+    AGENTS.map((a) => [a.id, a.displayName]),
   );
 
-  /** Group metadata (race + flavor + color) from graph.json. */
   readonly groupMeta = computed(() => GRAPH.groups.find((g) => g.id === this.agent().group) ?? null);
-
   readonly race = computed(() => this.groupMeta()?.race ?? null);
   readonly flavor = computed(() => this.groupMeta()?.flavor ?? null);
 
-  // Passives — 3 tiers filtered kind=passive
   readonly worldPassives = computed(() => RULES.global.filter((r) => r.kind === 'passive'));
   readonly racePassives = computed(() => {
     const fam = RULES.groups.find((g) => g.group === this.agent().group);
@@ -80,7 +64,6 @@ export class AgentCard implements OnDestroy {
     return entry ? entry.rules.filter((r) => r.kind === 'passive') : [];
   });
 
-  // Skills — same sources filtered kind=active
   readonly worldSkills = computed(() => RULES.global.filter((r) => r.kind === 'active'));
   readonly raceSkills = computed(() => {
     const fam = RULES.groups.find((g) => g.group === this.agent().group);
@@ -91,7 +74,6 @@ export class AgentCard implements OnDestroy {
     return entry ? entry.rules.filter((r) => r.kind === 'active') : [];
   });
 
-  /** Weapons = explicit permission entries excluding task. */
   readonly weapons = computed<WeaponItem[]>(() => {
     const perm = this.agent().permission;
     return Object.entries(perm)
@@ -99,95 +81,44 @@ export class AgentCard implements OnDestroy {
       .map(([tool, status]) => ({ tool, status: status as 'allow' | 'deny' }));
   });
 
-  /** Summons = permission.task allow-list rendered with displayNames. */
   readonly summons = computed<SummonItem[]>(() => {
     const task = this.agent().permission.task;
     if (!Array.isArray(task)) return [];
     return task.map((id) => ({ id, displayName: this.nameById.get(id) ?? id }));
   });
 
-  /** Protocol scrolls = relatedFiles filtered to .opencode/protocols/ */
   readonly protocolScrolls = computed(() =>
     this.agent().relatedFiles.filter((f) => f.includes('.opencode/protocols/')),
   );
 
-  /**
-   * Deduped canCall list. A self-reference (id === own id) is rendered once
-   * with a "recursivo" hint instead of twice (delivery's list contains
-   * interpreter etc. exactly once already; explorer/reviewer self-loops are the
-   * graph's recursive-fanout edges).
-   */
   readonly canCallItems = computed<CanCallItem[]>(() => {
     const agent = this.agent();
     const seen = new Set<string>();
     const items: CanCallItem[] = [];
     for (const id of agent.canCall) {
-      if (seen.has(id)) {
-        continue;
-      }
+      if (seen.has(id)) continue;
       seen.add(id);
-      items.push({
-        id,
-        displayName: this.nameById.get(id) ?? id,
-        recursive: id === agent.id,
-      });
+      items.push({ id, displayName: this.nameById.get(id) ?? id, recursive: id === agent.id });
     }
     return items;
   });
 
-  /** Empty canCall = leaf agent that never delegates. */
   readonly isLeaf = computed(() => this.canCallItems().length === 0);
 
   private copyResetTimer: ReturnType<typeof setTimeout> | null = null;
 
-  onMouseEnter(): void {
-    this.hovered.set(true);
-  }
-
-  onMouseLeave(): void {
-    this.hovered.set(false);
-  }
-
-  /**
-   * Whole-card click now SELECTS the agent for the persistent right-side
-   * detail panel (master-detail). Navigation to /diagram-agent/:id is via the
-   * explicit "View doc →" link (RouterLink with stopPropagation), keeping
-   * hover and selection as independent signals — hover does not clear selection.
-   */
-  onCardClick(): void {
-    this.cardSelected.emit(this.agent().id);
-  }
-
-  onKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      this.cardSelected.emit(this.agent().id);
-    }
-  }
-
   onChipClick(path: string, event: Event): void {
-    // Chip clicks copy the path — do not bubble into the card navigation.
     event.stopPropagation();
     void this.copyToClipboard(path);
     this.copiedPath.set(path);
-    if (this.copyResetTimer) {
-      clearTimeout(this.copyResetTimer);
-    }
+    if (this.copyResetTimer) clearTimeout(this.copyResetTimer);
     this.copyResetTimer = setTimeout(() => this.copiedPath.set(null), 1600);
   }
 
   ngOnDestroy(): void {
-    if (this.copyResetTimer) {
-      clearTimeout(this.copyResetTimer);
-    }
+    if (this.copyResetTimer) clearTimeout(this.copyResetTimer);
   }
 
-  /**
-   * Copies a path to the clipboard. Prefers the async Clipboard API; falls back
-   * to a temporary textarea + execCommand for non-secure contexts (and jsdom,
-   * where the Clipboard API is absent). Never throws: the "Copiado" feedback is
-   * signal-driven and shows regardless of clipboard availability.
-   */
   private async copyToClipboard(text: string): Promise<void> {
     try {
       if (navigator.clipboard?.writeText) {
@@ -195,7 +126,7 @@ export class AgentCard implements OnDestroy {
         return;
       }
     } catch {
-      // Fall through to the legacy path.
+      // fall through
     }
     try {
       const textarea = document.createElement('textarea');
@@ -207,7 +138,7 @@ export class AgentCard implements OnDestroy {
       document.execCommand('copy');
       document.body.removeChild(textarea);
     } catch {
-      // Clipboard unavailable; the UI feedback still indicates the click.
+      // clipboard unavailable
     }
   }
 }

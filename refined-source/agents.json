@@ -55,7 +55,7 @@
     "role": "Persistent coordinator. Receives handoff from delivery, decomposes, fans out, aggregates, returns agent-snapshot.",
     "group": "coordination",
     "essence": "Sole executor of Phase 2 Reduce (scope, complexity, hot spots, in/out, verification). Maintains state across delegations, fans out same-type subagents when input too large, aggregates structured JSON via EventV2 bus.",
-    "model": "inherit (delivery)",
+    "model": "inherit",
     "temperature": null,
     "mode": "subagent",
     "permission": {

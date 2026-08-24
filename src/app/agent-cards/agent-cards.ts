@@ -1,24 +1,31 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AGENTS, GROUP_COLORS, FALLBACK_GROUP_COLOR } from '../models/refined-source';
-import { AgentCard } from './agent-card';
+import { AgentMiniCard } from './agent-mini-card';
+import { AgentSelection } from './agent-selection.service';
 
 /**
- * Grid of agent cards. Consumes refined-source/agents.json (14 cards) and
- * group colors from refined-source/graph.json.
+ * Grid of 12 compact mini cards.
+ * Selection is delegated to the shell-level AgentSelection service so the
+ * detail panel can be rendered in app.html's .site-detail aside. No internal
+ * aside/detail is rendered here — only the mini-grid.
  */
 @Component({
   selector: 'app-agent-cards',
-  imports: [AgentCard],
+  imports: [AgentMiniCard],
   templateUrl: './agent-cards.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './agent-cards.css',
 })
 export class AgentCards {
-  /** All agents in curated order. */
   readonly agents = AGENTS;
 
-  /** Group id → color. */
   readonly groupColors: ReadonlyMap<string, string> = GROUP_COLORS as ReadonlyMap<string, string>;
+
+  readonly selection = inject(AgentSelection);
+
+  onCardSelected(id: string): void {
+    this.selection.select(id);
+  }
 
   groupColor(group: string): string {
     return this.groupColors.get(group) ?? FALLBACK_GROUP_COLOR;

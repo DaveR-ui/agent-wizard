@@ -4,6 +4,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Router, provideRouter, withComponentInputBinding } from '@angular/router';
 import { App } from './app';
 import { routes } from './app.routes';
+import { AgentSelection } from './agent-cards/agent-selection.service';
 // JointJS needs SVG matrix/transform APIs jsdom lacks — the Pipeline tab's lazy
 // chunk imports @joint/core at runtime, so the shim must be in place up front.
 import './testing/joint-test-env';
@@ -106,5 +107,47 @@ describe('App detail side panel', () => {
     expect(aside.classList.contains('has-detail')).toBe(true);
     expect(aside.querySelector('.viewer-card')).toBeTruthy();
     expect(aside.querySelector('.viewer-title')?.textContent).toBe('Interpreter');
+  });
+
+  it('shows inline detail in the shell aside when a mini card is selected and keeps placeholder when none', async () => {
+    TestBed.configureTestingModule({
+      imports: [App],
+      providers: [provideNoopAnimations(), provideRouter(routes, withComponentInputBinding())],
+    });
+    const fixture = TestBed.createComponent(App);
+    fixture.detectChanges();
+
+    const aside = fixture.nativeElement.querySelector('.site-detail') as HTMLElement;
+    expect(aside).toBeTruthy();
+    // Initially no routed detail and no inline selection → aside hidden, placeholder present but hidden
+    expect(aside.classList.contains('has-detail')).toBe(false);
+    expect(aside.classList.contains('has-inline')).toBe(false);
+    expect(aside.classList.contains('has-side-panel')).toBe(false);
+    expect(aside.querySelector('.detail-placeholder')?.textContent).toBe('Select an agent to see details');
+    expect(aside.querySelector('.detail-panel')).toBeFalsy();
+
+    // Simulate selecting a mini card via shared service
+    const selection = TestBed.inject(AgentSelection);
+    selection.select('delivery');
+    fixture.detectChanges();
+
+    expect(aside.classList.contains('has-inline')).toBe(true);
+    expect(aside.classList.contains('has-side-panel')).toBe(true);
+    expect(aside.querySelector('.detail-panel')).toBeTruthy();
+    expect(aside.querySelector('.detail-panel')?.textContent).toContain('Delivery');
+    expect(aside.querySelector('.detail-placeholder')).toBeFalsy();
+
+    // Selecting another agent switches the panel
+    selection.select('explorer');
+    fixture.detectChanges();
+    expect(aside.querySelector('.detail-panel')?.textContent).toContain('Explorer');
+
+    // Clearing selection returns to placeholder and hides aside
+    selection.clear();
+    fixture.detectChanges();
+    expect(aside.classList.contains('has-inline')).toBe(false);
+    expect(aside.classList.contains('has-side-panel')).toBe(false);
+    expect(aside.querySelector('.detail-placeholder')).toBeTruthy();
+    expect(aside.querySelector('.detail-panel')).toBeFalsy();
   });
 });

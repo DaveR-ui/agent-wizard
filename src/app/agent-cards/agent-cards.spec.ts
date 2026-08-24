@@ -2,203 +2,173 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { vi } from 'vitest';
 import { AgentCards } from './agent-cards';
-import { AGENTS, GRAPH, RULES } from '../models/refined-source';
+import { AgentSelection } from './agent-selection.service';
+import { AGENTS, GRAPH } from '../models/refined-source';
 
-function cardFor(fixture: { nativeElement: HTMLElement }, displayName: string): HTMLElement {
+function miniCardFor(fixture: { nativeElement: HTMLElement }, displayName: string): HTMLElement {
   const cards = Array.from(
-    fixture.nativeElement.querySelectorAll('.agent-card') as NodeListOf<HTMLElement>,
+    fixture.nativeElement.querySelectorAll('.mini-card') as NodeListOf<HTMLElement>,
   );
-  const card = cards.find((el) => el.querySelector('.agent-name')?.textContent === displayName);
+  const card = cards.find((el) => el.querySelector('.mini-name')?.textContent === displayName);
   if (!card) {
-    throw new Error(`No card found for "${displayName}"`);
+    throw new Error(`No mini card found for "${displayName}"`);
   }
   return card;
 }
 
-describe('AgentCards', () => {
+describe('AgentCards (mini-grid)', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AgentCards],
-      // AgentCard navigates via Router (whole-card click) and renders RouterLink.
       providers: [provideRouter([])],
     }).compileComponents();
   });
 
-  it('should render one card per agent (12)', () => {
+  afterEach(() => {
+    // Clear shared selection between tests (service is root-provided)
+    try {
+      TestBed.inject(AgentSelection).clear();
+    } catch {}
+  });
+
+  it('should render 12 mini cards in a grid', () => {
     const fixture = TestBed.createComponent(AgentCards);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelectorAll('.agent-card').length).toBe(12);
+    expect(compiled.querySelectorAll('.mini-card').length).toBe(12);
+    expect(compiled.querySelectorAll('app-agent-mini-card').length).toBe(12);
     expect(AGENTS.length).toBe(12);
+    // grid uses compact minmax
+    const grid = compiled.querySelector('.agent-grid') as HTMLElement;
+    expect(grid).toBeTruthy();
+    // No internal aside/detail — detail lives in App shell
+    expect(compiled.querySelector('.agent-detail-aside')).toBeFalsy();
+    expect(compiled.querySelector('app-agent-detail-panel')).toBeFalsy();
+    expect(compiled.querySelector('.detail-placeholder')).toBeFalsy();
   });
 
   it('should show the group badge with the group color from graph.json', () => {
     const fixture = TestBed.createComponent(AgentCards);
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    const delivery = cardFor(fixture, 'Delivery');
+    const delivery = miniCardFor(fixture, 'Delivery');
     const badge = delivery.querySelector('.group-badge');
     expect(badge?.textContent).toBe('coordination');
-    // coordination → #4F46E5 in graph.json groups
     expect((badge as HTMLElement).style.backgroundColor).toBe('rgb(79, 70, 229)');
   });
 
-  it('should show race badge + flavor derived from GRAPH.groups for every agent without hover', () => {
+  it('should show race badge for every mini card (no RPG blocks, no hover-panel)', () => {
     const fixture = TestBed.createComponent(AgentCards);
     fixture.detectChanges();
     const cards = Array.from(
-      fixture.nativeElement.querySelectorAll('.agent-card') as NodeListOf<HTMLElement>,
+      fixture.nativeElement.querySelectorAll('.mini-card') as NodeListOf<HTMLElement>,
     );
     expect(cards.length).toBe(12);
     for (const card of cards) {
-      const name = card.querySelector('.agent-name')?.textContent?.trim() ?? '';
+      const name = card.querySelector('.mini-name')?.textContent?.trim() ?? '';
       const agent = AGENTS.find((a) => a.displayName === name);
       expect(agent).toBeTruthy();
       const groupMeta = GRAPH.groups.find((g) => g.id === agent!.group);
-      // race badge always visible
       const raceBadge = card.querySelector('.race-badge');
       expect(raceBadge, `race badge for ${name}`).toBeTruthy();
       expect(raceBadge?.textContent).toBe(groupMeta?.race);
-      // flavor text always visible
-      const flavor = card.querySelector('.flavor-text');
-      expect(flavor, `flavor for ${name}`).toBeTruthy();
-      expect(flavor?.textContent).toBe(groupMeta?.flavor);
+      // mini cards have no RPG blocks
+      expect(card.querySelector('.passives-block')).toBeFalsy();
+      expect(card.querySelector('.skills-block')).toBeFalsy();
+      expect(card.querySelector('.weapons-block')).toBeFalsy();
+      expect(card.querySelector('.protocols-block')).toBeFalsy();
+      expect(card.querySelector('.hover-panel')).toBeFalsy();
     }
   });
 
-  it('should render RPG passives (3 tiers) for every agent without hover', () => {
+  it('should render role and truncated essence plus View doc link', () => {
     const fixture = TestBed.createComponent(AgentCards);
     fixture.detectChanges();
-    const delivery = cardFor(fixture, 'Delivery');
-    // Passives headings always visible (no hover needed)
-    expect(delivery.querySelector('.passives-block')).toBeTruthy();
-    expect(delivery.textContent).toContain('World laws');
-    expect(delivery.textContent).toContain('Race trait');
-    expect(delivery.textContent).toContain('Personal trait');
-    // Skills heading also always visible
-    expect(delivery.querySelector('.skills-block')).toBeTruthy();
-    expect(delivery.textContent).toContain('Skills');
-  });
-
-  it('should render weapons / summons and protocol scrolls for every agent without hover', () => {
-    const fixture = TestBed.createComponent(AgentCards);
-    fixture.detectChanges();
-    const delivery = cardFor(fixture, 'Delivery');
-    expect(delivery.querySelector('.weapons-block')).toBeTruthy();
-    expect(delivery.querySelector('.protocols-block')).toBeTruthy();
-    // protocol scrolls are chips filtered to .opencode/protocols/
-    const protocolChips = delivery.querySelectorAll('.protocols-block .protocol-chip');
-    const expectedScrolls = AGENTS.find((a) => a.id === 'delivery')!.relatedFiles.filter((f) =>
-      f.includes('.opencode/protocols/'),
-    );
-    expect(protocolChips.length).toBe(expectedScrolls.length);
-  });
-
-  it('should reveal the hover panel with canCall and related-file chips on hover', () => {
-    const fixture = TestBed.createComponent(AgentCards);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    const delivery = cardFor(fixture, 'Delivery');
-
-    // Hover contract is signal-driven: mouseenter opens the panel.
-    delivery.dispatchEvent(new MouseEvent('mouseenter'));
-    fixture.detectChanges();
-
-    const panel = delivery.querySelector('.hover-panel');
-    expect(panel).toBeTruthy();
-
-    const canCallNames = Array.from(
-      delivery.querySelectorAll('.can-call-list li'),
-    ).map((li) => li.textContent?.trim());
-    expect(canCallNames).toContain('Interpreter');
-    expect(canCallNames.length).toBe(11); // delivery delegates to 11 agents, deduped
-
-    const hoverChips = delivery.querySelectorAll('.hover-panel .file-chip');
-    const expectedFiles = AGENTS.find((a) => a.id === 'delivery')!.relatedFiles.length;
-    expect(hoverChips.length).toBe(expectedFiles);
-  });
-
-  it('should render a neutral leaf note when canCall is empty', () => {
-    const fixture = TestBed.createComponent(AgentCards);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    const interpreter = cardFor(fixture, 'Interpreter');
-
-    interpreter.dispatchEvent(new MouseEvent('mouseenter'));
-    fixture.detectChanges();
-
-    expect(interpreter.querySelector('.hover-panel .leaf-note')?.textContent).toBe('Hoja — no delega');
-    expect(interpreter.querySelectorAll('.hover-panel .can-call-list li').length).toBe(0);
-  });
-
-  it('should dedupe the recursive fan-out self-loop with a hint (explorer)', () => {
-    const fixture = TestBed.createComponent(AgentCards);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    const explorer = cardFor(fixture, 'Explorer');
-
-    explorer.dispatchEvent(new MouseEvent('mouseenter'));
-    fixture.detectChanges();
-
-    const entries = explorer.querySelectorAll('.can-call-list li');
-    expect(entries.length).toBe(1); // self-call deduped to a single entry
-    expect(explorer.querySelector('.recursive-hint')?.textContent).toBe('recursivo');
-  });
-
-  it('should show "Copiado" feedback when a related-file chip is clicked', () => {
-    const fixture = TestBed.createComponent(AgentCards);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    const delivery = cardFor(fixture, 'Delivery');
-
-    delivery.dispatchEvent(new MouseEvent('mouseenter'));
-    fixture.detectChanges();
-
-    const chip = delivery.querySelector('.hover-panel .file-chip') as HTMLButtonElement;
-    expect(chip).toBeTruthy();
-    chip.click();
-    fixture.detectChanges();
-
-    const feedback = delivery.querySelector('.copied-feedback');
-    expect(feedback?.textContent).toBe('Copiado');
-  });
-
-  it('should render chips for minimal-surface agents (external-scout)', () => {
-    const fixture = TestBed.createComponent(AgentCards);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    const externalScout = cardFor(fixture, 'External Scout');
-
-    externalScout.dispatchEvent(new MouseEvent('mouseenter'));
-    fixture.detectChanges();
-
-    const expected = AGENTS.find((a) => a.id === 'external-scout')!.relatedFiles.length;
-    const chips = externalScout.querySelectorAll('.hover-panel .file-chip');
-    expect(chips.length).toBe(expected);
-    expect(chips[0].textContent).toContain('external-scout.md');
-  });
-
-  it('should navigate to the diagram-agent counterpart view when a card is clicked', () => {
-    const fixture = TestBed.createComponent(AgentCards);
-    fixture.detectChanges();
-    const delivery = cardFor(fixture, 'Delivery');
-    const router = TestBed.inject(Router);
-    const navigateSpy = vi.spyOn(router, 'navigate');
-
-    delivery.dispatchEvent(new MouseEvent('click'));
-
-    expect(navigateSpy).toHaveBeenCalledWith(['/diagram-agent', 'delivery']);
-  });
-
-  it('should render a "View doc" link per card pointing to the diagram-agent counterpart', () => {
-    const fixture = TestBed.createComponent(AgentCards);
-    fixture.detectChanges();
-    const delivery = cardFor(fixture, 'Delivery');
+    const delivery = miniCardFor(fixture, 'Delivery');
+    expect(delivery.querySelector('.mini-role')?.textContent).toBeTruthy();
+    expect(delivery.querySelector('.mini-essence')?.textContent).toBeTruthy();
     const link = delivery.querySelector('.view-doc-link') as HTMLAnchorElement;
     expect(link).toBeTruthy();
     expect(link.getAttribute('href')).toBe('/diagram-agent/delivery');
-    expect(link.getAttribute('aria-label')).toBe(
-      'Open diagram-agent counterpart doc for Delivery',
-    );
+  });
+
+  it('should select an agent on mini card click and highlight with aria-selected via shared service', () => {
+    const fixture = TestBed.createComponent(AgentCards);
+    fixture.detectChanges();
+    const delivery = miniCardFor(fixture, 'Delivery');
+    const selection = TestBed.inject(AgentSelection);
+    expect(selection.selectedId()).toBeNull();
+
+    delivery.dispatchEvent(new MouseEvent('click'));
+    fixture.detectChanges();
+
+    expect(selection.selectedId()).toBe('delivery');
+    expect(selection.selectedAgent()?.displayName).toBe('Delivery');
+    expect(delivery.classList.contains('is-selected')).toBe(true);
+    expect(delivery.getAttribute('aria-selected')).toBe('true');
+    expect(delivery.getAttribute('role')).toBe('button');
+  });
+
+  it('should switch selection on rapid clicks and keep single selection', () => {
+    const fixture = TestBed.createComponent(AgentCards);
+    fixture.detectChanges();
+    const delivery = miniCardFor(fixture, 'Delivery');
+    const explorer = miniCardFor(fixture, 'Explorer');
+    const selection = TestBed.inject(AgentSelection);
+
+    delivery.dispatchEvent(new MouseEvent('click'));
+    fixture.detectChanges();
+    expect(selection.selectedId()).toBe('delivery');
+    expect(delivery.classList.contains('is-selected')).toBe(true);
+
+    explorer.dispatchEvent(new MouseEvent('click'));
+    fixture.detectChanges();
+    expect(selection.selectedId()).toBe('explorer');
+    expect(explorer.classList.contains('is-selected')).toBe(true);
+    expect(delivery.classList.contains('is-selected')).toBe(false);
+  });
+
+  it('should support keyboard activation (Enter/Space) for selection', () => {
+    const fixture = TestBed.createComponent(AgentCards);
+    fixture.detectChanges();
+    const selection = TestBed.inject(AgentSelection);
+    const delivery = miniCardFor(fixture, 'Delivery');
+    const explorer = miniCardFor(fixture, 'Explorer');
+
+    delivery.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    fixture.detectChanges();
+    expect(selection.selectedId()).toBe('delivery');
+
+    explorer.dispatchEvent(new KeyboardEvent('keydown', { key: ' ' }));
+    fixture.detectChanges();
+    expect(selection.selectedId()).toBe('explorer');
+  });
+
+  it('should render a View doc link per card that does not select on link click (stopPropagation)', () => {
+    const fixture = TestBed.createComponent(AgentCards);
+    fixture.detectChanges();
+    const delivery = miniCardFor(fixture, 'Delivery');
+    const link = delivery.querySelector('.view-doc-link') as HTMLAnchorElement;
+    expect(link).toBeTruthy();
+    expect(link.getAttribute('aria-label')).toBe('Open diagram-agent counterpart doc for Delivery');
+
+    const router = TestBed.inject(Router);
+    vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true as never);
+    vi.spyOn(router, 'navigate').mockResolvedValue(true as never);
+    const selection = TestBed.inject(AgentSelection);
+    expect(selection.selectedId()).toBeNull();
+    link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    fixture.detectChanges();
+    expect(selection.selectedId()).toBeNull();
+  });
+
+  it('should have no hover-panel even after mouseenter (compact variant)', () => {
+    const fixture = TestBed.createComponent(AgentCards);
+    fixture.detectChanges();
+    const delivery = miniCardFor(fixture, 'Delivery');
+    delivery.dispatchEvent(new MouseEvent('mouseenter'));
+    fixture.detectChanges();
+    expect(delivery.querySelector('.hover-panel')).toBeFalsy();
   });
 });
+
+// Shell-level detail integration is tested in app.spec (App detail side panel)

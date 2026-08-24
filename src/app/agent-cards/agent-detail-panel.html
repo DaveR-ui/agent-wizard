@@ -1,33 +1,20 @@
-<article
-  class="agent-card"
-  [class.is-hovered]="hovered()"
-  [class.is-selected]="selected()"
-  [style.--group-color]="groupColor()"
-  (mouseenter)="onMouseEnter()"
-  (mouseleave)="onMouseLeave()"
-  (click)="onCardClick()"
-  (keydown)="onKeyDown($event)"
-  role="button"
-  tabindex="0"
-  [attr.aria-selected]="selected()"
-  [attr.aria-label]="'Select ' + agent().displayName + ' for details'"
->
-  <header class="agent-card-header">
+<section class="detail-panel" [style.--group-color]="groupColor()">
+  <header class="detail-header">
     <span class="group-badge" [style.background-color]="groupColor()">{{ agent().group }}</span>
     @if (race()) {
       <span class="race-badge" [style.border-color]="groupColor()" [style.color]="groupColor()" [attr.title]="flavor()">{{ race() }}</span>
     }
-    <h3 class="agent-name">{{ agent().displayName }}</h3>
+    <h3 class="detail-title">{{ agent().displayName }}</h3>
   </header>
 
   @if (flavor()) {
     <p class="flavor-text" [attr.title]="flavor()">{{ flavor() }}</p>
   }
 
-  <p class="agent-role">{{ agent().role }}</p>
-  <p class="agent-essence">{{ agent().essence }}</p>
+  <p class="detail-role">{{ agent().role }}</p>
+  <p class="detail-essence">{{ agent().essence }}</p>
 
-  <dl class="agent-meta">
+  <dl class="detail-meta">
     <div class="meta-row">
       <dt>Modelo</dt>
       <dd>{{ agent().model ?? 'inherit' }}</dd>
@@ -42,7 +29,45 @@
     </div>
   </dl>
 
-  <!-- RPG: Passives (3 tiers) — always visible per DoD -->
+  <!-- Delegation: hover contract's canCall — persistent here -->
+  <section class="panel-block">
+    <h4>Puede llamar a</h4>
+    @if (isLeaf()) {
+      <p class="leaf-note">Hoja — no delega</p>
+    } @else {
+      <ul class="can-call-list">
+        @for (item of canCallItems(); track item.id) {
+          <li>
+            {{ item.displayName }}
+            @if (item.recursive) {
+              <span class="recursive-hint">recursivo</span>
+            }
+          </li>
+        }
+      </ul>
+    }
+  </section>
+
+  <section class="panel-block">
+    <h4>Más allá de las reglas generales</h4>
+    <p class="beyond-text">{{ agent().specificBeyondGeneral }}</p>
+  </section>
+
+  <section class="panel-block">
+    <h4>Archivos relacionados</h4>
+    <div class="chips">
+      @for (file of agent().relatedFiles; track file) {
+        <button type="button" class="file-chip" (click)="onChipClick(file, $event)">
+          {{ file }}
+          @if (copiedPath() === file) {
+            <span class="copied-feedback">Copiado</span>
+          }
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- RPG: Passives -->
   <section class="rpg-block passives-block">
     <h4>Passives</h4>
     <div class="tier">
@@ -83,7 +108,7 @@
     </div>
   </section>
 
-  <!-- RPG: Skills (active) — secondary -->
+  <!-- RPG: Skills -->
   <section class="rpg-block skills-block">
     <h4>Skills</h4>
     @if (worldSkills().length + raceSkills().length + personalSkills().length === 0) {
@@ -148,7 +173,7 @@
     }
   </section>
 
-  <!-- RPG: Protocol scrolls — derived from relatedFiles .opencode/protocols/ -->
+  <!-- RPG: Protocol scrolls -->
   <section class="rpg-block protocols-block">
     <h4>Protocol scrolls</h4>
     @if (protocolScrolls().length === 0) {
@@ -166,56 +191,4 @@
       </div>
     }
   </section>
-
-  @if (hovered()) {
-    <div class="hover-panel">
-      <section class="panel-block">
-        <h4>Puede llamar a</h4>
-        @if (isLeaf()) {
-          <p class="leaf-note">Hoja — no delega</p>
-        } @else {
-          <ul class="can-call-list">
-            @for (item of canCallItems(); track item.id) {
-              <li>
-                {{ item.displayName }}
-                @if (item.recursive) {
-                  <span class="recursive-hint">recursivo</span>
-                }
-              </li>
-            }
-          </ul>
-        }
-      </section>
-
-      <section class="panel-block">
-        <h4>Más allá de las reglas generales</h4>
-        <p class="beyond-text">{{ agent().specificBeyondGeneral }}</p>
-      </section>
-
-      <section class="panel-block">
-        <h4>Archivos relacionados</h4>
-        <div class="chips">
-          @for (file of agent().relatedFiles; track file) {
-            <button type="button" class="file-chip" (click)="onChipClick(file, $event)">
-              {{ file }}
-              @if (copiedPath() === file) {
-                <span class="copied-feedback">Copiado</span>
-              }
-            </button>
-          }
-        </div>
-      </section>
-    </div>
-  }
-
-  <footer class="agent-card-footer">
-    <a
-      class="view-doc-link"
-      [routerLink]="['/diagram-agent', agent().id]"
-      (click)="$event.stopPropagation()"
-      aria-label="Open diagram-agent counterpart doc for {{ agent().displayName }}"
-    >
-      View doc →
-    </a>
-  </footer>
-</article>
+</section>
