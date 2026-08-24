@@ -1,6 +1,6 @@
 ---
-last_updated: 2026-08-23
-description: Layered architecture of agent-wizard — agent system, data layer, and Angular UI, plus dependency flow and the graph UI.
+last_updated: 2026-08-25
+description: Layered architecture of agent-wizard — agent system (.opencode sole source), data layer, and Angular UI, plus dependency flow and the graph UI.
 tags: [architecture, layers, agent-system, data-layer, angular, graph-ui]
 status: active
 ---
@@ -11,30 +11,30 @@ agent-wizard is three layers: the **agent system** (runtime config), the **data 
 
 ## Layers
 
-### Agent system (`.opencode/` ↔ `source/`)
+### Agent system (`.opencode/` — sole source of truth)
 
-The opencode agent runtime. `.opencode/` is the live config the runtime loads; `source/` is an identical clean copy with `node_modules` removed (verified via diff) and is the only maintained copy.
+The opencode agent runtime. `.opencode/` is the live config the runtime loads and the **sole maintained source** (since 2026-08-24 `source/` was deleted — verified `ls` → No such file; previously `source/` was an identical clean copy with `node_modules` removed and the only maintained copy).
 
 | Area | Path | Contents |
 |---|---|---|
-| Agents | `.opencode/agents/subagents/` | 14 agent `.md` definitions, 8 with `.schema.json` (`coder.schema.json` shared by both coders) |
+| Agents | `.opencode/agents/subagents/` | 13 agent `.md` definitions spec / 12 actual (single `coder.md` + `coder.schema.json`, vision-relay removed, interpreter now handles image inspection), 7 with `.schema.json` |
 | Protocols | `.opencode/protocols/` | 11 agent protocols + `references/` (3 refs) |
 | Workflows | `.opencode/workflows/` | `dispatch.md`, `orchestrate.md` |
 | Scripts | `.opencode/scripts/` | `install-agent.ps1`, `session-recover.ps1`, `validate-agent.sh` |
 | Tests | `.opencode/tests/` | `run-tests.sh`, schema contract tests, fixtures |
 
-Flow: `delivery` (human interface) → `interpreter` (Step 0, every prompt) → `orchestrator` (Phase 2 Reduce, non-trivial) → subagents (coders, guardians, quality, writers, exploration).
+Flow: `delivery` (human interface) → `interpreter` (Step 0, every prompt, now also image-inspection fallback) → `orchestrator` (Phase 2 Reduce, non-trivial) → subagents (coder [language-param], guardians, quality, writers, exploration).
 
 ### Data layer (`refined-source/`)
 
-Curated, human-maintained JSON + MD that power the graph UI. Source of truth is `source/`; `refined-source/` is the presentation layer.
+Curated, human-maintained JSON + MD that power the graph UI. Source of truth is `.opencode/` (previously `source/` clean copy, deleted 2026-08-24); `refined-source/` is the presentation layer.
 
 | File | Drives |
 |---|---|
-| `agents.json` | Agent cards (14) |
-| `rules.json` | Rule cards, 3 levels |
-| `graph.json` | Delegation graph (14 nodes, 27 edges, 7 groups) |
-| `agents/*.md` | Per-agent detail prose (14) |
+| `agents.json` | Agent cards (13 spec / 12 actual — single coder, vision-relay removed) |
+| `rules.json` | Rule cards, 3 levels (passive-first, `kind` tagged) |
+| `graph.json` | Delegation graph (13 nodes spec / 12 actual, 22 edges, 7 groups, v1.0.2) |
+| `agents/*.md` | Per-agent detail prose (12 actual / 13 spec) |
 
 ### Angular skeleton (`src/`)
 
@@ -48,7 +48,7 @@ Angular 22.1.x standalone-component app (CLI 22.1.5). Renders agent cards, a fil
 | `src/app/app.routes.ts` | Empty routes |
 | `src/app/app.html` / `app.css` | Root template / styles |
 | `src/app/app.spec.ts` | Vitest smoke test |
-| `src/app/agent-cards/` | 14 agent cards + hover contract |
+| `src/app/agent-cards/` | Agent cards + hover contract (13 spec / 12 actual) |
 | `src/app/rules-panel/` | 3-level filterable rules |
 | `src/app/graph-panel/` | Force-directed delegation graph via @swimlane/ngx-graph |
 | `src/app/pipeline-panel/` | Pipeline visualization |
@@ -61,15 +61,13 @@ Angular 22.1.x standalone-component app (CLI 22.1.5). Renders agent cards, a fil
 ## Dependency flow
 
 ```
-.opencode/ (runtime) ──clean copy──▶ source/ (maintained)
-        │
-        └──manual curation──▶ refined-source/ (JSON + MD)
-                                   │
-                                   └──▶ src/app components → rendered cards/graph
+.opencode/ (sole source, runtime) ──manual curation──▶ refined-source/ (JSON + MD)
+                                                         │
+                                                         └──▶ src/app components → rendered cards/graph
 ```
+> `source/` deleted 2026-08-24 (was `.opencode/` ↔ `source/` clean copy, node_modules removed).
 
-- `.opencode/` → `source/`: copy, node_modules removed.
-- `source/` → `refined-source/`: manual curation (no auto-script).
+- `.opencode/` → `refined-source/`: manual curation (no auto-script; `source/` step removed 2026-08-24).
 - `refined-source/` → `src/`: wired — the Angular app imports `refined-source/*.json` as TS modules at build time (`resolveJsonModule`).
 
 ## What is future

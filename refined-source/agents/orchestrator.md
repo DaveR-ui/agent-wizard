@@ -6,13 +6,13 @@
 Sole executor of Phase 2 Reduce. Decomposes handoff, fans out subagents in parallel, aggregates EventV2 JSON, returns agent-snapshot.
 
 ## Can call (hover)
-interpreter, coder-angular, coder-go, tester, reviewer, architect, explorer, project-context, vision-relay, external-scout, analista, documenter
+coder, tester, reviewer, architect, explorer, project-context, external-scout, analista, documenter
 
-Hover detail: *Does NOT call delivery. Fan-out pattern: split file list into 20-file chunks, parallel N tasks, de-duplicate, promote severity. Cross-type parallelism + same-type fan-out.*
+Hover detail: *Does NOT call delivery or interpreter. Fan-out pattern: split file list into 20-file chunks, parallel N tasks, de-duplicate, promote severity. Single coder fan-out by language param; cross-type parallelism + same-type fan-out (9 entries).*
 
 ## What it does BEYOND global rules
 - Produces ## Scope block (complexity Baja→Muy Alta, hot spots, in/out, key files, verification path)
-- Slices routing via Keywords → Repo → Entry points; pick coder by stack
+- Slices routing via Keywords → Repo → Entry points; pick coder by language param (angular|go)
 - Decision Hierarchy (context > integrity > user decisions > objective > buildable > conventions > quality)
 - Context Budget: trim → delegate slice → request restart with clean snapshot
 

@@ -16,17 +16,17 @@ The orchestrator uses this table to route incoming tasks. Each slice is a vertic
 | Slice | Description | Keywords | Entry points | Primary agents |
 |---|---|---|---|---|
 | docs | Documentation maintenance: project.md, context docs, protocols, indexes | docs, README, context, protocol, convention, documentation, tag index, frontmatter | `docs/` | documenter |
-| agent-system | Agent definitions, protocols, workflows, scripts, tests, runtime config | agent, subagent, protocol, workflow, dispatch, orchestrate, script, test, .opencode, source, permission, frontmatter, schema, review loop | `.opencode/`, `source/` | reviewer, analista, tester |
+| agent-system | Agent definitions, protocols, workflows, scripts, tests, runtime config | agent, subagent, protocol, workflow, dispatch, orchestrate, script, test, .opencode, permission, frontmatter, schema, review loop | `.opencode/` | reviewer, analista, tester |
 | refined-source | Curated JSON + MD data layer for the UI | refined-source, agents.json, rules.json, graph.json, card, hover, curation, jq | `refined-source/` | documenter |
-| frontend-skeleton | Angular 22 SPA skeleton (Material tab shell) | angular, component, route, src, app, serve, build, test, skeleton | `src/`, `angular.json`, `package.json` | coder-angular, tester |
-| graph-ui | Graph visualization of the agent system — implemented | graph, visualization, force-directed, d3, vis-network, ngx-graph, node, edge | `refined-source/graph.json`, `src/app/*` | coder-angular, reviewer |
+| frontend-skeleton | Angular 22 SPA skeleton (Material tab shell) | angular, component, route, src, app, serve, build, test, skeleton | `src/`, `angular.json`, `package.json` | coder, tester |
+| graph-ui | Graph visualization of the agent system — implemented | graph, visualization, force-directed, d3, vis-network, ngx-graph, node, edge | `refined-source/graph.json`, `src/app/*` | coder, reviewer |
 
 ### Slice matching rules
 
 1. **Match by keywords first**: scan the prompt for terms in the Keywords column.
 2. **Multi-slice tasks**: if a task touches multiple slices (e.g., "add a rule card to the data layer" → refined-source + docs), list all relevant slices and let the orchestrator coordinate.
 3. **New slice detection**: if a task does NOT match any slice, the orchestrator MUST propose a new slice row with rationale before starting work. New slices should be added to this table permanently.
-4. **Cross-cutting concerns**: the agent system appears in `.opencode/`, `source/`, and `refined-source/`. If the task is about runtime config or agent definitions, route to `agent-system`. If it is about the curated presentation of that data, route to `refined-source`.
+4. **Cross-cutting concerns**: the agent system appears in `.opencode/` (sole source; `source/` deleted 2026-08-24) and `refined-source/` (curated presentation). If the task is about runtime config or agent definitions, route to `agent-system`. If it is about the curated presentation of that data, route to `refined-source`.
 5. **Each slice is a vertical slice**: understand the full path from entry point to output before working (e.g., `refined-source` = JSON → card → hover contract).
 
 ## Technology Stack
@@ -47,11 +47,11 @@ The orchestrator uses this table to route incoming tasks. Each slice is a vertic
 ## Architecture
 
 - **Pattern**: Three independent layers — agent system, data layer, Angular skeleton.
-- **Agent system**: `.opencode/` (runtime) ↔ `source/` (clean copy, node_modules removed, the only maintained copy).
-- **Data layer**: `refined-source/*.json` + `agents/*.md` — manually curated presentation of the agent system.
+- **Agent system**: `.opencode/` (sole source of truth; `source/` deleted 2026-08-24, previously clean copy with node_modules removed).
+- **Data layer**: `refined-source/*.json` + `agents/*.md` — manually curated presentation of the agent system (directly from `.opencode/`).
 - **Angular skeleton**: `src/` — standalone-component app with a 4-tab Material shell (Agentes → agent cards, Reglas → rules, Grafo de delegación → graph, Pipeline); `app.routes.ts` is empty.
 - **Data flow**: `refined-source/*.json` imported as TS modules at build time (`resolveJsonModule`) → Angular components → rendered cards/graph.
-- **Graph UI**: consumes `graph.json` (14 nodes, 27 edges, 7 groups) with a force-directed layout via @swimlane/ngx-graph.
+- **Graph UI**: consumes `graph.json` (13 nodes spec / 12 actual, 22 edges, 7 groups, v1.0.2) with a force-directed layout via @swimlane/ngx-graph.
 
 ## Commands
 
@@ -112,7 +112,7 @@ The data layer entities (see `docs/context/refined-source-data.md`):
 
 - **Agent** (`agents.json`) — id, displayName, role, group, essence, model, temperature, mode, permission, canCall, specificBeyondGeneral, relatedFiles
 - **Rule** (`rules.json`) — global / groups / agentSpecific, each citing a source file
-- **Graph** (`graph.json`) — meta, groups (7), nodes (14), edges (27)
+- **Graph** (`graph.json`) — meta, groups (7), nodes (13 spec / 12 actual), edges (22) — v1.0.2 (vision-relay removed, coders 2→1)
 - **Agent card prose** (`agents/*.md`) — per-agent detail for the card view
 
 ## Context Index
@@ -122,7 +122,7 @@ The single source of truth for strategic knowledge is `docs/context/`:
 - `docs/context/README.md` - index and philosophy
 - `docs/context/architecture.md` - layered architecture and dependency flow
 - `docs/context/project-rules.md` - development standards
-- `docs/context/agent-catalog.md` - the 14 agents
+- `docs/context/agent-catalog.md` - the 13 agents (spec) / 12 actual (1.0.2)
 - `docs/context/agent-delegation-graph.md` - canCall graph and routing
 - `docs/context/refined-source-data.md` - data layer schemas and validation
 - `docs/context/rules-hierarchy.md` - 3-level rule hierarchy

@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-08-23
+last_updated: 2026-08-25
 description: Tag index for docs/ — every tag used in context and protocol frontmatter, mapped to the files that carry it.
 tags: [index, tags, lookup]
 status: active
@@ -29,7 +29,7 @@ Fast lookup for the doc tree. Every tag used in `docs/context/` and `docs/protoc
 | `curation` | `protocols/refined-source-curation.md` |
 | `data-layer` | `context/architecture.md`, `context/refined-source-data.md`, `protocols/refined-source-curation.md` |
 | `delegation` | `context/agent-delegation-graph.md` |
-| `diagram-agent` | `diagram-agent/README.md`, `diagram-agent/*.md` (14 flat files — `delivery`, `orchestrator`, `interpreter`, `explorer`, `project-context`, `external-scout`, `vision-relay`, `coder-angular`, `coder-go`, `reviewer`, `tester`, `architect`, `analista`, `documenter`), `diagram-agent/<group>/README.md` (7 group indexes) |
+| `diagram-agent` | `diagram-agent/README.md`, `diagram-agent/*.md` (13 spec / 12 actual flat files — `delivery`, `orchestrator`, `interpreter`, `explorer`, `project-context`, `external-scout`, `coder`, `reviewer`, `tester`, `architect`, `analista`, `documenter`), `diagram-agent/<group>/README.md` (7 group indexes) |
 | `deploy` | `production.md` |
 | `dev` | `local-dev.md` |
 | `discipline` | `context/context-engineering.md` |

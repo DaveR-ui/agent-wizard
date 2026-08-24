@@ -1,7 +1,7 @@
 ---
-last_updated: 2026-08-23
+last_updated: 2026-08-24
 description: Development standards for agent-wizard — language, path quoting, cost discipline, test invocation, .opencode review loop, structured returns.
-tags: [rules, standards, conventions, english, cost, review-loop]
+tags: [rules, standards, conventions, english, cost, review-loop, passive, active]
 status: active
 ---
 
@@ -17,7 +17,7 @@ Development standards for THIS project. The full agent rule hierarchy (global / 
 |---|---|---|
 | English only | hard | All docs, comments, routing packets, and structured returns in English (`doc_language: english`). Human ↔ delivery may be any language; delivery translates. |
 | Quote paths with spaces | medium | Workspace root is `/run/media/admin/Datos/Matafuegos necochea` — every bash path with spaces must be quoted. |
-| Cost discipline | medium | Default to the cheap tier (`opencode-go/deepseek-v4-flash`); escalate only when the task demands it. Fan-out multiplies cost. |
+| Cost discipline | discretionary | A discretionary decision (not a global rule) owned by `orchestrator`, `coder-angular`, `coder-go`, `analista`, `architect`: default to the cheap tier (`opencode-go/deepseek-v4-flash`); escalate only when the task demands it. Fan-out multiplies cost. |
 | Never run tests from repo root | hard | Run canonical commands from the affected package dir (`agent-wizard/`, `frontend/`, `backend/`). |
 | No-mutate `.opencode/` review loop | hard | Changes to `.opencode/agents`, `.opencode/protocols`, `.opencode/workflows`, or `opencode.json` require Draft → Review (reviewer/analista) → Apply → Verify (tester). Single-line typo exempt. |
 | Structured returns via EventV2 | hard | Subagents with `output_schema` return validated JSON via the `task` tool + EventV2 bus. Never write `summary.md` / `output-full.md` / `manifest.md` to disk. |
@@ -25,9 +25,11 @@ Development standards for THIS project. The full agent rule hierarchy (global / 
 | Coordinators never implement | hard | `delivery` and `orchestrator` delegate ALL technical work via the `task` tool. |
 | One question block | medium | Batch all blocking questions into a single `question` call; never ask across turns. |
 
+> **Ordering note (2026-08-24):** `refined-source/rules.json` orders **passive/invariant** rules first within each level/family and adds an explicit `kind` field (`passive` or `active`) for queryability — physical order + kind tag is the chosen mechanism (robust, backwards compatible). Invariant example: `documenter`/writers must write in English (English-only) is passive; Interpreter's `grep`/`glob` reconciliation is active (triggered at Step 0). See `docs/context/rules-hierarchy.md#passive-vs-active-ordering`.
+
 ## Cross-references
 
-- Global rules (12): `refined-source/rules.json → global` and `docs/context/rules-hierarchy.md`
+- Global rules (2): `refined-source/rules.json → global` and `docs/context/rules-hierarchy.md`
 - Group rules (6 families): `refined-source/rules.json → groups`
 - Agent-specific rules (6 agents): `refined-source/rules.json → agentSpecific`
 - Source of truth hierarchy: `docs/context/*.md` > `docs/project.md` > `docs/_TAG-INDEX.md` > `src/`

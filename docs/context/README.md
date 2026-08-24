@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-08-23
+last_updated: 2026-08-25
 description: Index and philosophy of docs/context/ — the strategic knowledge base for agent-wizard.
 tags: [context, index, philosophy, knowledge-base]
 status: active
@@ -27,7 +27,7 @@ This folder contains **strategic documents** that guide the agent system's behav
 | File | Purpose | When to Use |
 |------|---------|-------------|
 | `architecture.md` | Layered architecture (agent system, data layer, Angular skeleton), dependency flow, graph UI | When designing features, refactoring, or understanding how the layers relate |
-| `agent-delegation-graph.md` | The canCall graph (14 nodes, 27 edges), edge kinds, routing and fan-out behavior | When reasoning about delegation, fan-out, or graph data |
+| `agent-delegation-graph.md` | The canCall graph (13 nodes spec / 12 actual, 22 edges), edge kinds, routing and fan-out behavior | When reasoning about delegation, fan-out, or graph data |
 
 ### Development Standards
 
@@ -40,8 +40,8 @@ This folder contains **strategic documents** that guide the agent system's behav
 
 | File | Purpose | When to Use |
 |------|---------|-------------|
-| `agent-catalog.md` | The 14 agents: id, group, role, model, mode, canCall, key files | When picking an agent, reviewing the roster, or updating agent cards |
-| `rules-hierarchy.md` | The 3-level rule hierarchy: 12 global, 6 group families, 6 agent-specific sets | When checking which rules apply to an agent or a change |
+| `agent-catalog.md` | The 13 agents (spec) / 12 actual: id, group, role, model, mode, canCall, key files | When picking an agent, reviewing the roster, or updating agent cards |
+| `rules-hierarchy.md` | The 3-level rule hierarchy: 2 global, 6 group families, 6 agent-specific sets | When checking which rules apply to an agent or a change |
 
 ### Data Layer
 

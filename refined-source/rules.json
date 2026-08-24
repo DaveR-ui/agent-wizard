@@ -1,83 +1,54 @@
 {
   "global": [
     {
-      "id": "0001",
-      "rule": "Inter-agent language is English",
-      "description": "Delivery ↔ subagents communicate exclusively in English. Human ↔ delivery is human language; delivery translates. All docs, comments, routing packets, and structured returns in English.",
-      "source": ".opencode/agents/subagents/orchestrator.md / .opencode/agents/subagents/delivery.md / docs/project.md doc_language",
-      "severity": "hard"
-    },
-    {
       "id": "0007",
       "rule": "Structured returns via EventV2, not markdown files",
       "description": "Subagents with output_schema return validated JSON via task tool + EventV2 bus. Never write summary.md/output-full.md/manifest.md to disk. Runtime captures via GET /session/:id/children.",
       "source": ".opencode/agents/subagents/orchestrator.md / subagent-spec-template.md",
-      "severity": "hard"
+      "severity": "hard",
+      "kind": "passive"
     },
     {
       "id": "0008",
       "rule": "Agent-system changes require review loop",
       "description": "Changes to .opencode/agents, .opencode/protocols, .opencode/workflows, opencode.json require Draft → Review (reviewer/analista) → Apply → Verify (tester). Single-line typo exempt. Never touch .opencode/ silently.",
       "source": ".opencode/agents/subagents/delivery.md Agent-system changes",
-      "severity": "hard"
-    },
-    {
-      "id": "0009",
-      "rule": "Never run tests/typecheck/lint from repo root",
-      "description": "Run canonical commands from affected package dir (backend/ or frontend/). Guard verified via docs/project.md Common Commands. Workspace path contains space — quote it.",
-      "source": ".opencode/workflows/orchestrate.md / docs/project.md Common Commands",
-      "severity": "hard"
-    },
-    {
-      "id": "0010",
-      "rule": "Quote paths with spaces",
-      "description": "Workspace root is '/run/media/admin/Datos/Matafuegos necochea' — all bash paths with spaces must be quoted.",
-      "source": "Handoff constraints / docs/project.md",
-      "severity": "medium"
-    },
-    {
-      "id": "0011",
-      "rule": "Cost discipline: cheap tier default",
-      "description": "Default to cheap model (opencode-go/deepseek-v4-flash etc.); escalate only when task demands it. Fan-out multiplies cost — use only when input too large.",
-      "source": ".opencode/agents/subagents/orchestrator.md / subagent frontmatters",
-      "severity": "medium"
-    },
-    {
-      "id": "0012",
-      "rule": "All documentation and comments in English",
-      "description": "doc_language: english enforced for docs/ and .opencode/.",
-      "source": "docs/project.md / .opencode/workflows/orchestrate.md Language Rule",
-      "severity": "medium"
+      "severity": "hard",
+      "kind": "passive"
     }
   ],
   "groups": [
     {
       "group": "coders",
-      "members": ["coder-angular", "coder-go"],
+      "members": ["coder"],
       "rules": [
+        {
+          "id": "0016",
+          "rule": "Stack conventions",
+          "description": "Coder branches by language param: angular→ standalone components, signals/rxResource, Angular 22, Material, @swimlane/ngx-graph; go→ gofmt, explicit error handling, layered domain→repo→service→handler→routes, /api/v1 versioning, seed logic for new entities.",
+          "source": "docs/project.md Technology Stack / docs/context/architecture.md",
+          "kind": "passive"
+        },
         {
           "id": "0013",
           "rule": "Complexity review and slice routing",
-          "description": "Match task to Slices table Keywords → Repo → Entry points before coding. Assess complexity level (Baja → Muy Alta) and hot spots (compute guard >5 files, breaking refactor >900 lines, standard supremacy violation).",
-          "source": ".opencode/protocols/prompt-pipeline.md Phase 2 / .opencode/agents/subagents/coder-*.md"
+          "description": "Match task to Slices table Keywords → Repo → Entry points before coding. Assess complexity level (Baja → Muy Alta) and hot spots (compute guard >5 files, breaking refactor >900 lines, standard supremacy violation). Pick coder by language param (language=angular|go branching).",
+          "source": ".opencode/protocols/prompt-pipeline.md Phase 2 / .opencode/agents/subagents/coder.md",
+          "kind": "active"
         },
         {
           "id": "0014",
           "rule": "Read relevant code before modifying; follow docs/context/ not src/ legacy",
-          "description": "Anti-pattern: copying legacy src/ patterns against docs/. Source-of-truth hierarchy: docs/context/*.md > docs/project.md > docs/_TAG-INDEX.md > src/.",
-          "source": ".opencode/agents/subagents/coder-angular.md / coder-go.md"
+          "description": "Anti-pattern: copying legacy src/ patterns against docs/. Source-of-truth hierarchy: docs/context/*.md > docs/project.md > docs/_TAG-INDEX.md > src/. Coder reads docs/context/ + language-specific docs, not legacy src/.",
+          "source": ".opencode/agents/subagents/coder.md",
+          "kind": "active"
         },
         {
           "id": "0015",
           "rule": "Run canonical test/lint/build before reporting done",
-          "description": "Run from package dir. Frontend: npm run check / npm test. Backend: go vet, go test. Never commit without explicit instruction.",
-          "source": "docs/project.md Common Commands / coder-*.md Rules"
-        },
-        {
-          "id": "0016",
-          "rule": "Stack conventions",
-          "description": "Angular: standalone components, signals/rxResource, Tailwind 4.1, Biome. Go: gofmt, explicit error handling, layered domain→repo→service→handler→routes, /api/v1 versioning, seed logic for new entities.",
-          "source": "docs/project.md Technology Stack / backend/docs/project.md"
+          "description": "Run from package dir. Frontend: npm run check / npm test. Backend: go vet, go test. Never commit without explicit instruction. Coder runs language-specific checks (angular: ng test/build; go: gofmt/vet).",
+          "source": "docs/project.md Common Commands / .opencode/agents/subagents/coder.md Rules",
+          "kind": "active"
         }
       ]
     },
@@ -89,61 +60,63 @@
           "id": "0017",
           "rule": "Read-only analysis with structured JSON verdict",
           "description": "Never modify code. Return ReviewerOutput / ArchitectOutput / AnalystOutput JSON. Cite file:line for every finding.",
-          "source": ".opencode/agents/subagents/reviewer.md / architect.md / analista.md"
+          "source": ".opencode/agents/subagents/reviewer.md / architect.md / analista.md",
+          "kind": "passive"
         },
         {
           "id": "0018",
           "rule": "Reviewer checklist ordering by severity",
           "description": "Architecture compliance → standards → permissions → secrets/auth → performance → anti-patterns → testing → doc-tree integrity. Correctness and security first, style last.",
-          "source": ".opencode/agents/subagents/reviewer.md Review Checklist"
+          "source": ".opencode/agents/subagents/reviewer.md Review Checklist",
+          "kind": "passive"
         },
         {
           "id": "0019",
           "rule": "Architect cites concrete files and favors simplicity",
           "description": "Every proposal lists files each phase touches. Document rejected alternatives with rationale. No gold-plating.",
-          "source": ".opencode/agents/subagents/architect.md Principles"
+          "source": ".opencode/agents/subagents/architect.md Principles",
+          "kind": "passive"
         },
         {
           "id": "0020",
           "rule": "Analista requires two alternatives + calibrated confidence",
           "description": "Every verdict (proceed/reconsider/abandon) weighs 2+ options. Confidence below 0.5 must state what evidence would raise it. Re-routes via re_route_to.",
-          "source": ".opencode/agents/subagents/analista.md Standards"
+          "source": ".opencode/agents/subagents/analista.md Standards",
+          "kind": "active"
         }
       ]
     },
     {
       "group": "exploration",
-      "members": ["explorer", "project-context", "external-scout", "vision-relay"],
+      "members": ["explorer", "project-context", "external-scout"],
       "rules": [
         {
           "id": "0021",
           "rule": "Read-only, no edits, no bash beyond reads",
-          "description": "Explorer/project-context/vision-relay are read-only. External-scout may only webfetch.",
-          "source": ".opencode/agents/subagents/explorer.md / project-context.md"
-        },
-        {
-          "id": "0022",
-          "rule": "Explorer fan-out thresholds",
-          "description": "SAMPLE_WINDOW 10, CHUNK_SIZE 20, MAX_DEPTH 3. Broad Investigation Template for coverage tasks. Evidence scale Verified/Likely/Inferred distinct from confidence.",
-          "source": ".opencode/agents/subagents/explorer.md Sampling and Fan-out"
+          "description": "Explorer and project-context are read-only. External-scout may only webfetch. Interpreter handles image inspection read-only as well.",
+          "source": ".opencode/agents/subagents/explorer.md / project-context.md / interpreter.md",
+          "kind": "passive"
         },
         {
           "id": "0023",
           "rule": "Project-context is sole doc source hierarchy",
           "description": "Knows docs/project.md → docs/context/README.md → slice README → grep. Never write docs; delegate to documenter.",
-          "source": ".opencode/agents/subagents/project-context.md"
+          "source": ".opencode/agents/subagents/project-context.md",
+          "kind": "passive"
+        },
+        {
+          "id": "0022",
+          "rule": "Explorer fan-out thresholds",
+          "description": "SAMPLE_WINDOW 10, CHUNK_SIZE 20, MAX_DEPTH 3. Broad Investigation Template for coverage tasks. Evidence scale Verified/Likely/Inferred distinct from confidence.",
+          "source": ".opencode/agents/subagents/explorer.md Sampling and Fan-out",
+          "kind": "active"
         },
         {
           "id": "0024",
           "rule": "External-scout: one library/version/question",
           "description": "Fetches live docs in priority (official → releases → README). Compact answer; unreachable → one line and stop.",
-          "source": ".opencode/agents/subagents/external-scout.md"
-        },
-        {
-          "id": "0025",
-          "rule": "Vision-relay: one image/one question/one answer",
-          "description": "Cheap inspection for non-vision models. No shell, no web, no chain-of-thought. Unreadable → one line.",
-          "source": ".opencode/agents/subagents/vision-relay.md"
+          "source": ".opencode/agents/subagents/external-scout.md",
+          "kind": "active"
         }
       ]
     },
@@ -155,13 +128,15 @@
           "id": "0026",
           "rule": "Canonical runner per package dir",
           "description": "Frontend: Vitest 4 (unit), Playwright 1.58 (e2e), Storybook 10. Backend: go test (not yet configured). Run from package dir.",
-          "source": ".opencode/agents/subagents/tester.md / docs/project.md"
+          "source": ".opencode/agents/subagents/tester.md / docs/project.md",
+          "kind": "passive"
         },
         {
           "id": "0027",
           "rule": "Behavior assertions, not mock verification",
           "description": "Assert observable outcomes (DOM, emitted values, state), not private calls or mocks alone. Don't duplicate logic into tests. Flaky quarantined with report.",
-          "source": ".opencode/agents/subagents/tester.md Anti-Patterns"
+          "source": ".opencode/agents/subagents/tester.md Anti-Patterns",
+          "kind": "passive"
         }
       ]
     },
@@ -173,13 +148,15 @@
           "id": "0028",
           "rule": "Sole dedicated writer for docs/ with registration",
           "description": "Every new doc needs frontmatter (last_updated, status, description, tags) and registration in docs/context/README.md, _TAG-INDEX.md, Slices if applicable.",
-          "source": ".opencode/agents/subagents/documenter.md"
+          "source": ".opencode/agents/subagents/documenter.md",
+          "kind": "passive"
         },
         {
           "id": "0029",
           "rule": "Post-change audit: routing sync, freshness, links",
           "description": "Three-dimension audit after any doc change: routing-table sync (never auto-fix), date freshness (>30 stale, >90 review), link integrity.",
-          "source": ".opencode/agents/subagents/documenter.md Post-change audit"
+          "source": ".opencode/agents/subagents/documenter.md Post-change audit",
+          "kind": "active"
         }
       ]
     },
@@ -188,44 +165,52 @@
       "members": ["delivery", "orchestrator"],
       "rules": [
         {
-          "id": "0030",
-          "rule": "Decision hierarchy and slices routing",
-          "description": "Resolve conflicts via Decision Hierarchy (context > integrity > user decisions > objective > buildable > conventions > quality). Route tasks via Slices Keywords → Repo → Entry points; pick coder by stack.",
-          "source": ".opencode/agents/subagents/orchestrator.md / docs/project.md Slices"
-        },
-        {
-          "id": "0031",
-          "rule": "Orchestrator Phase 2 Reduce owns scope",
-          "description": "delivery never runs Phase 2 — orchestrator produces Scope with complexity, hot spots, in/out, key files, verification path. Alta/Muy Alta requires human validation.",
-          "source": ".opencode/protocols/prompt-pipeline.md Phase 2"
-        },
-        {
           "id": "0003",
           "rule": "Coordinators never implement",
           "description": "delivery and orchestrator delegate ALL technical work via task tool. 'Just do it myself' temptation is the primary failure mode.",
           "source": ".opencode/agents/subagents/delivery.md / .opencode/agents/subagents/orchestrator.md",
-          "severity": "hard"
+          "severity": "hard",
+          "kind": "passive"
         },
         {
           "id": "0004",
           "rule": "Delegation via permission.task + Dispatch table",
-          "description": "Who can call whom is declared in each agent's frontmatter permission.task. Delivery's Delegation table routes by action type (read/explore/write/bash/docs/code). Pick coder by stack (Angular→coder-angular, Go→coder-go).",
+          "description": "Who can call whom is declared in each agent's frontmatter permission.task. Delivery's Delegation table routes by action type (read/explore/write/bash/docs/code). Pick coder by language param (language=angular|go branching to single coder).",
           "source": ".opencode/agents/subagents/delivery.md##Delegation / each agent frontmatter",
-          "severity": "hard"
+          "severity": "hard",
+          "kind": "active"
         },
         {
           "id": "0005",
           "rule": "One question block",
           "description": "Never ask human 5 questions across 5 turns. Interpreter batches all blocking questions into ONE question call; orchestrator groups ambiguities via Session Preflight. Cache answers.",
           "source": ".opencode/protocols/prompt-pipeline.md / delivery.md Session Preflight",
-          "severity": "medium"
+          "severity": "medium",
+          "kind": "active"
         },
         {
           "id": "0006",
           "rule": "Hard STOP on subagent failure",
           "description": "If a subagent fails to launch (Model not found, permission denied), report 'delegación bloqueada: <agente> falló con <motivo>' and STOP. Do not absorb failure or do work yourself.",
           "source": ".opencode/agents/subagents/delivery.md Hard STOP",
-          "severity": "hard"
+          "severity": "hard",
+          "kind": "active"
+        },
+        {
+          "id": "0030",
+          "rule": "Decision hierarchy and slices routing",
+          "description": "Resolve conflicts via Decision Hierarchy (context > integrity > user decisions > objective > buildable > conventions > quality). Route tasks via Slices Keywords → Repo → Entry points; pick coder by language param (angular|go).",
+          "source": ".opencode/agents/subagents/orchestrator.md / docs/project.md Slices",
+          "severity": "hard",
+          "kind": "active"
+        },
+        {
+          "id": "0031",
+          "rule": "Orchestrator Phase 2 Reduce owns scope",
+          "description": "delivery never runs Phase 2 — orchestrator produces Scope with complexity, hot spots, in/out, key files, verification path. Alta/Muy Alta requires human validation.",
+          "source": ".opencode/protocols/prompt-pipeline.md Phase 2",
+          "severity": "hard",
+          "kind": "active"
         }
       ]
     }
@@ -238,20 +223,23 @@
           "id": "0032",
           "rule": "Owns human conversation and translation",
           "description": "Only agent that speaks human language; all subagent traffic is English translation.",
-          "source": ".opencode/agents/subagents/delivery.md"
-        },
-        {
-          "id": "0033",
-          "rule": "Skill Loading Contract: pass exact file paths",
-          "description": "Give subagents exact docs/context/*.md paths, not digested summaries, to avoid drift.",
-          "source": ".opencode/agents/subagents/delivery.md"
+          "source": ".opencode/agents/subagents/delivery.md",
+          "kind": "passive"
         },
         {
           "id": "0002",
           "rule": "Interpreter-first hard gate",
           "description": "FIRST agent invocation of every turn is task to interpreter — every prompt, no exceptions, no pre-classification. No read/glob/grep/edit/bash/webfetch before interpreter returns routing packet. Trivial vs non-trivial is OUTPUT of packet.",
           "source": ".opencode/workflows/dispatch.md / .opencode/protocols/prompt-pipeline.md",
-          "severity": "hard"
+          "severity": "hard",
+          "kind": "active"
+        },
+        {
+          "id": "0033",
+          "rule": "Skill Loading Contract: pass exact file paths",
+          "description": "Give subagents exact docs/context/*.md paths, not digested summaries, to avoid drift.",
+          "source": ".opencode/agents/subagents/delivery.md",
+          "kind": "active"
         }
       ]
     },
@@ -262,13 +250,15 @@
           "id": "0034",
           "rule": "Fan-out aggregation and cost note",
           "description": "Split file list into 20-file chunks, parallel N tasks, de-duplicate, promote severity to max. Fan-out multiplies cost — only when input too large.",
-          "source": ".opencode/agents/subagents/orchestrator.md"
+          "source": ".opencode/agents/subagents/orchestrator.md",
+          "kind": "active"
         },
         {
           "id": "0035",
           "rule": "Context Budget: trim → delegate slice → request restart",
           "description": "Runtime compaction handles trimming; prefer handing bounded slice to fresh subagent before asking delivery to re-instantiate with clean snapshot.",
-          "source": ".opencode/agents/subagents/orchestrator.md"
+          "source": ".opencode/agents/subagents/orchestrator.md",
+          "kind": "active"
         }
       ]
     },
@@ -278,8 +268,9 @@
         {
           "id": "0036",
           "rule": "Vocabulary reconciliation via grep/glob only",
-          "description": "Lookups against Slices table and docs/context only; never resolve from general knowledge. Unresolved goes to unresolved_questions.",
-          "source": ".opencode/agents/subagents/interpreter.md"
+          "description": "Lookups against Slices table and docs/context only; never resolve from general knowledge. Unresolved goes to unresolved_questions. Also handles image-inspection fallback: one image + one question, text-over-image priority, unclear → one-line failure.",
+          "source": ".opencode/agents/subagents/interpreter.md",
+          "kind": "active"
         }
       ]
     },
@@ -290,7 +281,8 @@
           "id": "0037",
           "rule": "Slices-first routing before searching",
           "description": "Match task to Slices table Keywords before searching src/. Report verified facts separately from inferred.",
-          "source": ".opencode/agents/subagents/explorer.md Approach"
+          "source": ".opencode/agents/subagents/explorer.md Approach",
+          "kind": "active"
         }
       ]
     },
@@ -301,7 +293,8 @@
           "id": "0038",
           "rule": "No nitpicking style while correctness issues exist",
           "description": "Order findings by severity; never approve with unverified claims.",
-          "source": ".opencode/agents/subagents/reviewer.md"
+          "source": ".opencode/agents/subagents/reviewer.md",
+          "kind": "passive"
         }
       ]
     },
@@ -312,7 +305,8 @@
           "id": "0039",
           "rule": "Canonical-only spec, no twin in .opencode/agents/",
           "description": "Single spec ratified 2026-07-30; do not create top-level twin.",
-          "source": ".opencode/agents/subagents/analista.md"
+          "source": ".opencode/agents/subagents/analista.md",
+          "kind": "passive"
         }
       ]
     }

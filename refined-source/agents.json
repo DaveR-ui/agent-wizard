@@ -10,9 +10,9 @@
     "mode": "primary",
     "permission": {
       "webfetch": "deny",
-      "task": ["interpreter", "orchestrator", "coder-angular", "coder-go", "tester", "reviewer", "architect", "explorer", "project-context", "vision-relay", "external-scout", "analista", "documenter"]
+      "task": ["interpreter", "orchestrator", "coder", "tester", "reviewer", "architect", "explorer", "project-context", "external-scout", "analista", "documenter"]
     },
-    "canCall": ["interpreter", "orchestrator", "coder-angular", "coder-go", "tester", "reviewer", "architect", "explorer", "project-context", "vision-relay", "external-scout", "analista", "documenter"],
+    "canCall": ["interpreter", "orchestrator", "coder", "tester", "reviewer", "architect", "explorer", "project-context", "external-scout", "analista", "documenter"],
     "specificBeyondGeneral": "Trivial vs non-trivial is OUTPUT of interpreter packet (never pre-classified). Implements Self-check gate, Hard STOP on subagent failure (report, don't absorb), Agent-system changes review loop (draft → review → apply → verify), Session Preflight (batch all ambiguities), Skill Loading Contract (pass exact file paths).",
     "relatedFiles": [
       ".opencode/agents/subagents/delivery.md",
@@ -33,9 +33,9 @@
     "temperature": null,
     "mode": "subagent",
     "permission": {
-      "task": ["coder-angular", "coder-go", "tester", "reviewer", "architect", "explorer", "project-context", "vision-relay", "external-scout", "analista", "documenter"]
+      "task": ["coder", "tester", "reviewer", "architect", "explorer", "project-context", "external-scout", "analista", "documenter"]
     },
-    "canCall": ["coder-angular", "coder-go", "tester", "reviewer", "architect", "explorer", "project-context", "vision-relay", "external-scout", "analista", "documenter"],
+    "canCall": ["coder", "tester", "reviewer", "architect", "explorer", "project-context", "external-scout", "analista", "documenter"],
     "specificBeyondGeneral": "Produces ## Scope block (complexity, hot spots, key files, verification). Fan-out pattern: split by file list, 10-20 per chunk, N parallel tasks. Cost discipline (cheap tier default). Slices routing via docs/project.md Keywords → Repo → Entry points. Decision Hierarchy (context > integrity > user decisions > objective > buildable > conventions > quality).",
     "relatedFiles": [
       ".opencode/agents/subagents/orchestrator.md",
@@ -50,9 +50,9 @@
   {
     "id": "interpreter",
     "displayName": "Interpreter",
-    "role": "Step 0 normalization helper. Reconciles vocabulary via grep/glob, captures constraints, returns routing packet.",
+    "role": "Step 0 normalization helper. Reconciles vocabulary via grep/glob, captures constraints, returns routing packet. Also handles cheap image inspection (one image + one question → compact answer).",
     "group": "analysis",
-    "essence": "Lightweight pre-routing. Normalizes raw human prompt (in human language) → English routing packet with modules (slice IDs), constraints, hidden assumption, acceptance criteria. Mandatory grep+glob against docs/project.md Slices table.",
+    "essence": "Lightweight pre-routing. Normalizes raw human prompt (in human language) → English routing packet with modules (slice IDs), constraints, hidden assumption, acceptance criteria. Mandatory grep+glob against docs/project.md Slices table. Also serves vision fallback: single image inspection with text-over-image rule, unclear → one-line failure.",
     "model": "inherit",
     "temperature": 0.1,
     "mode": "subagent",
@@ -62,7 +62,7 @@
       "task": ["interpreter"]
     },
     "canCall": [],
-    "specificBeyondGeneral": "Every ambiguous term lands in exactly one of resolved_by_lookup (with source) or unresolved_questions. May call question tool ONCE batched. Never answers request itself - only normalizes and routes. Packet consumed by Phase 2 Reduce.",
+    "specificBeyondGeneral": "Every ambiguous term lands in exactly one of resolved_by_lookup (with source) or unresolved_questions. May call question tool ONCE batched. Never answers request itself - only normalizes and routes. Packet consumed by Phase 2 Reduce. Image-inspection mode: one image + one focused question → compact textual answer; prioritize visible text over image context; unreadable image → one-line failure; if caller already vision-capable, don't invoke.",
     "relatedFiles": [
       ".opencode/agents/subagents/interpreter.md",
       ".opencode/agents/subagents/interpreter.schema.json",
@@ -95,49 +95,24 @@
     ]
   },
   {
-    "id": "coder-angular",
-    "displayName": "Coder Angular",
-    "role": "Angular 21 SPA implementation specialist.",
+    "id": "coder",
+    "displayName": "Coder",
+    "role": "Language-parameterized implementation specialist for Angular SPA and Go backend. Branches by language=angular|go, delegating stack knowledge to docs/context/.",
     "group": "coders",
-    "essence": "Thin adapter over Angular docs in docs/context/. Implements features, bug fixes, refactors for frontend. Returns CoderOutput JSON.",
+    "essence": "Thin adapter over docs/context/. Branches: if angular read Angular docs + MCP angular; if go read Go docs + gofmt/vet; returns CoderOutput.",
     "model": "opencode-go/deepseek-v4-flash",
     "temperature": null,
     "mode": "subagent",
     "permission": {
-      "task": ["coder-angular"]
+      "task": ["coder"]
     },
     "canCall": [],
-    "specificBeyondGeneral": "Reads docs/project.md + Angular docs in docs/context/ (not src/ legacy patterns). Follows slice pattern <feature>.{routes,service,models}.ts + page/ + ui/. Biome lint, Tailwind 4.1, standalone components. Complexity review of codebase is GROUP rule for coders.",
+    "specificBeyondGeneral": "Language-parameterized branching: language=angular → read docs/project.md + Angular docs in docs/context/ + MCP angular, follow standalone components, signals/rxResource, slice pattern <feature>.{routes,service,models}.ts + page/+ui; language=go → read Go docs + backend docs, follow domain→repository→service→handler→routes under /api/v1, GORM+PostgreSQL, Gin, Viper, JWT, seed logic, gofmt/vet clean, explicit errors. Never copy legacy src/ patterns; source-of-truth hierarchy docs/context/*.md > docs/project.md > _TAG-INDEX.md > src/.",
     "relatedFiles": [
-      ".opencode/agents/subagents/coder-angular.md",
+      ".opencode/agents/subagents/coder.md",
       ".opencode/agents/subagents/coder.schema.json",
       "docs/project.md",
-      "docs/context/architecture.md",
-      "frontend/docs/context/README.md",
-      "frontend/src/features/<feature>/"
-    ]
-  },
-  {
-    "id": "coder-go",
-    "displayName": "Coder Go",
-    "role": "Go 1.24 API implementation specialist.",
-    "group": "coders",
-    "essence": "Thin adapter over Go docs in docs/context/. Implements backend domain → repository → service → handler → routes under /api/v1. Returns CoderOutput JSON.",
-    "model": "opencode-go/deepseek-v4-flash",
-    "temperature": null,
-    "mode": "subagent",
-    "permission": {
-      "task": ["coder-go"]
-    },
-    "canCall": [],
-    "specificBeyondGeneral": "Follows backend layering, GORM + PostgreSQL, Gin, Viper, JWT. Seed logic for new domain entities. Database in development: backward compatibility not required. gofmt/go vet clean, explicit error handling.",
-    "relatedFiles": [
-      ".opencode/agents/subagents/coder-go.md",
-      ".opencode/agents/subagents/coder.schema.json",
-      "docs/project.md",
-      "backend/docs/project.md",
-      "backend/internal/domain/",
-      "backend/internal/transport/http/"
+      "docs/context/architecture.md"
     ]
   },
   {
@@ -274,26 +249,6 @@
       ".opencode/agents/subagents/project-context.md",
       "docs/project.md",
       "docs/context/README.md"
-    ]
-  },
-  {
-    "id": "vision-relay",
-    "displayName": "Vision Relay",
-    "role": "Cheap image inspection for non-vision models. One image + one question → compact answer.",
-    "group": "exploration",
-    "essence": "Minimal subagent: one image, one focused question, one answer. No edits, no shell, no web, no chain-of-thought. Unreadable image → one-line failure.",
-    "model": "inherit",
-    "temperature": 0.1,
-    "mode": "subagent",
-    "permission": {
-      "edit": "deny",
-      "bash": "deny",
-      "webfetch": "deny"
-    },
-    "canCall": [],
-    "specificBeyondGeneral": "Called via task tool with absolute image path + question. Use cases: OCR screenshot, read diagram, extract visible text from PDF snapshot. If caller model already vision-capable, don't invoke.",
-    "relatedFiles": [
-      ".opencode/agents/subagents/vision-relay.md"
     ]
   },
   {
