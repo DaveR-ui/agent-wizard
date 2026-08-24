@@ -33,9 +33,9 @@
     "temperature": null,
     "mode": "subagent",
     "permission": {
-      "task": ["interpreter", "coder-angular", "coder-go", "tester", "reviewer", "architect", "explorer", "project-context", "vision-relay", "external-scout", "analista", "documenter"]
+      "task": ["coder-angular", "coder-go", "tester", "reviewer", "architect", "explorer", "project-context", "vision-relay", "external-scout", "analista", "documenter"]
     },
-    "canCall": ["interpreter", "coder-angular", "coder-go", "tester", "reviewer", "architect", "explorer", "project-context", "vision-relay", "external-scout", "analista", "documenter"],
+    "canCall": ["coder-angular", "coder-go", "tester", "reviewer", "architect", "explorer", "project-context", "vision-relay", "external-scout", "analista", "documenter"],
     "specificBeyondGeneral": "Produces ## Scope block (complexity, hot spots, key files, verification). Fan-out pattern: split by file list, 10-20 per chunk, N parallel tasks. Cost discipline (cheap tier default). Slices routing via docs/project.md Keywords → Repo → Entry points. Decision Hierarchy (context > integrity > user decisions > objective > buildable > conventions > quality).",
     "relatedFiles": [
       ".opencode/agents/subagents/orchestrator.md",

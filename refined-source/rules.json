@@ -8,41 +8,6 @@
       "severity": "hard"
     },
     {
-      "id": "0002",
-      "rule": "Interpreter-first hard gate",
-      "description": "FIRST agent invocation of every turn is task to interpreter — every prompt, no exceptions, no pre-classification. No read/glob/grep/edit/bash/webfetch before interpreter returns routing packet. Trivial vs non-trivial is OUTPUT of packet.",
-      "source": ".opencode/workflows/dispatch.md / .opencode/protocols/prompt-pipeline.md",
-      "severity": "hard"
-    },
-    {
-      "id": "0003",
-      "rule": "Coordinators never implement",
-      "description": "delivery and orchestrator delegate ALL technical work via task tool. 'Just do it myself' temptation is the primary failure mode.",
-      "source": ".opencode/agents/subagents/delivery.md / .opencode/agents/subagents/orchestrator.md",
-      "severity": "hard"
-    },
-    {
-      "id": "0004",
-      "rule": "Delegation via permission.task + Dispatch table",
-      "description": "Who can call whom is declared in each agent's frontmatter permission.task. Delivery's Delegation table routes by action type (read/explore/write/bash/docs/code). Pick coder by stack (Angular→coder-angular, Go→coder-go).",
-      "source": ".opencode/agents/subagents/delivery.md##Delegation / each agent frontmatter",
-      "severity": "hard"
-    },
-    {
-      "id": "0005",
-      "rule": "One question block",
-      "description": "Never ask human 5 questions across 5 turns. Interpreter batches all blocking questions into ONE question call; orchestrator groups ambiguities via Session Preflight. Cache answers.",
-      "source": ".opencode/protocols/prompt-pipeline.md / delivery.md Session Preflight",
-      "severity": "medium"
-    },
-    {
-      "id": "0006",
-      "rule": "Hard STOP on subagent failure",
-      "description": "If a subagent fails to launch (Model not found, permission denied), report 'delegación bloqueada: <agente> falló con <motivo>' and STOP. Do not absorb failure or do work yourself.",
-      "source": ".opencode/agents/subagents/delivery.md Hard STOP",
-      "severity": "hard"
-    },
-    {
       "id": "0007",
       "rule": "Structured returns via EventV2, not markdown files",
       "description": "Subagents with output_schema return validated JSON via task tool + EventV2 bus. Never write summary.md/output-full.md/manifest.md to disk. Runtime captures via GET /session/:id/children.",
@@ -233,6 +198,34 @@
           "rule": "Orchestrator Phase 2 Reduce owns scope",
           "description": "delivery never runs Phase 2 — orchestrator produces Scope with complexity, hot spots, in/out, key files, verification path. Alta/Muy Alta requires human validation.",
           "source": ".opencode/protocols/prompt-pipeline.md Phase 2"
+        },
+        {
+          "id": "0003",
+          "rule": "Coordinators never implement",
+          "description": "delivery and orchestrator delegate ALL technical work via task tool. 'Just do it myself' temptation is the primary failure mode.",
+          "source": ".opencode/agents/subagents/delivery.md / .opencode/agents/subagents/orchestrator.md",
+          "severity": "hard"
+        },
+        {
+          "id": "0004",
+          "rule": "Delegation via permission.task + Dispatch table",
+          "description": "Who can call whom is declared in each agent's frontmatter permission.task. Delivery's Delegation table routes by action type (read/explore/write/bash/docs/code). Pick coder by stack (Angular→coder-angular, Go→coder-go).",
+          "source": ".opencode/agents/subagents/delivery.md##Delegation / each agent frontmatter",
+          "severity": "hard"
+        },
+        {
+          "id": "0005",
+          "rule": "One question block",
+          "description": "Never ask human 5 questions across 5 turns. Interpreter batches all blocking questions into ONE question call; orchestrator groups ambiguities via Session Preflight. Cache answers.",
+          "source": ".opencode/protocols/prompt-pipeline.md / delivery.md Session Preflight",
+          "severity": "medium"
+        },
+        {
+          "id": "0006",
+          "rule": "Hard STOP on subagent failure",
+          "description": "If a subagent fails to launch (Model not found, permission denied), report 'delegación bloqueada: <agente> falló con <motivo>' and STOP. Do not absorb failure or do work yourself.",
+          "source": ".opencode/agents/subagents/delivery.md Hard STOP",
+          "severity": "hard"
         }
       ]
     }
@@ -252,6 +245,13 @@
           "rule": "Skill Loading Contract: pass exact file paths",
           "description": "Give subagents exact docs/context/*.md paths, not digested summaries, to avoid drift.",
           "source": ".opencode/agents/subagents/delivery.md"
+        },
+        {
+          "id": "0002",
+          "rule": "Interpreter-first hard gate",
+          "description": "FIRST agent invocation of every turn is task to interpreter — every prompt, no exceptions, no pre-classification. No read/glob/grep/edit/bash/webfetch before interpreter returns routing packet. Trivial vs non-trivial is OUTPUT of packet.",
+          "source": ".opencode/workflows/dispatch.md / .opencode/protocols/prompt-pipeline.md",
+          "severity": "hard"
         }
       ]
     },

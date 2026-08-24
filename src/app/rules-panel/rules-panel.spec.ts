@@ -17,22 +17,22 @@ describe('RulesPanel', () => {
     }).compileComponents();
   });
 
-  it('should render the three level tabs with the curated counts (12 / 6 / 6)', () => {
+  it('should render the three level tabs with the curated counts (7 / 6 / 6)', () => {
     const fixture = TestBed.createComponent(RulesPanel);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     const tabs = Array.from(compiled.querySelectorAll('.level-tab')).map((el) =>
       el.textContent?.trim(),
     );
-    expect(tabs).toEqual(['Global (12)', 'Grupos (6)', 'Específicas (6)']);
+    expect(tabs).toEqual(['Global (7)', 'Grupos (6)', 'Específicas (6)']);
   });
 
-  it('should render 12 global rules with severity badges by default', () => {
+  it('should render 7 global rules with severity badges by default', () => {
     const fixture = TestBed.createComponent(RulesPanel);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelectorAll('.rule-card').length).toBe(12);
-    expect(compiled.querySelectorAll('.severity-badge').length).toBe(12);
+    expect(compiled.querySelectorAll('.rule-card').length).toBe(7);
+    expect(compiled.querySelectorAll('.severity-badge').length).toBe(7);
     expect(compiled.querySelector('.severity-hard')).toBeTruthy();
     expect(compiled.querySelector('.severity-medium')).toBeTruthy();
     // Each global rule cites its source.
@@ -94,8 +94,8 @@ describe('RulesPanel', () => {
       'reviewer',
       'analista',
     ]);
-    // 2 + 2 + 1 + 1 + 1 + 1 rule cards across the six blocks.
-    expect(compiled.querySelectorAll('.rule-card').length).toBe(8);
+    // 3 + 2 + 1 + 1 + 1 + 1 rule cards across the six blocks.
+    expect(compiled.querySelectorAll('.rule-card').length).toBe(9);
   });
 
   it('should filter global rules client-side by free text', () => {

@@ -1,8 +1,8 @@
 {
   "meta": {
-    "generated": "2026-08-23",
+    "generated": "2026-08-24",
     "source": "agent-wizard/source (copy of .opencode, node_modules removed)",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Nodes = agents, edges = canCall via task tool (from permission.task frontmatter). Hover on each card shows callable agents + specificBeyondGeneral + related files.",
     "layoutHint": "Force-directed with coordination layer top, guardians middle, coders/quality/writers leaves, exploration periphery"
   },
@@ -45,7 +45,6 @@
     { "from": "delivery", "to": "external-scout", "kind": "direct" },
     { "from": "delivery", "to": "analista", "kind": "direct" },
     { "from": "delivery", "to": "documenter", "kind": "direct" },
-    { "from": "orchestrator", "to": "interpreter", "kind": "optional" },
     { "from": "orchestrator", "to": "coder-angular", "kind": "fan-out" },
     { "from": "orchestrator", "to": "coder-go", "kind": "fan-out" },
     { "from": "orchestrator", "to": "tester", "kind": "parallel" },

@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-08-23
+last_updated: 2026-08-24
 description: Catalog of the 14 agents defined in refined-source/agents.json — id, group, role, model, mode, canCall count, key files.
 tags: [agents, catalog, subagents, groups, canCall]
 status: active
@@ -14,7 +14,7 @@ The 14 agents defined in `refined-source/agents.json` (source of truth: `.openco
 | id | displayName | group | role (one line) | model | mode | canCall | key relatedFiles |
 |---|---|---|---|---|---|---|---|
 | `delivery` | Delivery | coordination | Sole human ↔ agent interface; translates, routes, delegates — never implements | deepseek-v4-flash | primary | 13 | `delivery.md`, `workflows/dispatch.md`, `protocols/prompt-pipeline.md`, `docs/project.md` |
-| `orchestrator` | Orchestrator | coordination | Persistent coordinator; Phase 2 Reduce, fan-out, aggregation | inherit | subagent | 12 | `orchestrator.md`, `workflows/orchestrate.md`, `docs/project.md`, `docs/context/README.md` |
+| `orchestrator` | Orchestrator | coordination | Persistent coordinator; Phase 2 Reduce, fan-out, aggregation | inherit | subagent | 11 | `orchestrator.md`, `workflows/orchestrate.md`, `docs/project.md`, `docs/context/README.md` |
 | `interpreter` | Interpreter | analysis | Step 0 normalization; vocabulary reconciliation → routing packet | inherit | subagent | 0 | `interpreter.md`, `interpreter.schema.json`, `docs/project.md` |
 | `explorer` | Explorer | exploration | Read-only codebase exploration, file search, dependency analysis | inherit | subagent | 1 | `explorer.md`, `explorer.schema.json`, `docs/context/architecture.md` |
 | `project-context` | Project Context | exploration | READ-ONLY doc lookup and context assembly for docs/ | inherit | subagent | 0 | `project-context.md`, `docs/project.md`, `docs/context/README.md` |
@@ -27,6 +27,8 @@ The 14 agents defined in `refined-source/agents.json` (source of truth: `.openco
 | `analista` | Analista | guardians | Second-opinion advisor; read-only plan critique | inherit | subagent | 0 | `analista.md`, `analista.schema.json`, `protocols/session-recovery.md` |
 | `tester` | Tester | quality | Unit, integration, coverage, e2e test author and runner | inherit | subagent | 0 | `tester.md`, `tester.schema.json`, `docs/context/project-rules.md`, `frontend/package.json` |
 | `documenter` | Documenter | writers | Sole dedicated writer for docs/ | inherit | subagent | 0 | `documenter.md`, `documenter.schema.json`, `docs/project.md`, `docs/_TAG-INDEX.md` |
+
+> `orchestrator` canCall 12→11 in 1.0.1 (interpreter removed from orchestrator's `permission.task`; delivery retains interpreter via Step 0). Edge count 27→26.
 
 ## Groups
 

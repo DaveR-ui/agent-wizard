@@ -121,7 +121,7 @@ export interface GraphData {
  */
 export const AGENTS = agentsJson as Agent[];
 
-/** The 3-level rule tree (12 global / 6 families / 6 agent-specific). */
+/** The 3-level rule tree (7 global / 6 families / 6 agent-specific). */
 export const RULES = rulesJson as RulesData;
 
 /** The delegation graph (14 nodes, 27 edges, 7 groups). */

@@ -6,7 +6,7 @@ export type RuleLevel = 'global' | 'groups' | 'specific';
 
 /**
  * 3-level filterable rules panel (refined-source/rules.json):
- * - Global: 12 rules with severity badges (hard/medium).
+ * - Global: 7 rules with severity badges (hard/medium).
  * - Grupos: 6 group families, switchable via a family pill selector.
  * - Específicas: 6 agents with their own rule blocks.
  * A free-text filter applies across all levels (pure client-side, signal state).

@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-08-23
+last_updated: 2026-08-24
 description: The refined-source data layer — agents.json, rules.json, graph.json schemas, hover contract, jq validation, and manual curation workflow.
 tags: [refined-source, data-layer, json, agents.json, rules.json, graph.json, jq]
 status: active
@@ -14,8 +14,8 @@ status: active
 | File | Content |
 |---|---|
 | `agents.json` | 14 agent cards |
-| `rules.json` | Rule cards, 3 levels |
-| `graph.json` | Delegation graph |
+| `rules.json` | Rule cards, 3 levels (global 7, groups 6 families, agentSpecific 6 agents) |
+| `graph.json` | Delegation graph (14 nodes, 26 edges, 7 groups, v1.0.1) |
 | `agents/*.md` | Per-agent detail prose (14) |
 | `README.md` | Overview + hover contract |
 
@@ -40,9 +40,9 @@ status: active
 
 | Level | Key | Count | Notes |
 |---|---|---|---|
-| Global | `global` | 12 | Applies to every agent; each has `severity` (hard/medium) |
-| Group | `groups` | 6 families | `coders`, `guardians`, `exploration`, `quality`, `writers`, `coordination`; each has `members` + `rules` |
-| Agent-specific | `agentSpecific` | 6 agents | `delivery`, `orchestrator`, `interpreter`, `explorer`, `reviewer`, `analista` |
+| Global | `global` | 7 | Applies to every agent; each has `severity` (hard/medium). Was 12 pre-1.0.1; `0002`→`agentSpecific/delivery`, `0003-0006`→`groups/coordination` |
+| Group | `groups` | 6 families | `coders` (4), `guardians` (4), `exploration` (5), `quality` (2), `writers` (2), `coordination` (6: `0030,0031` + `0003-0006`); each has `members` + `rules` |
+| Agent-specific | `agentSpecific` | 6 agents | `delivery` (3: `0032,0033` + `0002`), `orchestrator` (2), `interpreter` (1), `explorer` (1), `reviewer` (1), `analista` (1) |
 
 Every rule cites `source` (the file it comes from).
 
@@ -50,10 +50,10 @@ Every rule cites `source` (the file it comes from).
 
 | Key | Content |
 |---|---|
-| `meta` | `version`, `generated`, `source`, `description`, `layoutHint` |
+| `meta` | `version 1.0.1`, `generated 2026-08-24`, `source agent-wizard/source`, `description`, `layoutHint` |
 | `groups` | 7 groups with `id`, `label`, `color`, `order` |
 | `nodes` | 14 nodes with `id`, `label`, `group`, `level`, `isPrimary` |
-| `edges` | 27 edges with `from`, `to`, `kind`, optional `label` |
+| `edges` | 26 edges with `from`, `to`, `kind`, optional `label` (was 27; orchestrator→interpreter removed, orchestrator canCall 12→11) |
 
 ## Hover contract (per card)
 
@@ -74,7 +74,7 @@ jq empty refined-source/agents.json && jq empty refined-source/rules.json && jq 
 1. Change originates in `.opencode/` → update `source/` copy if needed.
 2. Manually reflect in `agents.json` / `rules.json` / `graph.json` (pretty-printed, jq-checked).
 3. Add/update `agents/<id>.md` if prose is needed.
-4. Bump `graph.json → meta.version` and `meta.generated`.
+4. Bump `graph.json → meta.version` and `meta.generated` (current: `1.0.1` / `2026-08-24`).
 5. Validate with jq.
 
 ## References
