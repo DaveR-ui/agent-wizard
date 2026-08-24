@@ -1,13 +1,13 @@
 ---
-last_updated: 2026-08-23
-description: Documentation conventions for this project, derived from the ia-docs-gen protocol — frontmatter, registration, one-topic-per-file, nesting, status markers.
-tags: [docs, conventions, frontmatter, ia-docs-gen, registration]
+last_updated: 2026-08-24
+description: Documentation conventions for this project — frontmatter, registration, one-topic-per-file, nesting, status markers, post-change audit (canonical spec, formerly ia-docs-gen).
+tags: [docs, conventions, frontmatter, registration]
 status: active
 ---
 
 # Doc Conventions
 
-How `docs/` is written and maintained, per `source/protocols/ia-docs-gen.md` (the format spec). The `documenter` subagent is the canonical writer.
+How `docs/` is written and maintained (canonical spec — this file, formerly ia-docs-gen). The `documenter` subagent is the sole dedicated writer for `docs/`.
 
 ## Frontmatter
 
@@ -31,6 +31,10 @@ A new doc is done only when registered:
 1. Row in `docs/context/README.md` (context docs) or `docs/protocols/README.md` (protocols).
 2. Tag entries in `docs/_TAG-INDEX.md`.
 3. Slices-table row in `docs/project.md` when the doc introduces a new slice.
+
+## Principles (AI-optimized, salvaged from retired ia-docs-gen)
+
+All docs follow: concise over verbose (bullets/tables over paragraphs), patterns over prose (show code patterns), consistent headers with max 3 nesting levels, include real project code examples where possible, status markers `(WIP)`/`(TODO)`/`(DEPRECATED)`, English only.
 
 ## Rules
 
@@ -63,6 +67,6 @@ After any doc change, run the three-dimension audit:
 
 ## References
 
-- Format spec: `source/protocols/ia-docs-gen.md`
+- Format spec: `docs/context/doc-conventions.md` (this file — former ia-docs-gen merged 2026-08-24)
 - Indexing: `docs/context/indexing-strategy.md`
 - Context budget: `docs/context/context-engineering.md`

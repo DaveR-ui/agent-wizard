@@ -17,4 +17,4 @@ _(none)_
 - `.opencode/agents/subagents/documenter.md`
 - `.opencode/agents/subagents/documenter.schema.json`
 - `docs/project.md`, `docs/context/README.md`, `docs/_TAG-INDEX.md`
-- `.opencode/protocols/ia-docs-gen.md`, `.opencode/protocols/ia-catalog-manager.md`
+- `docs/context/doc-conventions.md` (canonical spec)

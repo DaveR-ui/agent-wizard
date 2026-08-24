@@ -18,7 +18,7 @@ The opencode agent runtime. `.opencode/` is the live config the runtime loads an
 | Area | Path | Contents |
 |---|---|---|
 | Agents | `.opencode/agents/subagents/` | 13 agent `.md` definitions spec / 12 actual (single `coder.md` + `coder.schema.json`, vision-relay removed, interpreter now handles image inspection), 7 with `.schema.json` |
-| Protocols | `.opencode/protocols/` | 11 agent protocols + `references/` (3 refs) |
+| Protocols | `.opencode/protocols/` | 5 agent protocols + `README.md` (retired 4 ia-* + references/ on 2026-08-24) |
 | Workflows | `.opencode/workflows/` | `dispatch.md`, `orchestrate.md` |
 | Scripts | `.opencode/scripts/` | `install-agent.ps1`, `session-recover.ps1`, `validate-agent.sh` |
 | Tests | `.opencode/tests/` | `run-tests.sh`, schema contract tests, fixtures |

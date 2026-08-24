@@ -34,7 +34,7 @@ This folder contains **strategic documents** that guide the agent system's behav
 | File | Purpose | When to Use |
 |------|---------|-------------|
 | `project-rules.md` | Development standards: language, path quoting, cost discipline, review loop, structured returns | Always - baseline for all development |
-| `doc-conventions.md` | Documentation conventions derived from ia-docs-gen: frontmatter, registration, nesting, audit | When writing or reviewing any doc in `docs/` |
+| `doc-conventions.md` | Documentation conventions: frontmatter, registration, one-topic-per-file, nesting, post-change audit (canonical) | When writing or reviewing any doc in `docs/` |
 
 ### Agents & Rules
 

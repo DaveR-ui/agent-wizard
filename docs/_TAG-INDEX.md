@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-08-25
+last_updated: 2026-08-24
 description: Tag index for docs/ — every tag used in context and protocol frontmatter, mapped to the files that carry it.
 tags: [index, tags, lookup]
 status: active
@@ -44,7 +44,6 @@ Fast lookup for the doc tree. Every tag used in `docs/context/` and `docs/protoc
 | `graph.json` | `context/refined-source-data.md` |
 | `groups` | `context/agent-catalog.md`, `context/rules-hierarchy.md` |
 | `hierarchy` | `context/rules-hierarchy.md` |
-| `ia-docs-gen` | `context/doc-conventions.md` |
 | `index` | `context/README.md`, `protocols/README.md`, `_TAG-INDEX.md` |
 | `indexing` | `context/indexing-strategy.md` |
 | `jq` | `context/refined-source-data.md`, `local-dev.md`, `protocols/refined-source-curation.md` |
@@ -84,7 +83,7 @@ Fast lookup for the doc tree. Every tag used in `docs/context/` and `docs/protoc
 | Diagram agent | `diagram-agent` (mirror of `graph.json` — flat + group indexes, static) |
 | Rules | `rules`, `standards`, `conventions`, `english`, `cost`, `review-loop`, `hierarchy`, `global`, `agent-specific`, `severity` |
 | Data layer | `refined-source`, `json`, `jq`, `curation`, `data-layer` |
-| Docs system | `docs`, `frontmatter`, `registration`, `ia-docs-gen`, `indexing`, `tags`, `_TAG-INDEX`, `search`, `lookup`, `index` |
+| Docs system | `docs`, `frontmatter`, `registration`, `indexing`, `tags`, `_TAG-INDEX`, `search`, `lookup`, `index` |
 | Context discipline | `context`, `mvi`, `load-on-demand`, `budget`, `discipline` |
 | Protocols | `protocol`, `protocols` |
 | Dev / ops | `local`, `dev`, `serve`, `test`, `build`, `production`, `deploy`, `static`, `spa` |

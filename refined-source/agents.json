@@ -225,8 +225,7 @@
       "docs/project.md",
       "docs/context/README.md",
       "docs/_TAG-INDEX.md",
-      ".opencode/protocols/ia-docs-gen.md",
-      ".opencode/protocols/ia-catalog-manager.md"
+      "docs/context/doc-conventions.md"
     ]
   },
   {
