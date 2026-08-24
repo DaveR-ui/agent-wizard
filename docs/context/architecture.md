@@ -31,10 +31,10 @@ Curated, human-maintained JSON + MD that power the graph UI. Source of truth is 
 
 | File | Drives |
 |---|---|
-| `agents.json` | Agent cards (13 spec / 12 actual — single coder, vision-relay removed) |
+| `agents.json` | Agent cards (12 actual — single coder, vision-relay removed; Branch B scrolls in `relatedFiles`) |
 | `rules.json` | Rule cards, 3 levels (passive-first, `kind` tagged) |
-| `graph.json` | Delegation graph (13 nodes spec / 12 actual, 22 edges, 7 groups, v1.0.2) |
-| `agents/*.md` | Per-agent detail prose (12 actual / 13 spec) |
+| `graph.json` | Delegation graph (12 nodes, 22 edges, 7 groups, v1.1.0 with display-only `race` + `flavor`) |
+| `agents/*.md` | Per-agent detail prose (12 actual) |
 
 ### Angular skeleton (`src/`)
 
@@ -73,6 +73,7 @@ Angular 22.1.x standalone-component app (CLI 22.1.5). Renders agent cards, a fil
 ## What is future
 
 - **Routes** — `app.routes.ts` is empty; no pages exist.
+- **Diagram-agent mirror** — `diagram-agent/` static mirror (v1.0.0, 14 nodes / 27 edges) is `deprecated` since Phase 3; superseded by live RPG card at `/diagram-agent/:id` (`src/app/diagram-agent/diagram-agent-viewer.ts`) rendering `refined-source/*` v1.1.0 (race/flavor, passives, weapons, scrolls) with no static `.md` links — see `diagram-agent/README.md` (`status: deprecated`).
 
 ## References
 

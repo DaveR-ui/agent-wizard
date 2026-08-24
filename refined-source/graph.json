@@ -3,7 +3,7 @@
     "generated": "2026-08-24",
     "source": "agent-wizard/.opencode (sole source; source/ deleted 2026-08-24)",
     "version": "1.1.0",
-    "description": "Nodes = agents, edges = canCall via task tool (from permission.task frontmatter). Hover on each card shows callable agents + specificBeyondGeneral + related files. 13 nodes, 22 edges. v1.1.0 adds display-only race+flavor per group (RPG layer, display-only).",
+    "description": "Nodes = agents, edges = canCall via task tool (from permission.task frontmatter). Hover on each card shows callable agents + specificBeyondGeneral + related files. 12 nodes, 22 edges. v1.1.0 adds display-only race+flavor per group (RPG layer, display-only).",
     "layoutHint": "Force-directed with coordination layer top, guardians middle, coders/quality/writers leaves, exploration periphery"
   },
   "groups": [

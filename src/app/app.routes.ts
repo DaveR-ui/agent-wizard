@@ -2,13 +2,14 @@ import { Routes } from '@angular/router';
 
 /**
  * Page routes. The only routed page is the diagram-agent counterpart viewer
- * (graph/agent UI → node :id).
+ * (graph/agent UI → node :id) rendering the live RPG card from
+ * refined-source/*.json (v1.1.0, race/flavor, passives, weapons, scrolls).
  *
  * Static hosting note: the default PathLocationStrategy is used, so deep links
  * like /diagram-agent/interpreter require the host's SPA fallback to rewrite to
- * index.html. The counterpart markdown itself is served as static files from
- * /diagram-agent/*.md (plain anchors, not Angular routes) — see the
- * diagram-agent/ folder.
+ * index.html. The static diagram-agent/ mirror is deprecated since Phase 3
+ * (see diagram-agent/README.md status: deprecated) — the live viewer no longer
+ * links to static .md files.
  */
 export const routes: Routes = [
   {
