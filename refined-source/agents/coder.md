@@ -1,6 +1,6 @@
 # Coder — Language-Parameterized Implementation Specialist
 
-**Group**: coders | **Model**: opencode-go/deepseek-v4-flash
+**Group**: coders | **Model**: inherit
 
 ## What it is
 Language-parameterized thin adapter over docs/context/. Branches by `language=angular|go` param. If `angular`: reads Angular docs in docs/context/ + MCP angular; if `go`: reads Go docs + gofmt/vet. Returns CoderOutput JSON.
@@ -15,6 +15,6 @@ _(none)_ — leaf worker. Does not delegate. Branches internally, does not fan-o
 - **Group rule**: complexity review and slice routing is a coder trait.
 
 ## Related files
-- `.opencode/agents/subagents/coder.md`
-- `.opencode/agents/subagents/coder.schema.json`
+- `agents/coder.md`
+- `agents/coder.schema.json`
 - `docs/project.md`, `docs/context/architecture.md`

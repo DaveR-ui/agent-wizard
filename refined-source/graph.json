@@ -1,9 +1,9 @@
 {
   "meta": {
-    "generated": "2026-08-24",
-    "source": "agent-wizard/.opencode (sole source; source/ deleted 2026-08-24)",
-    "version": "1.1.0",
-    "description": "Nodes = agents, edges = canCall via task tool (from permission.task frontmatter). Hover on each card shows callable agents + specificBeyondGeneral + related files. 12 nodes, 22 edges. v1.1.0 adds display-only race+flavor per group (RPG layer, display-only).",
+    "generated": "2026-09-24",
+    "source": "agent-system (installed global config; flat agents/, 6 protocols)",
+    "version": "1.2.0",
+    "description": "Nodes = agents, edges = canCall via task tool (from permission.task frontmatter). Hover on each card shows callable agents + specificBeyondGeneral + related files. 11 nodes, 20 edges. v1.2.0 re-syncs to the installed agent-system (flat agents/, project-context removed, 6 protocols).",
     "layoutHint": "Force-directed with coordination layer top, guardians middle, coders/quality/writers leaves, exploration periphery"
   },
   "groups": [
@@ -89,13 +89,6 @@
     {
       "id": "explorer",
       "label": "Explorer",
-      "group": "exploration",
-      "level": 2,
-      "isPrimary": false
-    },
-    {
-      "id": "project-context",
-      "label": "Project Context",
       "group": "exploration",
       "level": 2,
       "isPrimary": false
@@ -191,11 +184,6 @@
     },
     {
       "from": "delivery",
-      "to": "project-context",
-      "kind": "direct"
-    },
-    {
-      "from": "delivery",
       "to": "external-scout",
       "kind": "direct"
     },
@@ -233,11 +221,6 @@
       "from": "orchestrator",
       "to": "explorer",
       "kind": "fan-out"
-    },
-    {
-      "from": "orchestrator",
-      "to": "project-context",
-      "kind": "parallel"
     },
     {
       "from": "orchestrator",

@@ -2,6 +2,14 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 import { RouterLink } from '@angular/router';
 import { AGENTS, GRAPH, RULES } from '../models/refined-source';
 
+/** One weapons chip: a scalar allow/deny entry, or a summarized scoped permission map. */
+export interface WeaponItem {
+  tool: string;
+  status: 'allow' | 'deny' | 'scoped';
+  /** Allow-glob summary when the permission value is a scoped map (e.g. `docs/**`). */
+  scope?: string;
+}
+
 /**
  * Visual counterpart view for a diagram-agent node (graph.json → agents.json).
  *
@@ -83,12 +91,19 @@ export class DiagramAgentViewer {
     return entry ? entry.rules.filter((r) => r.kind === 'active') : [];
   });
 
-  readonly weapons = computed(() => {
+  readonly weapons = computed<WeaponItem[]>(() => {
     const agent = this.agent();
-    if (!agent) return [] as Array<{ tool: string; status: 'allow' | 'deny' }>;
-    return Object.entries(agent.permission)
-      .filter(([key, val]) => key !== 'task' && (val === 'allow' || val === 'deny'))
-      .map(([tool, status]) => ({ tool, status: status as 'allow' | 'deny' }));
+    if (!agent) return [];
+    return Object.entries(agent.permission).flatMap(([tool, val]): WeaponItem[] => {
+      if (tool === 'task' || val === undefined || Array.isArray(val)) return [];
+      if (typeof val === 'string') {
+        return val === 'allow' || val === 'deny' ? [{ tool, status: val }] : [];
+      }
+      const scope = Object.keys(val)
+        .filter((k) => val[k] === 'allow')
+        .join(', ');
+      return [{ tool, status: 'scoped' as const, scope }];
+    });
   });
 
   readonly summons = computed(() => {
@@ -100,7 +115,7 @@ export class DiagramAgentViewer {
 
   readonly protocolScrolls = computed(() => {
     const agent = this.agent();
-    return agent ? agent.relatedFiles.filter((f) => f.includes('.opencode/protocols/')) : [];
+    return agent ? agent.relatedFiles.filter((f) => f.startsWith('protocols/')) : [];
   });
 
   /** agent id → display label (agents.json displayName fallback to graph.json label). */

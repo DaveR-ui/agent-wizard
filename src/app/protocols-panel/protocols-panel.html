@@ -1,0 +1,83 @@
+<div class="protocols-panel">
+  <p class="protocols-intro">
+    Un <strong>protocolo</strong> es markdown en prosa que el agente lee on demand e interpreta: no es
+    texto inyectado por el runtime. Estas son las {{ count }} convenciones del sistema instalado.
+  </p>
+
+  <div class="category-pills" role="tablist" aria-label="Categoría de protocolo">
+    <button
+      type="button"
+      class="category-pill"
+      [class.active]="category() === 'all'"
+      (click)="category.set('all')"
+    >
+      Todos ({{ count }})
+    </button>
+    @for (cat of categories(); track cat) {
+      <button
+        type="button"
+        class="category-pill"
+        [class.active]="category() === cat"
+        (click)="category.set(cat)"
+      >
+        {{ cat }}
+      </button>
+    }
+  </div>
+
+  @if (showHighlighted() && highlighted(); as dispatch) {
+    <section class="dispatch-highlight">
+      <span class="dispatch-badge">Entrada del turno · {{ dispatch.owner }}</span>
+      <h3 class="dispatch-title">{{ dispatch.title }}</h3>
+      <p class="dispatch-summary">{{ dispatch.summary }}</p>
+      @if (dispatch.steps?.length) {
+        <ol class="dispatch-steps">
+          @for (step of dispatch.steps; track step) {
+            <li>{{ step }}</li>
+          }
+        </ol>
+      }
+      <code class="protocol-file">{{ dispatch.file }}</code>
+    </section>
+  }
+
+  <div class="protocol-grid">
+    @for (protocol of visibleOthers(); track protocol.id) {
+      <article class="protocol-card">
+        <div class="protocol-head">
+          <h4 class="protocol-title">{{ protocol.title }}</h4>
+          <span class="protocol-category">{{ protocol.category }}</span>
+        </div>
+        <p class="protocol-owner">Responsable: {{ protocol.owner }}</p>
+        <p class="protocol-summary">{{ protocol.summary }}</p>
+        @if (protocol.steps?.length) {
+          <ul class="protocol-steps">
+            @for (step of protocol.steps; track step) {
+              <li>{{ step }}</li>
+            }
+          </ul>
+        }
+        <code class="protocol-file">{{ protocol.file }}</code>
+      </article>
+    } @empty {
+      <p class="empty-note">Sin protocolos para «{{ category() }}».</p>
+    }
+  </div>
+
+  <section class="protocol-vs-skill">
+    <h3 class="vs-title">Protocolo vs Skill</h3>
+    <div class="vs-grid">
+      <div class="vs-card vs-protocol">
+        <span class="vs-tag">Protocolo = Flexible</span>
+        <p class="vs-nature">{{ comparison.protocol.nature }}</p>
+        <p class="vs-mechanism">{{ comparison.protocol.mechanism }}</p>
+      </div>
+      <div class="vs-card vs-skill">
+        <span class="vs-tag">Skill = Estricto</span>
+        <p class="vs-nature">{{ comparison.skill.nature }}</p>
+        <p class="vs-mechanism">{{ comparison.skill.mechanism }}</p>
+      </div>
+    </div>
+    <p class="vs-why">{{ comparison.why }}</p>
+  </section>
+</div>

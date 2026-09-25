@@ -1,14 +1,14 @@
 # Delivery — Sole Human ↔ Agent Interface
 
-**Group**: coordination (primary) | **Model**: opencode-go/deepseek-v4-flash (0.3)
+**Group**: coordination (primary) | **Model**: opencode-go/qwen3.8-flash
 
 ## What it is
 Coordinator, not executor. Owns human conversation, language translation, and routing. Never implements.
 
 ## Can call (hover)
-interpreter, orchestrator, coder, tester, reviewer, architect, explorer, project-context, external-scout, analista, documenter
+interpreter, orchestrator, coder, tester, reviewer, architect, explorer, external-scout, analista, documenter
 
-Hover detail: *Step 0 is always interpreter first; orchestrator for non-trivial (1+ files or multi-step); direct coder/tester/etc only for trivial scopes. Single coder branches by language=angular|go. Permission.task in frontmatter is the allow-list (11 entries).*
+Hover detail: *Step 0 is always interpreter first; orchestrator for non-trivial (1+ files or multi-step); direct coder/tester/etc only for trivial scopes. Single coder branches by language=angular|go. Permission.task in frontmatter is the allow-list (10 entries).*
 
 ## What it does BEYOND global rules
 - Trivial vs non-trivial is OUTPUT of interpreter packet (never pre-classified)
@@ -18,8 +18,8 @@ Hover detail: *Step 0 is always interpreter first; orchestrator for non-trivial 
 - Skill Loading Contract: pass exact file paths, not summaries, to subagents
 
 ## Related files
-- `.opencode/agents/subagents/delivery.md`
-- `.opencode/workflows/dispatch.md`
-- `.opencode/protocols/prompt-pipeline.md`
-- `.opencode/protocols/session-recovery.md`
+- `agents/delivery.md`
+- `protocols/dispatch.md`
+- `protocols/prompt-pipeline.md`
+- `protocols/session-recovery.md`
 - `opencode.json`, `docs/project.md`

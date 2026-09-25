@@ -63,13 +63,13 @@ describe('RulesPanel', () => {
     expect(compiled.querySelector('.family-members')?.textContent).toContain('coder');
     expect(compiled.querySelectorAll('.rule-card').length).toBe(4);
 
-    // Switch to exploration (4 rules).
+    // Switch to exploration (3 rules: read-only + fan-out thresholds + scout contract).
     const exploration = Array.from(
       compiled.querySelectorAll<HTMLButtonElement>('.family-pill'),
     ).find((el) => el.textContent?.trim() === 'exploration');
     exploration?.click();
     fixture.detectChanges();
-    expect(compiled.querySelectorAll('.rule-card').length).toBe(4);
+    expect(compiled.querySelectorAll('.rule-card').length).toBe(3);
   });
 
   it('should render the 6 agent-specific rule blocks', () => {
@@ -110,7 +110,7 @@ describe('RulesPanel', () => {
     );
     // Both global rules (0007, 0008) describe "never" write/touch actions.
     expect(titles.length).toBe(2);
-    expect(titles.join(' | ')).toContain('Structured returns via EventV2');
+    expect(titles.join(' | ')).toContain('Structured returns via output_schema');
     expect(titles.join(' | ')).toContain('Agent-system changes');
     expect(titles).not.toContain('One question block');
   });

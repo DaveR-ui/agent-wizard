@@ -1,34 +1,33 @@
 ---
-last_updated: 2026-08-24
-description: Catalog of the 12 agents defined in refined-source/agents.json — id, group, role, model, mode, canCall count, key files. (14→13 in 1.0.2: removed vision-relay, merged coders 2→1; Branch B flat with per-agent protocol scrolls under .opencode/protocols/<id>/ in v1.1.0)
+last_updated: 2026-09-24
+description: Catalog of the 11 agents of the installed global opencode agent system (cyborges fork of DaverAgent) — id, group, role, model, mode, canCall count, key files. Flat agents/<id>.md layout.
 tags: [agents, catalog, subagents, groups, canCall]
 status: active
 ---
 
 # Agent Catalog
 
-The 12 agents defined in `refined-source/agents.json` (source of truth: `.opencode/agents/subagents/*.md` flat, Branch B). Group colors and RPG race/flavor come from `refined-source/graph.json → groups` (v1.1.0, 7 groups). Actual file count is 12 after 1.0.2 merge math (14−1 vision-relay −1 coder merge =12); per-agent protocol scrolls now live under `.opencode/protocols/<id>/*.md` (12 dirs) and are reflected in `refined-source/agents.json` v1.1.0 `relatedFiles` — see footnote after the table and `.opencode/protocols/README.md` Per-agent scrolls.
+The 11 agents defined in `refined-source/agents.json`. Source of truth: the **installed global agent system** (`~/.config/opencode`, via the `agent-system` reference) — a **FLAT** `agents/<id>.md` layout (no `agents/subagents/`, no `workflows/`, no per-agent scrolls). The system is the `cyborges` fork of DaverAgent; the Borges display names in `lore.md` are display-only. Group colors come from `refined-source/graph.json → groups` (v1.2.0, 7 groups).
 
 ## All agents
 
-| id | displayName | group | role (one line) | model | mode | canCall | key relatedFiles |
-|---|---|---|---|---|---|---|---|
-| `delivery` | Delivery | coordination | Sole human ↔ agent interface; translates, routes, delegates — never implements | deepseek-v4-flash | primary | 11 | `delivery.md`, `workflows/dispatch.md`, `protocols/prompt-pipeline.md`, `docs/project.md` |
-| `orchestrator` | Orchestrator | coordination | Persistent coordinator; Phase 2 Reduce, fan-out, aggregation | inherit | subagent | 9 | `orchestrator.md`, `workflows/orchestrate.md`, `docs/project.md`, `docs/context/README.md` |
-| `interpreter` | Interpreter | analysis | Step 0 normalization + cheap image inspection; vocabulary reconciliation → routing packet | inherit | subagent | 0 | `interpreter.md`, `interpreter.schema.json`, `docs/project.md` |
-| `explorer` | Explorer | exploration | Read-only codebase exploration, file search, dependency analysis | inherit | subagent | 1 | `explorer.md`, `explorer.schema.json`, `docs/context/architecture.md` |
-| `project-context` | Project Context | exploration | READ-ONLY doc lookup and context assembly for docs/ | inherit | subagent | 0 | `project-context.md`, `docs/project.md`, `docs/context/README.md` |
-| `external-scout` | External Scout | exploration | Fetches live docs for external libraries on demand | inherit | subagent | 0 | `external-scout.md` |
-| `coder` | Coder | coders | Language-parameterized implementation (Angular SPA | Go API) — branches by language param, thin adapter over docs/context/ | deepseek-v4-flash | subagent | 0 | `coder.md`, `coder.schema.json`, `docs/project.md`, `docs/context/architecture.md`, `.opencode/protocols/coder/coder-toolkit.md` |
-| `reviewer` | Reviewer | guardians | Code review, security audit, best practices, performance | deepseek-v4-flash | subagent | 1 | `reviewer.md`, `reviewer.schema.json`, `docs/context/architecture.md` |
-| `architect` | Architect | guardians | System design, module boundaries, patterns | inherit | subagent | 0 | `architect.md`, `architect.schema.json`, `docs/context/architecture.md` |
-| `analista` | Analista | guardians | Second-opinion advisor; read-only plan critique | inherit | subagent | 0 | `analista.md`, `analista.schema.json`, `protocols/session-recovery.md` |
-| `tester` | Tester | quality | Unit, integration, coverage, e2e test author and runner | inherit | subagent | 0 | `tester.md`, `tester.schema.json`, `docs/context/project-rules.md`, `frontend/package.json` |
-| `documenter` | Documenter | writers | Sole dedicated writer for docs/ | inherit | subagent | 0 | `documenter.md`, `documenter.schema.json`, `docs/project.md`, `docs/_TAG-INDEX.md` |
+| id | displayName | group | role (one line) | model | mode | canCall |
+|---|---|---|---|---|---|---|
+| `delivery` | Delivery | coordination | Sole human ↔ agent interface; translates, routes, delegates — never implements | default (`opencode-go/qwen3.8-flash`) | primary | 10 |
+| `orchestrator` | Orchestrator | coordination | Persistent coordinator; Phase 2 Reduce, fan-out, aggregation | inherit | subagent | 8 |
+| `interpreter` | Interpreter | analysis | Step 0 normalization + cheap image inspection → routing packet | inherit | subagent | 0 |
+| `explorer` | Explorer | exploration | Read-only codebase exploration, file search, dependency analysis | inherit | subagent | 1 |
+| `external-scout` | External Scout | exploration | Fetches live docs for external libraries on demand | inherit | subagent | 0 |
+| `coder` | Coder | coders | Language-parameterized implementation (Angular SPA \| Go API) | inherit | subagent | 0 |
+| `reviewer` | Reviewer | guardians | Code review, security audit, best practices, performance | inherit | subagent | 1 |
+| `architect` | Architect | guardians | System design, module boundaries, patterns | inherit | subagent | 0 |
+| `analista` | Analista | guardians | Second-opinion advisor; read-only plan critique | inherit | subagent | 0 |
+| `tester` | Tester | quality | Unit, integration, coverage, e2e test author and runner | inherit | subagent | 0 |
+| `documenter` | Documenter | writers | Sole dedicated writer for docs/ | inherit | subagent | 0 |
 
-> 1.0.1: `orchestrator` canCall 12→11 (interpreter removed); Edge count 27→26.
-> 1.0.2: removed vision-relay, merged coders (2→1), nodes 14→13 (spec) / 14→12 actual, edges 26→22. Delivery canCall 13→11, orchestrator 11→9. Interpreter gained image-inspection capability (one image one question, text-over-image rule, unclear fallback).
-> 1.1.0 (Branch B, 2026-08-24): flat-loader precedent — agents stay at `.opencode/agents/subagents/<id>.md` (12); per-agent protocol scrolls under `.opencode/protocols/<id>/*.md` (12 dirs, e.g. `.opencode/protocols/coder/coder-toolkit.md`, `.opencode/protocols/documenter/documenter-chronicle.md`) reflected in `refined-source/agents.json` `relatedFiles`; `graph.json` groups add display-only `race` + `flavor` (Herald, Diviner, Ranger, Artificer, Sentinel, Inquisitor, Lorekeeper). Single coder preserved — Artificer with two toolkits (`language=angular|go`). See `docs/plans/rpg-agent-organization-plan.md` Phases 1–2 and `.opencode/protocols/README.md` Per-agent scrolls.
+> **No agent declares `model:` or `temperature:`** in its frontmatter. Subagents therefore `inherit` the invoking primary agent's model; `delivery` (primary) runs the top-level `model` from `opencode.json` (currently `opencode-go/qwen3.8-flash`). `temperature` is `null` everywhere — on opencode V2 an agent `temperature` is dead config and is omitted by design.
+> `project-context` **no longer exists**; doc context is read on demand by the owning agents directly. There are no per-agent protocol scrolls and no `workflows/` layer.
+> `delivery` canCall **10**, `orchestrator` canCall **8**; `explorer` and `reviewer` each self-fan-out (`canCall: [explorer]` / `[reviewer]`); the remaining 7 agents are leaves (`canCall: []`).
 
 ## Groups
 
@@ -40,9 +39,9 @@ The human interface and the persistent coordinator. Delivery owns conversation a
 
 Step 0 normalization + cheap image inspection. Reconciles vocabulary via grep/glob against the Slices table and returns a routing packet; also handles one image + one question fallback. Never answers the request itself.
 
-### Exploration (explorer, project-context, external-scout)
+### Exploration (explorer, external-scout)
 
-Read-only finders. Explorer searches code; project-context assembles doc context; external-scout fetches live library docs. Vision-relay removed in 1.0.2 — its one-image capability migrated to interpreter.
+Read-only finders. Explorer searches code; external-scout fetches live library docs.
 
 ### Coders (coder)
 
@@ -58,10 +57,18 @@ Test author and runner via canonical commands from `docs/project.md`. Runs from 
 
 ### Writers (documenter)
 
-Sole dedicated writer for `docs/`. Maintains `docs/project.md`, context docs, and indexes; never modifies code or `.opencode/` runtime config.
+Sole dedicated writer for `docs/`. Maintains `docs/project.md`, context docs, and indexes; never modifies code or the installed agent system.
+
+## relatedFiles vocabulary
+
+`relatedFiles` in `refined-source/agents.json` mixes two vocabularies (see `docs/context/refined-source-data.md`):
+
+- **agent-system assets** — bare agent-system-relative paths (`agents/<id>.md`, `agents/<id>.schema.json`, `protocols/<name>.md`, `opencode.json`, `readme.md`, `lore.md`) that resolve against the `agent-system` reference root (documented exception).
+- **in-repo paths** — `docs/…`, `refined-source/…` that must resolve in the repo.
 
 ## References
 
 - Delegation graph: `docs/context/agent-delegation-graph.md`
+- Protocols: `docs/context/protocols.md`
 - Rules per agent: `docs/context/rules-hierarchy.md`
 - Data schema: `docs/context/refined-source-data.md`

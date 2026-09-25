@@ -43,7 +43,7 @@ describe('App', () => {
     const labels = fixture.debugElement
       .queryAll(By.css('.mat-mdc-tab'))
       .map((tab) => tab.nativeElement.textContent?.trim());
-    expect(labels).toEqual(['Agentes', 'Reglas', 'Constructor', 'Pipeline']);
+    expect(labels).toEqual(['Agentes', 'Reglas', 'Protocolos', 'Pipeline']);
   });
 
   it('should mount only the active tab content (Agentes by default)', () => {
@@ -51,7 +51,7 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('app-agent-cards')).toBeTruthy();
     expect(compiled.querySelector('app-rules-panel')).toBeNull();
-    expect(compiled.querySelector('app-constructor-panel')).toBeNull();
+    expect(compiled.querySelector('app-protocols-panel')).toBeNull();
   });
 
   it('should mount each panel when its tab is activated', async () => {
@@ -64,10 +64,10 @@ describe('App', () => {
     expect(fixture.nativeElement.querySelector('app-rules-panel')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('app-agent-cards')).toBeNull();
 
-    // Tab 3: Constructor.
+    // Tab 3: Protocolos.
     headers[2].nativeElement.click();
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('app-constructor-panel')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('app-protocols-panel')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('app-rules-panel')).toBeNull();
 
     // Tab 4: Pipeline — lazy-loaded via @defer (on idle); wait for the idle
@@ -78,7 +78,7 @@ describe('App', () => {
     await new Promise((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('app-pipeline-panel')).toBeTruthy();
-    expect(fixture.nativeElement.querySelector('app-constructor-panel')).toBeNull();
+    expect(fixture.nativeElement.querySelector('app-protocols-panel')).toBeNull();
   });
 });
 

@@ -1,6 +1,6 @@
 # Architect — System Design & Patterns
 
-**Group**: guardians
+**Group**: guardians | **Model**: inherit | **Edit**: deny
 
 ## What it is
 Designs module boundaries, layering, patterns. Returns ArchitectOutput JSON with decisions[] and files_to_touch.
@@ -14,6 +14,6 @@ _(none)_
 - Never implements — produce decisions + file list; coders edit
 
 ## Related files
-- `.opencode/agents/subagents/architect.md`
-- `.opencode/agents/subagents/architect.schema.json`
-- `docs/context/architecture.md`
+- `agents/architect.md`
+- `agents/architect.schema.json`
+- `docs/context/architecture.md`, `docs/project.md`

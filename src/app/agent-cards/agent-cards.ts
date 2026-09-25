@@ -4,7 +4,7 @@ import { AgentMiniCard } from './agent-mini-card';
 import { AgentSelection } from './agent-selection.service';
 
 /**
- * Grid of 12 compact mini cards.
+ * Grid of 11 compact mini cards.
  * Selection is delegated to the shell-level AgentSelection service so the
  * detail panel can be rendered in app.html's .site-detail aside. No internal
  * aside/detail is rendered here — only the mini-grid.

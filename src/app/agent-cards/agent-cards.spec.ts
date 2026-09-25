@@ -31,13 +31,13 @@ describe('AgentCards (mini-grid)', () => {
     } catch {}
   });
 
-  it('should render 12 mini cards in a grid', () => {
+  it('should render 11 mini cards in a grid', () => {
     const fixture = TestBed.createComponent(AgentCards);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelectorAll('.mini-card').length).toBe(12);
-    expect(compiled.querySelectorAll('app-agent-mini-card').length).toBe(12);
-    expect(AGENTS.length).toBe(12);
+    expect(compiled.querySelectorAll('.mini-card').length).toBe(11);
+    expect(compiled.querySelectorAll('app-agent-mini-card').length).toBe(11);
+    expect(AGENTS.length).toBe(11);
     // grid uses compact minmax
     const grid = compiled.querySelector('.agent-grid') as HTMLElement;
     expect(grid).toBeTruthy();
@@ -62,7 +62,7 @@ describe('AgentCards (mini-grid)', () => {
     const cards = Array.from(
       fixture.nativeElement.querySelectorAll('.mini-card') as NodeListOf<HTMLElement>,
     );
-    expect(cards.length).toBe(12);
+    expect(cards.length).toBe(11);
     for (const card of cards) {
       const name = card.querySelector('.mini-name')?.textContent?.trim() ?? '';
       const agent = AGENTS.find((a) => a.displayName === name);

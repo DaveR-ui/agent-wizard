@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-08-24
+last_updated: 2026-09-24
 description: Tag index for docs/ — every tag used in context, protocol, and plan frontmatter, mapped to the files that carry it.
 tags: [index, tags, lookup]
 status: active
@@ -16,6 +16,7 @@ Fast lookup for the doc tree. Every tag used in `docs/context/`, `docs/protocols
 | `agent` | `context/agent-catalog.md`, `context/agent-delegation-graph.md` |
 | `agent-specific` | `context/rules-hierarchy.md` |
 | `agent-system` | `context/architecture.md` |
+| `active` | `context/project-rules.md`, `context/rules-hierarchy.md`, `context/refined-source-data.md` |
 | `agents` | `context/agent-catalog.md`, `context/agent-delegation-graph.md`, `plans/rpg-agent-organization-plan.md` |
 | `agents.json` | `context/refined-source-data.md` |
 | `angular` | `context/architecture.md` |
@@ -29,7 +30,8 @@ Fast lookup for the doc tree. Every tag used in `docs/context/`, `docs/protocols
 | `curation` | `protocols/refined-source-curation.md` |
 | `data-layer` | `context/architecture.md`, `context/refined-source-data.md`, `protocols/refined-source-curation.md` |
 | `delegation` | `context/agent-delegation-graph.md` |
-| `diagram-agent` | `diagram-agent/README.md`, `diagram-agent/*.md` (13 spec / 12 actual flat files — `delivery`, `orchestrator`, `interpreter`, `explorer`, `project-context`, `external-scout`, `coder`, `reviewer`, `tester`, `architect`, `analista`, `documenter`), `diagram-agent/<group>/README.md` (7 group indexes) |
+| `diagram-agent` | `diagram-agent/` (repo root) — `README.md` + `*.md` static mirror, `status: deprecated`; superseded by the live viewer at `/diagram-agent/:id` |
+| `dispatch` | `context/protocols.md` |
 | `deploy` | `production.md` |
 | `dev` | `local-dev.md` |
 | `discipline` | `context/context-engineering.md` |
@@ -54,13 +56,17 @@ Fast lookup for the doc tree. Every tag used in `docs/context/`, `docs/protocols
 | `local` | `local-dev.md` |
 | `lookup` | `context/indexing-strategy.md`, `_TAG-INDEX.md` |
 | `mvi` | `context/context-engineering.md` |
+| `orchestrate` | `context/protocols.md` |
+| `passive` | `context/project-rules.md`, `context/rules-hierarchy.md`, `context/refined-source-data.md` |
 | `permissions` | `plans/rpg-agent-organization-plan.md` |
 | `philosophy` | `context/README.md` |
 | `plan` | `plans/rpg-agent-organization-plan.md` |
 | `plans` | `plans/README.md` |
 | `production` | `production.md` |
-| `protocol` | `protocols/refined-source-curation.md` |
-| `protocols` | `protocols/README.md`, `plans/rpg-agent-organization-plan.md` |
+| `protocol` | `context/protocols.md`, `protocols/refined-source-curation.md` |
+| `protocols` | `context/protocols.md`, `protocols/README.md`, `plans/rpg-agent-organization-plan.md` |
+| `protocols.json` | `context/protocols.md`, `context/refined-source-data.md` |
+| `prompt-pipeline` | `context/protocols.md` |
 | `refined-source` | `context/refined-source-data.md`, `protocols/refined-source-curation.md`, `plans/rpg-agent-organization-plan.md` |
 | `registration` | `context/doc-conventions.md` |
 | `review-loop` | `context/project-rules.md` |
@@ -71,6 +77,7 @@ Fast lookup for the doc tree. Every tag used in `docs/context/`, `docs/protocols
 | `search` | `context/indexing-strategy.md` |
 | `serve` | `local-dev.md` |
 | `severity` | `context/rules-hierarchy.md` |
+| `skill` | `context/protocols.md` |
 | `spa` | `production.md` |
 | `standards` | `context/project-rules.md` |
 | `static` | `production.md` |
@@ -86,12 +93,12 @@ Fast lookup for the doc tree. Every tag used in `docs/context/`, `docs/protocols
 |---|---|
 | Architecture | `architecture`, `layers`, `angular`, `graph-ui`, `data-layer` |
 | Agents | `agents`, `agent`, `subagents`, `canCall`, `delegation`, `graph`, `edges`, `fan-out`, `groups`, `diagram-agent`, `plan`, `rpg` |
-| Diagram agent | `diagram-agent` (mirror of `graph.json` — flat + group indexes, static) |
-| Rules | `rules`, `standards`, `conventions`, `english`, `cost`, `review-loop`, `hierarchy`, `global`, `agent-specific`, `severity` |
+| Diagram agent | `diagram-agent` (deprecated static mirror; superseded by the live viewer at `/diagram-agent/:id`) |
+| Rules | `rules`, `standards`, `conventions`, `english`, `cost`, `review-loop`, `hierarchy`, `global`, `agent-specific`, `severity`, `passive`, `active` |
 | Data layer | `refined-source`, `json`, `jq`, `curation`, `data-layer` |
 | Docs system | `docs`, `frontmatter`, `registration`, `indexing`, `tags`, `_TAG-INDEX`, `search`, `lookup`, `index` |
 | Context discipline | `context`, `mvi`, `load-on-demand`, `budget`, `discipline` |
-| Protocols | `protocol`, `protocols` |
+| Protocols | `protocol`, `protocols`, `protocols.json`, `dispatch`, `prompt-pipeline`, `orchestrate`, `skill` |
 | Dev / ops | `local`, `dev`, `serve`, `test`, `build`, `production`, `deploy`, `static`, `spa` |
 
 ## Maintenance

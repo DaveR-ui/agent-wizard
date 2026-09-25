@@ -1,0 +1,82 @@
+{
+  "meta": {
+    "source": "agent-system",
+    "version": "1.0.0",
+    "generated": "2026-09-24",
+    "count": 6,
+    "description": "The 6 agent protocols of the installed opencode agent system (protocols/*.md)."
+  },
+  "protocols": [
+    {
+      "id": "dispatch",
+      "file": "protocols/dispatch.md",
+      "title": "Dispatch",
+      "category": "turn-entry",
+      "owner": "delivery",
+      "highlight": true,
+      "summary": "Turn-entry procedure for the delivery seat: the interpreter-first hard gate, the \"about to ask\" tripwire, and the hand-off into the pipeline. Read first on every turn, before any other tool.",
+      "steps": [
+        "Interpreter first (hard gate)",
+        "Do not pre-classify",
+        "The \"about to ask\" tripwire",
+        "Continue the pipeline (prompt-pipeline)"
+      ]
+    },
+    {
+      "id": "prompt-pipeline",
+      "file": "protocols/prompt-pipeline.md",
+      "title": "Prompt Pipeline",
+      "category": "pipeline",
+      "owner": "interpreter (Step 0) + orchestrator (Phase 2)",
+      "highlight": false,
+      "summary": "Step 0 (Interpret) normalizes the raw prompt into a routing packet; Phase 2 (Reduce) turns it into scope. The two phases every non-trivial prompt passes through."
+    },
+    {
+      "id": "orchestrate",
+      "file": "protocols/orchestrate.md",
+      "title": "Orchestrate",
+      "category": "thinking",
+      "owner": "orchestrator",
+      "highlight": false,
+      "summary": "Pre-action thinking process for the orchestrator: Protocol Discovery → Context Refresh → Proposal → Implementation → Verification → Documentation."
+    },
+    {
+      "id": "subagent-spec-template",
+      "file": "protocols/subagent-spec-template.md",
+      "title": "Subagent Spec Template",
+      "category": "template",
+      "owner": "agent authors",
+      "highlight": false,
+      "summary": "Canonical shape for subagent definitions and the output_schema bridge (the prose contract for structured returns)."
+    },
+    {
+      "id": "session-recovery",
+      "file": "protocols/session-recovery.md",
+      "title": "Session Recovery",
+      "category": "recovery",
+      "owner": "delivery + orchestrator",
+      "highlight": false,
+      "summary": "Recovery flow for interrupted or STUCK sessions across the delivery → orchestrator → subagent hierarchy."
+    },
+    {
+      "id": "broad-investigation-template",
+      "file": "protocols/broad-investigation-template.md",
+      "title": "Broad Investigation Template",
+      "category": "template",
+      "owner": "explorer",
+      "highlight": false,
+      "summary": "5-section scaffold for prompts that map, inventory, or audit the repo."
+    }
+  ],
+  "protocolVsSkill": {
+    "protocol": {
+      "nature": "Flexible",
+      "mechanism": "Prose markdown under protocols/, read on demand and interpreted by the agent"
+    },
+    "skill": {
+      "nature": "Strict",
+      "mechanism": "Strict-text, injected by the runtime with a fixed shape"
+    },
+    "why": "This system ships no skills by design: conventions are protocols/*.md — intentionally prose markdown, not .opencode/skills/, because skills are strict-text and protocols are the preferred mechanism here."
+  }
+}

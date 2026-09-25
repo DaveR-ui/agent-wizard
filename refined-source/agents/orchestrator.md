@@ -1,14 +1,14 @@
 # Orchestrator — Persistent Coordinator
 
-**Group**: coordination | **Model**: inherit (delivery)
+**Group**: coordination | **Model**: inherit
 
 ## What it is
-Sole executor of Phase 2 Reduce. Decomposes handoff, fans out subagents in parallel, aggregates EventV2 JSON, returns agent-snapshot.
+Sole executor of Phase 2 Reduce. Decomposes handoff, fans out subagents in parallel, aggregates structured returns, returns agent-snapshot.
 
 ## Can call (hover)
-coder, tester, reviewer, architect, explorer, project-context, external-scout, analista, documenter
+coder, tester, reviewer, architect, explorer, external-scout, analista, documenter
 
-Hover detail: *Does NOT call delivery or interpreter. Fan-out pattern: split file list into 20-file chunks, parallel N tasks, de-duplicate, promote severity. Single coder fan-out by language param; cross-type parallelism + same-type fan-out (9 entries).*
+Hover detail: *Does NOT call delivery or interpreter. Fan-out pattern: split file list into 20-file chunks, parallel N tasks, de-duplicate, promote severity. Single coder fan-out by language param; cross-type parallelism + same-type fan-out (8 entries).*
 
 ## What it does BEYOND global rules
 - Produces ## Scope block (complexity Baja→Muy Alta, hot spots, in/out, key files, verification path)
@@ -17,8 +17,8 @@ Hover detail: *Does NOT call delivery or interpreter. Fan-out pattern: split fil
 - Context Budget: trim → delegate slice → request restart with clean snapshot
 
 ## Related files
-- `.opencode/agents/subagents/orchestrator.md`
-- `.opencode/workflows/orchestrate.md`
-- `.opencode/protocols/prompt-pipeline.md`
-- `.opencode/protocols/broad-investigation-template.md`
-- `.opencode/protocols/session-recovery.md`, `docs/project.md`
+- `agents/orchestrator.md`
+- `protocols/orchestrate.md`
+- `protocols/prompt-pipeline.md`
+- `protocols/subagent-spec-template.md`
+- `protocols/session-recovery.md`, `docs/project.md`

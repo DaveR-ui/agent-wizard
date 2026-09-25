@@ -5,7 +5,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { filter, map, startWith } from 'rxjs';
 import { AgentCards } from './agent-cards/agent-cards';
 import { RulesPanel } from './rules-panel/rules-panel';
-import { ConstructorPanel } from './constructor-panel/constructor-panel';
+import { ProtocolsPanel } from './protocols-panel/protocols-panel';
 import { PipelinePanel } from './pipeline-panel/pipeline-panel';
 import { AgentDetailPanel } from './agent-cards/agent-detail-panel';
 import { AgentSelection } from './agent-cards/agent-selection.service';
@@ -13,7 +13,7 @@ import { GROUP_COLORS, FALLBACK_GROUP_COLOR } from './models/refined-source';
 
 /**
  * App shell: header + four Angular Material tabs (Agentes / Reglas /
- * Constructor / Pipeline) with the routed detail viewer (diagram-agent/:id)
+ * Protocolos / Pipeline) with the routed detail viewer (diagram-agent/:id)
  * and the inline agent detail (from AgentSelection) both rendered in the
  * shell-level .site-detail aside. The aside is visible when either a routed
  * detail is active (hasDetail) or an inline selection exists (hasInlineDetail);
@@ -22,7 +22,7 @@ import { GROUP_COLORS, FALLBACK_GROUP_COLOR } from './models/refined-source';
  */
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatTabsModule, AgentCards, RulesPanel, ConstructorPanel, PipelinePanel, AgentDetailPanel],
+  imports: [RouterOutlet, MatTabsModule, AgentCards, RulesPanel, ProtocolsPanel, PipelinePanel, AgentDetailPanel],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './app.css',

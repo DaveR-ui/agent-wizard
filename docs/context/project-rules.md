@@ -1,6 +1,6 @@
 ---
-last_updated: 2026-08-24
-description: Development standards for agent-wizard — language, path quoting, cost discipline, test invocation, .opencode review loop, structured returns.
+last_updated: 2026-09-24
+description: Development standards for agent-wizard — language, path quoting, cost discipline, test invocation, agent-system review loop, structured returns.
 tags: [rules, standards, conventions, english, cost, review-loop, passive, active]
 status: active
 ---
@@ -16,11 +16,11 @@ Development standards for THIS project. The full agent rule hierarchy (global / 
 | Rule | Severity | Detail |
 |---|---|---|
 | English only | hard | All docs, comments, routing packets, and structured returns in English (`doc_language: english`). Human ↔ delivery may be any language; delivery translates. |
-| Quote paths with spaces | medium | Workspace root is `/run/media/admin/Datos/Matafuegos necochea` — every bash path with spaces must be quoted. |
-| Cost discipline | discretionary | A discretionary decision (not a global rule) owned by `orchestrator`, `coder`, `analista`, `architect`: default to the cheap tier (`opencode-go/deepseek-v4-flash`); escalate only when the task demands it. Fan-out multiplies cost. |
+| Quote paths with spaces | medium | Workspace root is `/run/media/admin/Datos/projects/agent-wizard` — quote every bash path (sibling paths may contain spaces). |
+| Cost discipline | discretionary | A discretionary decision (not a global rule) owned by `orchestrator`, `coder`, `analista`, `architect`: subagents inherit the primary's model (`opencode-go/qwen3.8-flash`); escalate only when the task demands it. Fan-out multiplies cost. |
 | Never run tests from repo root | hard | Run canonical commands from the affected package dir (`agent-wizard/`, `frontend/`, `backend/`). |
-| No-mutate `.opencode/` review loop | hard | Changes to `.opencode/agents`, `.opencode/protocols`, `.opencode/workflows`, or `opencode.json` require Draft → Review (reviewer/analista) → Apply → Verify (tester). Single-line typo exempt. |
-| Structured returns via EventV2 | hard | Subagents with `output_schema` return validated JSON via the `task` tool + EventV2 bus. Never write `summary.md` / `output-full.md` / `manifest.md` to disk. |
+| No-mutate agent-system review loop | hard | Changes to the installed agent system (`agents/`, `protocols/`, `opencode.json` under `~/.config/opencode`) require Draft → Review (reviewer/analista) → Apply → Verify (tester). Single-line typo exempt. |
+| Structured returns via `output_schema` | hard | Subagents with `output_schema` return validated JSON through the `task` tool. Never write `summary.md` / `output-full.md` / `manifest.md` to disk. The structured return is a **prose contract, not runtime-enforced**. |
 | Interpreter-first hard gate | hard | Every prompt passes Step 0 (interpreter) before any handling. Trivial vs non-trivial is an output of the routing packet, never a pre-classification. |
 | Coordinators never implement | hard | `delivery` and `orchestrator` delegate ALL technical work via the `task` tool. |
 | One question block | medium | Batch all blocking questions into a single `question` call; never ask across turns. |

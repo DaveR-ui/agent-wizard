@@ -17,7 +17,9 @@ export interface CanCallItem {
 
 export interface WeaponItem {
   tool: string;
-  status: 'allow' | 'deny';
+  status: 'allow' | 'deny' | 'scoped';
+  /** Allow-glob summary when the permission value is a scoped map (e.g. `docs/**`). */
+  scope?: string;
 }
 
 export interface SummonItem {
@@ -76,9 +78,16 @@ export class AgentDetailPanel implements OnDestroy {
 
   readonly weapons = computed<WeaponItem[]>(() => {
     const perm = this.agent().permission;
-    return Object.entries(perm)
-      .filter(([key, val]) => key !== 'task' && (val === 'allow' || val === 'deny'))
-      .map(([tool, status]) => ({ tool, status: status as 'allow' | 'deny' }));
+    return Object.entries(perm).flatMap(([tool, val]): WeaponItem[] => {
+      if (tool === 'task' || val === undefined || Array.isArray(val)) return [];
+      if (typeof val === 'string') {
+        return val === 'allow' || val === 'deny' ? [{ tool, status: val }] : [];
+      }
+      const scope = Object.keys(val)
+        .filter((k) => val[k] === 'allow')
+        .join(', ');
+      return [{ tool, status: 'scoped' as const, scope }];
+    });
   });
 
   readonly summons = computed<SummonItem[]>(() => {
@@ -88,7 +97,7 @@ export class AgentDetailPanel implements OnDestroy {
   });
 
   readonly protocolScrolls = computed(() =>
-    this.agent().relatedFiles.filter((f) => f.includes('.opencode/protocols/')),
+    this.agent().relatedFiles.filter((f) => f.startsWith('protocols/')),
   );
 
   readonly canCallItems = computed<CanCallItem[]>(() => {

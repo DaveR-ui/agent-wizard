@@ -1,6 +1,6 @@
 # Reviewer — Code Review & Security Audit
 
-**Group**: guardians | **Model**: opencode-go/deepseek-v4-flash | **Edit**: deny
+**Group**: guardians | **Model**: inherit | **Edit**: deny
 
 ## What it is
 Analyzes diffs/PRs; never modifies. Returns ReviewerOutput JSON with verdict and issues. Can fan out when diff naturally partitioned.
@@ -14,6 +14,6 @@ reviewer (self — fan-out partitioned by independence; coupling forbids fan-out
 - Never rewrite code inline; describe fix
 
 ## Related files
-- `.opencode/agents/subagents/reviewer.md`
-- `.opencode/agents/subagents/reviewer.schema.json`
-- `docs/context/architecture.md`, `backend/docs/context/permission-architecture.md`
+- `agents/reviewer.md`
+- `agents/reviewer.schema.json`
+- `docs/context/architecture.md`, `docs/project.md`

@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-08-25
+last_updated: 2026-09-24
 description: Index and philosophy of docs/context/ — the strategic knowledge base for agent-wizard.
 tags: [context, index, philosophy, knowledge-base]
 status: active
@@ -27,7 +27,7 @@ This folder contains **strategic documents** that guide the agent system's behav
 | File | Purpose | When to Use |
 |------|---------|-------------|
 | `architecture.md` | Layered architecture (agent system, data layer, Angular skeleton), dependency flow, graph UI | When designing features, refactoring, or understanding how the layers relate |
-| `agent-delegation-graph.md` | The canCall graph (13 nodes spec / 12 actual, 22 edges), edge kinds, routing and fan-out behavior | When reasoning about delegation, fan-out, or graph data |
+| `agent-delegation-graph.md` | The canCall graph (11 nodes, 20 edges), edge kinds, routing and fan-out behavior | When reasoning about delegation, fan-out, or graph data |
 
 ### Development Standards
 
@@ -40,14 +40,15 @@ This folder contains **strategic documents** that guide the agent system's behav
 
 | File | Purpose | When to Use |
 |------|---------|-------------|
-| `agent-catalog.md` | The 13 agents (spec) / 12 actual: id, group, role, model, mode, canCall, key files | When picking an agent, reviewing the roster, or updating agent cards |
+| `agent-catalog.md` | The 11 agents: id, group, role, model, mode, canCall, key files | When picking an agent, reviewing the roster, or updating agent cards |
 | `rules-hierarchy.md` | The 3-level rule hierarchy: 2 global, 6 group families, 6 agent-specific sets | When checking which rules apply to an agent or a change |
+| `protocols.md` | The 6 agent-system protocols, who runs each, and the protocol-vs-skill distinction | When routing/turn-entry, debugging the pipeline, or curating protocol cards |
 
 ### Data Layer
 
 | File | Purpose | When to Use |
 |------|---------|-------------|
-| `refined-source-data.md` | Data layer schemas (agents.json, rules.json, graph.json), hover contract, jq validation | When working with `refined-source/` or the UI data flow |
+| `refined-source-data.md` | Data layer schemas (agents.json, rules.json, graph.json, protocols.json), hover contract, relatedFiles resolution, jq validation | When working with `refined-source/` or the UI data flow |
 
 ### Strategies & Optimization
 
@@ -80,7 +81,8 @@ project-rules.md (baseline - always applies)
 │   └── Referenced by: every strategy doc below; enforces the MVI cap
 ├── architecture.md (how the layers fit together)
 ├── agent-catalog.md (who the agents are)
-│   └── agent-delegation-graph.md (how they delegate)
+│   ├── agent-delegation-graph.md (how they delegate)
+│   └── protocols.md (the protocols they read)
 ├── rules-hierarchy.md (which rules apply where)
 ├── refined-source-data.md (the data layer schemas)
 ├── doc-conventions.md (how to write docs)
@@ -105,21 +107,22 @@ project-rules.md (baseline - always applies)
 
 ## Context Budget
 
-For models with limited context windows. **Last audit: 2026-08-23** (line counts are actual, tokens are estimated at ~3.5/line). MVI cap column follows the discipline in `context-engineering.md`; the **Status** column flags files over their cap.
+For models with limited context windows. **Last audit: 2026-09-24** (line counts are actual, tokens are estimated at ~3.5/line). MVI cap column follows the discipline in `context-engineering.md`; the **Status** column flags files over their cap.
 
 | File | Lines | Tokens (~3.5/line) | MVI cap | Status | Priority |
 |------|-------|--------------------|---------|--------|----------|
-| `project-rules.md` | 32 | 112 | <100 (concept) | OK | High (always load) |
-| `architecture.md` | 75 | 263 | <100 (concept) | OK | High (for design tasks) |
-| `agent-catalog.md` | 64 | 224 | <150 (guide) | OK | Medium (for agent tasks) |
-| `agent-delegation-graph.md` | 46 | 161 | <100 (concept) | OK | Medium (for delegation tasks) |
-| `rules-hierarchy.md` | 54 | 189 | <100 (concept) | OK | Medium (for rule checks) |
-| `refined-source-data.md` | 81 | 284 | <150 (guide) | OK | Medium (for data-layer tasks) |
-| `doc-conventions.md` | 67 | 235 | <100 (concept) | OK | Medium (when writing docs) |
-| `indexing-strategy.md` | 48 | 168 | <100 (concept) | OK | Low (for doc search) |
-| `context-engineering.md` | 49 | 172 | <100 (concept) | OK | Medium (when designing agents / writing docs) |
+| `project-rules.md` | 35 | 123 | <100 (concept) | OK | High (always load) |
+| `architecture.md` | 88 | 308 | <100 (concept) | OK | High (for design tasks) |
+| `agent-catalog.md` | 74 | 259 | <150 (guide) | OK | Medium (for agent tasks) |
+| `agent-delegation-graph.md` | 49 | 172 | <100 (concept) | OK | Medium (for delegation tasks) |
+| `protocols.md` | 54 | 189 | <100 (concept) | OK | Medium (for protocol/pipeline tasks) |
+| `rules-hierarchy.md` | 78 | 273 | <100 (concept) | OK | Medium (for rule checks) |
+| `refined-source-data.md` | 113 | 396 | <150 (guide) | OK | Medium (for data-layer tasks) |
+| `doc-conventions.md` | 72 | 252 | <100 (concept) | OK | Medium (when writing docs) |
+| `indexing-strategy.md` | 49 | 172 | <100 (concept) | OK | Low (for doc search) |
+| `context-engineering.md` | 50 | 175 | <100 (concept) | OK | Medium (when designing agents / writing docs) |
 
-**Total**: 516 lines / ~1808 tokens (context docs only)
+**Total**: 662 lines / ~2319 tokens (context docs only)
 
 **Recommendation**: Load only 2-3 files per task to stay under 2000 tokens. See `context-engineering.md` for the MVI sizing discipline and operational guidelines for when to load (and not load) context.
 

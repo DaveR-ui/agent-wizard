@@ -52,7 +52,7 @@ describe('DiagramAgentViewer', () => {
     // Protocol scrolls
     expect(compiled.textContent).toContain('Protocol scrolls');
     const agent = AGENTS.find((a) => a.id === 'interpreter')!;
-    const expectedScrolls = agent.relatedFiles.filter((f) => f.includes('.opencode/protocols/'));
+    const expectedScrolls = agent.relatedFiles.filter((f) => f.startsWith('protocols/'));
     const protocolChips = compiled.querySelectorAll('.protocol-chip');
     expect(protocolChips.length).toBe(expectedScrolls.length);
   });

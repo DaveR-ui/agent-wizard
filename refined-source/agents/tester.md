@@ -1,19 +1,20 @@
 # Tester — Test Author & Runner
 
-**Group**: quality | **Temp**: 0.2
+**Group**: quality | **Model**: inherit | **Edit**: deny
 
 ## What it is
-Authors and runs tests via canonical commands. Returns TesterOutput JSON. Handles flaky quarantine.
+Framework-parameterized test specialist. Runs via canonical commands. Returns TesterOutput JSON. Handles flaky quarantine. Does not implement source features.
 
 ## Can call (hover)
 _(none)_ — leaf.
 
 ## What it does BEYOND global rules
-- Runs from package dir (never root): Vitest 4, Playwright 1.58, Storybook 10 (frontend); go test (backend)
+- Branches by framework param (vitest | karma-jasmine | playwright | go); runs from package dir (never root)
 - Behavior assertions (DOM, emitted values, state) not mock verification; don't duplicate logic into test
 - Coverage gap reports; flaky quarantined with failure signature
+- Optional conditional linter only when a linter param is informed
 
 ## Related files
-- `.opencode/agents/subagents/tester.md`
-- `.opencode/agents/subagents/tester.schema.json`
-- `docs/project.md`, `frontend/package.json`
+- `agents/tester.md`
+- `agents/tester.schema.json`
+- `docs/project.md`, `docs/context/project-rules.md`

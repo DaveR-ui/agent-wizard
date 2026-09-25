@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-08-23
+last_updated: 2026-09-24
 description: Production notes for agent-wizard — static Angular build, SPA hosting, and what is NOT deployable.
 tags: [production, build, deploy, static, spa]
 status: active
@@ -27,7 +27,7 @@ Produces static artifacts in `dist/` (optimized production build).
 
 | Item | Status |
 |---|---|
-| Agent system (`.opencode/`, `source/`) | Config, not runtime — no deployable artifact |
+| Agent system (installed global config, `~/.config/opencode`) | Config, not runtime — no deployable artifact |
 | `refined-source/` | Data files; consumed at build time by the UI |
 | Graph UI | Implemented — part of the static SPA; data ships as JSON bundles imported at build time |
 

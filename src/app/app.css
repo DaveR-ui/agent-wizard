@@ -29,6 +29,15 @@
   font-size: 0.95rem;
 }
 
+.site-fork {
+  margin: 0.4rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent, #4f46e5);
+}
+
 /*
  * Desktop shell: the tab shell (.site-main) and the routed detail viewer
  * (.site-detail) sit side-by-side in a flex row. The previous centered

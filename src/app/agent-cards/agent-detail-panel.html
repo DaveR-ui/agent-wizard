@@ -155,8 +155,14 @@
     } @else {
       <div class="chips">
         @for (w of weapons(); track w.tool) {
-          <span class="weapon-chip" [class.equipped]="w.status === 'allow'" [class.locked]="w.status === 'deny'">
-            {{ w.tool }} — {{ w.status === 'allow' ? 'equipped' : 'locked' }}
+          <span
+            class="weapon-chip"
+            [class.equipped]="w.status === 'allow'"
+            [class.locked]="w.status !== 'allow'"
+          >
+            {{ w.tool }} —
+            {{ w.status === 'allow' ? 'equipped' : w.status === 'deny' ? 'locked' : 'scoped'
+            }}{{ w.scope ? ' (' + w.scope + ')' : '' }}
           </span>
         }
       </div>

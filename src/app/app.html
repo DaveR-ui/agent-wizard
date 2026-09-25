@@ -1,8 +1,10 @@
 <header class="site-header">
   <h1 class="site-title">AgentWizard</h1>
   <p class="site-tagline">
-    Visualización del sistema de agentes: 12 agentes, reglas en 3 niveles y constructor de agentes.
+    Sistema de agentes global de opencode (cyborges, fork de DaverAgent): 11 agentes, 6 protocolos,
+    reglas en 3 niveles y pipeline de delegación.
   </p>
+  <p class="site-fork">cyborges · fork de DaverAgent</p>
 </header>
 
 <!--
@@ -23,8 +25,8 @@
       <mat-tab label="Reglas">
         <app-rules-panel />
       </mat-tab>
-      <mat-tab label="Constructor">
-        <app-constructor-panel />
+      <mat-tab label="Protocolos">
+        <app-protocols-panel />
       </mat-tab>
       <mat-tab label="Pipeline">
         @defer (on idle) {

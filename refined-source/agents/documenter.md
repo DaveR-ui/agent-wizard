@@ -1,9 +1,9 @@
 # Documenter — Docs Writer (sole for docs/)
 
-**Group**: writers | **Temp**: 0.2
+**Group**: writers | **Model**: inherit | **Edit**: docs/ only | **Bash**: deny
 
 ## What it is
-Sole dedicated writer for docs/. Reads/writes docs/ on demand; never code or .opencode config. Returns DocumenterOutput JSON.
+Sole dedicated writer for docs/. Reads/writes docs/ on demand; never code or the global agent-system config. Returns DocumenterOutput JSON.
 
 ## Can call (hover)
 _(none)_
@@ -14,7 +14,6 @@ _(none)_
 - Post-change audit: routing-table sync, date freshness (>30/>90), link integrity
 
 ## Related files
-- `.opencode/agents/subagents/documenter.md`
-- `.opencode/agents/subagents/documenter.schema.json`
-- `docs/project.md`, `docs/context/README.md`, `docs/_TAG-INDEX.md`
-- `docs/context/doc-conventions.md` (canonical spec)
+- `agents/documenter.md`
+- `agents/documenter.schema.json`
+- `docs/project.md`, `docs/context/README.md`
