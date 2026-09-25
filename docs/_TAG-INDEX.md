@@ -1,5 +1,5 @@
 ---
-last_updated: 2026-09-24
+last_updated: 2026-09-25
 description: Tag index for docs/ — every tag used in context, protocol, and plan frontmatter, mapped to the files that carry it.
 tags: [index, tags, lookup]
 status: active
@@ -25,6 +25,7 @@ Fast lookup for the doc tree. Every tag used in `docs/context/`, `docs/protocols
 | `build` | `local-dev.md`, `production.md` |
 | `canCall` | `context/agent-catalog.md`, `context/agent-delegation-graph.md` |
 | `catalog` | `context/agent-catalog.md` |
+| `ci` | `production.md` |
 | `conventions` | `context/doc-conventions.md`, `context/project-rules.md` |
 | `cost` | `context/project-rules.md` |
 | `curation` | `protocols/refined-source-curation.md` |
@@ -40,6 +41,7 @@ Fast lookup for the doc tree. Every tag used in `docs/context/`, `docs/protocols
 | `english` | `context/project-rules.md` |
 | `fan-out` | `context/agent-delegation-graph.md` |
 | `frontmatter` | `context/doc-conventions.md` |
+| `github-pages` | `production.md` |
 | `global` | `context/rules-hierarchy.md` |
 | `graph` | `context/agent-delegation-graph.md` |
 | `graph-ui` | `context/architecture.md` |
@@ -99,7 +101,7 @@ Fast lookup for the doc tree. Every tag used in `docs/context/`, `docs/protocols
 | Docs system | `docs`, `frontmatter`, `registration`, `indexing`, `tags`, `_TAG-INDEX`, `search`, `lookup`, `index` |
 | Context discipline | `context`, `mvi`, `load-on-demand`, `budget`, `discipline` |
 | Protocols | `protocol`, `protocols`, `protocols.json`, `dispatch`, `prompt-pipeline`, `orchestrate`, `skill` |
-| Dev / ops | `local`, `dev`, `serve`, `test`, `build`, `production`, `deploy`, `static`, `spa` |
+| Dev / ops | `local`, `dev`, `serve`, `test`, `build`, `production`, `deploy`, `static`, `spa`, `github-pages`, `ci` |
 
 ## Maintenance
 

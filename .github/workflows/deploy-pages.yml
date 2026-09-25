@@ -1,0 +1,63 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+# Grant GITHUB_TOKEN the permissions required to deploy to GitHub Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping queued runs in between.
+# Do NOT cancel in-progress runs, so production deployments are not interrupted.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Project site lives under /agent-wizard/, so the base href must be the subpath
+      # (src/index.html ships <base href="/"> for local dev).
+      - name: Build
+        run: npm run build -- --base-href=/agent-wizard/
+
+      # SPA fallback: GitHub Pages serves 404.html for unknown deep links
+      # (e.g. /agent-wizard/diagram-agent/interpreter) so the app router can take over.
+      - name: Create SPA fallback
+        run: cp dist/agent-wizard/browser/index.html dist/agent-wizard/browser/404.html
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist/agent-wizard/browser
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
